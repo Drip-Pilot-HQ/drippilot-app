@@ -1,26 +1,101 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-source-sans-pro), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-domine), ui-serif, Georgia, serif;
+
+  --color-primary: #fb923c;
+  --color-secondary: #22d3ee;
+  --color-accent: #f472b6;
+  --color-background-light: #ffffff;
+  --color-background-dark: #0f172a;
+  --color-surface-light: #f8fafc;
+  --color-surface-dark: #1e293b;
+
+  --radius-default: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+}
+
 :root {
+  --primary: #fb923c;
+  --secondary: #22d3ee;
+  --accent: #f472b6;
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0f172a;
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --muted: #64748b;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --background: #020617;
+  --foreground: #f8fafc;
+  --card-bg: #0f172a;
+  --card-border: #1e293b;
+  --muted: #94a3b8;
 }
 
 body {
-  background: var(--background);
+  font-family: var(--font-source-sans-pro), ui-sans-serif, system-ui, sans-serif;
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply antialiased font-light transition-colors duration-300;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-domine), ui-serif, Georgia, serif;
+  font-weight: 700;
+}
+
+/* Custom Utilities */
+.font-heading { font-family: var(--font-domine), ui-serif, Georgia, serif; }
+.font-body { font-family: var(--font-source-sans-pro), ui-sans-serif, system-ui, sans-serif; }
+
+.text-brand-primary { color: var(--primary); }
+.text-brand-secondary { color: var(--secondary); }
+.text-brand-accent { color: var(--accent); }
+
+.bg-brand-primary { background-color: var(--primary); }
+.bg-brand-secondary { background-color: var(--secondary); }
+.bg-brand-accent { background-color: var(--accent); }
+
+.mesh-gradient {
+  background: radial-gradient(at 0% 0%, hsla(35, 100%, 50%, 0.1) 0, transparent 40%),
+              radial-gradient(at 100% 0%, hsla(189, 100%, 50%, 0.1) 0, transparent 40%);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.metric-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+}
+
+.metallic-bezel {
+  position: relative;
+  padding: 12px;
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 50%, #94a3b8 100%);
+  border-radius: 2rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255,255,255,0.8);
+}
+
+.text-gradient {
+  @apply text-transparent bg-clip-text bg-linear-to-r from-primary to-accent;
+}
+
+.grid-pattern {
+  background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+  background-size: 40px 40px;
 }
