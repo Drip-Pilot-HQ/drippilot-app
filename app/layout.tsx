@@ -1,12 +1,6 @@
 import type { Metadata } from "next";
-import { Domine, Poppins, Source_Sans_3 } from "next/font/google";
+import { Domine, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
-
-const poppins = Poppins({
-  variable: "--font-poppins",
-  weight: ["400", "500", "600", "700", "800", "900"],
-  subsets: ["latin"],
-});
 
 const sourceSans = Source_Sans_3({
   variable: "--font-source-sans-pro",

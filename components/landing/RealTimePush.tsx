@@ -1,26 +1,20 @@
-import React from "react";
 import { Container } from "@/components/branding/Container";
-import { Button } from "@/components/branding/Button";
-import {
-  BellRing,
-  CheckCircle2,
-  Zap,
-  Smartphone,
-  Globe,
-  BarChart3,
-} from "lucide-react";
+import { BellRing, Smartphone, Globe, BarChart3 } from "lucide-react";
 
 export const RealTimePush = () => {
   return (
-    <section className="flex items-center py-24 bg-white" id="realtime-push">
+    <section
+      className="flex items-center py-16 md:py-24 lg:py-32 bg-white"
+      id="realtime-push"
+    >
       <Container>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
           {/* Mockup Column - Left on Desktop */}
           <div className="relative order-2 lg:order-1">
             {/* Background decorations */}
             <div className="absolute -inset-4 bg-linear-to-tr from-primary/5 to-accent/5 rounded-[40px] blur-2xl"></div>
 
-            <div className="relative bg-white p-8 rounded-[40px] shadow-2xl border border-slate-100 overflow-hidden">
+            <div className="relative bg-white p-5 sm:p-8 rounded-[32px] lg:rounded-[40px] shadow-2xl border border-slate-100 overflow-hidden">
               <div className="flex items-center gap-4 mb-8 pb-6 border-b border-slate-50">
                 <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
                   <BellRing className="w-5 h-5 text-primary" />
@@ -89,7 +83,7 @@ export const RealTimePush = () => {
               Instant Outreach
             </div>
             <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight text-slate-900 font-serif tracking-tight">
-              Act when they're{" "}
+              Act when they&apos;re{" "}
               <span className="text-primary italic">actually</span> interested.
             </h2>
             <p className="text-lg text-slate-600 mb-10 leading-relaxed font-light">

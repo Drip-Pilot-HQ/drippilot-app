@@ -8,13 +8,20 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "primary", size = "md", children, ...props }, ref) => {
+  (
+    { className, variant = "primary", size = "md", children, ...props },
+    ref,
+  ) => {
     const variants = {
-      primary: "bg-primary text-white hover:brightness-110 shadow-lg shadow-primary/25",
-      secondary: "bg-secondary text-white hover:brightness-110 shadow-lg shadow-secondary/25",
-      accent: "bg-accent text-white hover:brightness-110 shadow-xl shadow-accent/20",
+      primary:
+        "bg-primary text-white hover:brightness-110 shadow-lg shadow-primary/25",
+      secondary:
+        "bg-secondary text-white hover:brightness-110 shadow-lg shadow-secondary/25",
+      accent:
+        "bg-accent text-white hover:brightness-110 shadow-xl shadow-accent/20",
       dark: "bg-slate-900 text-white hover:bg-slate-800 shadow-sm",
-      outline: "bg-white text-slate-900 border border-slate-200 hover:bg-slate-50",
+      outline:
+        "bg-white text-slate-900 border border-slate-200 hover:bg-slate-50",
       ghost: "text-slate-500 hover:text-slate-900",
     };
 
@@ -29,17 +36,17 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={cn(
-          "inline-flex items-center justify-center rounded-full font-semibold transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none",
+          "inline-flex items-center justify-center rounded-full font-semibold transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none cursor-pointer",
           variants[variant],
           sizes[size],
-          className
+          className,
         )}
         {...props}
       >
         {children}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";

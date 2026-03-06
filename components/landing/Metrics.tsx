@@ -4,9 +4,12 @@ import { TrendingUp } from "lucide-react";
 
 export const Metrics = () => {
   return (
-    <section className="flex items-center py-24 bg-white" id="metrics">
+    <section
+      className="flex items-center py-16 md:py-24 lg:py-32 bg-white"
+      id="metrics"
+    >
       <Container>
-        <div className="text-center mb-20">
+        <div className="text-center mb-10 lg:mb-20">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-6 border border-primary/20 uppercase tracking-wider">
             Industry Success Data
           </div>
@@ -15,16 +18,16 @@ export const Metrics = () => {
           </h2>
           <p className="text-lg text-slate-500 max-w-3xl mx-auto font-light">
             We help thousands of sales professionals quantify their impact with
-            real-time performance tracking and industry benchmarks.
+            performance tracking and industry benchmarks.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           <div>
             <div className="grid grid-cols-2 gap-6">
               <div className="metric-card p-6 rounded-2xl">
                 <p className="text-sm font-medium text-slate-500 mb-1 uppercase tracking-wider">
-                  Emails Sent
+                  Messages Sent
                 </p>
                 <h3 className="text-3xl font-bold text-slate-900">761,264+</h3>
                 <div className="mt-3 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
@@ -33,7 +36,7 @@ export const Metrics = () => {
               </div>
               <div className="metric-card p-6 rounded-2xl">
                 <p className="text-sm font-medium text-slate-500 mb-1 uppercase tracking-wider">
-                  Leads Nurtured
+                  Leads Engaged
                 </p>
                 <h3 className="text-3xl font-bold text-slate-900">347,641</h3>
                 <div className="mt-3 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
@@ -44,9 +47,9 @@ export const Metrics = () => {
             <div className="mt-6 p-6 bg-slate-900 rounded-3xl text-white flex items-center justify-between">
               <div>
                 <p className="text-slate-400 text-sm mb-1 uppercase font-semibold">
-                  Total Revenue Generated
+                  Pipeline Value
                 </p>
-                <h3 className="text-4xl font-bold">$150M+</h3>
+                <h3 className="text-4xl font-bold">$30K+</h3>
               </div>
               <TrendingUp className="w-10 h-10 text-primary" />
             </div>
@@ -76,16 +79,18 @@ export const Metrics = () => {
                 </div>
                 <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-100">
                   <div className="text-center">
-                    <p className="text-xs text-slate-400 mb-1">Open Rate</p>
-                    <p className="font-bold text-slate-900">66.7%</p>
+                    <p className="text-xs text-slate-400 mb-1">
+                      Conversion Rate
+                    </p>
+                    <p className="font-bold text-slate-900">7.5%</p>
                   </div>
                   <div className="text-center border-x border-slate-100">
-                    <p className="text-xs text-slate-400 mb-1">Click Rate</p>
-                    <p className="font-bold text-slate-900">12.4%</p>
+                    <p className="text-xs text-slate-400 mb-1">Reply Rate</p>
+                    <p className="font-bold text-slate-900">10.4%</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-slate-400 mb-1">Reply Rate</p>
-                    <p className="font-bold text-slate-900">8.9%</p>
+                    <p className="text-xs text-slate-400 mb-1">Lead Activity</p>
+                    <p className="font-bold text-slate-900">8.6%</p>
                   </div>
                 </div>
               </div>

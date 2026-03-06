@@ -1,10 +1,10 @@
 import { Button } from "@/components/branding/Button";
 import { Container } from "@/components/branding/Container";
-import { PlayCircle, Box, Mountain, Sun, Waves, Cloud } from "lucide-react";
+import { PlayCircle } from "lucide-react";
 
 export const Hero = () => {
   return (
-    <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden mesh-gradient">
+    <section className="relative pt-32 pb-12 md:pb-20 lg:pt-48 lg:pb-32 overflow-hidden mesh-gradient">
       <div className="absolute inset-0 grid-pattern opacity-30 pointer-events-none"></div>
       <Container className="relative z-10 text-center">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-8 border border-primary/20 uppercase tracking-wider">
@@ -14,7 +14,7 @@ export const Hero = () => {
           Drip Pilot - Your <br />
           <span className="text-gradient">AI-Powered</span>
           <br />
-          Sales <span className="italic font-serif">Assistant</span>
+          Sales <span className="italic">Assistant</span>
         </h1>
         <p className="text-xl md:text-2xl text-slate-600 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
           Automate your outreach, engage leads instantly, and close deals faster
@@ -26,14 +26,14 @@ export const Hero = () => {
             size="md"
             className="shadow-xl shadow-primary/20 w-full sm:w-auto"
           >
-            Join the Beta
+            Start free trial
           </Button>
           <Button
             variant="outline"
             size="md"
             className="w-full sm:w-auto bg-white border-slate-200"
           >
-            Get Started
+            Request Demo
           </Button>
         </div>
 
@@ -50,7 +50,7 @@ export const Hero = () => {
           </div>
         </div>
 
-        <div className="mt-20 pt-10">
+        {/* <div className="mt-20 pt-10">
           <p className="text-xs font-semibold text-slate-400 mb-8 uppercase tracking-[0.2em]">
             Trusted by innovative teams worldwide
           </p>
@@ -71,7 +71,7 @@ export const Hero = () => {
               <Cloud className="w-5 h-5" /> Nimbus
             </div>
           </div>
-        </div>
+        </div> */}
       </Container>
     </section>
   );

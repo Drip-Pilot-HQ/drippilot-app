@@ -92,7 +92,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .text-gradient {
-  @apply text-transparent bg-clip-text bg-linear-to-r from-primary to-accent;
+  @apply text-transparent bg-clip-text bg-linear-to-r from-accent via-secondary to-primary;
 }
 
 .grid-pattern {

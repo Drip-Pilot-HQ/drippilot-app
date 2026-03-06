@@ -1,26 +1,22 @@
-import React from "react";
 import { Container } from "@/components/branding/Container";
-import {
-  GitBranch,
-  Tag,
-  Webhook,
-  Zap,
-  UserCheck,
-  ChevronRight,
-} from "lucide-react";
+import { GitBranch, Tag, Webhook, Zap, ChevronRight } from "lucide-react";
 
 export const CampaignRouting = () => {
   return (
-    <section className="flex items-center py-24 bg-white" id="routing">
+    <section
+      className="flex items-center py-16 md:py-24 lg:py-32 bg-white"
+      id="routing"
+    >
       <Container>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
           <div>
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-6 border border-primary/20 uppercase tracking-wider">
               <Zap className="w-3.5 h-3.5 fill-primary" />
-              Intelligent Logic
+              Intelligent Routing
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 font-serif tracking-tight">
-              Smart Campaign Routing
+              Smart leads <span className="italic text-primary">routing</span>{" "}
+              to campaigns.
             </h2>
             <p className="text-lg text-slate-500 mb-10 leading-relaxed font-light">
               Import leads via your CRM using webhooks with intelligent routing.
@@ -60,34 +56,34 @@ export const CampaignRouting = () => {
             <div className="absolute -inset-4 bg-linear-to-tr from-primary/5 to-secondary/5 rounded-[40px] blur-2xl"></div>
 
             {/* Main Mockup Card */}
-            <div className="relative bg-white rounded-[40px] shadow-2xl border border-slate-100 p-8 overflow-hidden">
-              <div className="flex items-center justify-between mb-8 border-b border-slate-50 pb-6">
+            <div className="relative bg-white rounded-[32px] lg:rounded-[40px] shadow-2xl border border-slate-100 p-5 sm:p-8 overflow-hidden">
+              <div className="flex items-center justify-between mb-3 border-b border-slate-50 pb-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
                     <Webhook className="w-5 h-5 text-primary" />
                   </div>
                   <div>
                     <h4 className="font-bold text-slate-900 leading-tight">
-                      Incoming CRM Webhook
+                      Incoming CRM Leads
                     </h4>
                     <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-widest mt-0.5">
-                      Integration: Active
+                      Webhook Integration
                     </p>
                   </div>
                 </div>
                 <div className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-bold border border-emerald-100 uppercase tracking-wider">
-                  Status: Active
+                  Active
                 </div>
               </div>
 
               {/* Rules Canvas */}
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <div className="bg-slate-50/50 rounded-2xl p-6 border border-slate-100">
                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-4">
                     Rules Engine
                   </p>
 
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {/* Condition 1 */}
                     <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
                       <span className="text-[10px] font-bold text-slate-400 uppercase w-4">
@@ -98,12 +94,12 @@ export const CampaignRouting = () => {
                       </div>
                       <span className="text-xs text-slate-400">Contains</span>
                       <div className="px-3 py-1 bg-secondary/10 text-secondary rounded-lg text-xs font-bold border border-secondary/20">
-                        'Meta'
+                        &apos;Meta&apos;
                       </div>
                     </div>
 
                     {/* Logic Toggle */}
-                    <div className="flex justify-center -my-1 relative z-10">
+                    <div className="flex justify-center relative z-10">
                       <div className="flex p-1 bg-slate-100 rounded-lg text-[9px] font-bold cursor-pointer border border-slate-200">
                         <div className="px-2 py-0.5 bg-slate-900 text-white rounded-md shadow-sm">
                           AND
@@ -122,7 +118,7 @@ export const CampaignRouting = () => {
                       </div>
                       <span className="text-xs text-slate-400">IS</span>
                       <div className="px-3 py-1 bg-primary/10 text-primary rounded-lg text-xs font-bold border border-primary/20">
-                        'Hot'
+                        &apos;Hot&apos;
                       </div>
                     </div>
                   </div>

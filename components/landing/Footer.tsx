@@ -1,40 +1,54 @@
 import React from "react";
 import Link from "next/link";
 import { Container } from "@/components/branding/Container";
+import Image from "next/image";
 
-const footerLinks = {
-  Product: ["Features", "Pricing", "Integrations", "Templates"],
-  Resources: ["Blog", "Help Center", "Sales Guides", "API Docs"],
-  Company: ["About Us", "Careers", "Contact", "Privacy & Terms"],
-};
+const footerLinks = [
+  {
+    category: "Product",
+    links: [
+      { label: "Features", href: "/#features" },
+      { label: "Pricing", href: "/pricing" },
+      { label: "Integrations", href: "#" },
+      { label: "Templates", href: "#" },
+    ],
+  },
+  {
+    category: "Resources",
+    links: [
+      { label: "Blog", href: "#" },
+      { label: "Help Center", href: "#" },
+      { label: "Sales Guides", href: "#" },
+      { label: "API Docs", href: "#" },
+    ],
+  },
+  {
+    category: "Company",
+    links: [
+      { label: "About Us", href: "/about" },
+      { label: "Careers", href: "#" },
+      { label: "Contact", href: "/contact" },
+      { label: "Privacy & Terms", href: "/privacy" },
+    ],
+  },
+];
 
 export const Footer = () => {
   return (
-    <footer className="bg-slate-50 pt-16 pb-8 border-t border-slate-200">
+    <footer className="bg-slate-50 pt-16 pb-12 border-t border-slate-200">
       <Container>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
-          <div className="col-span-2 lg:col-span-2">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-y-12 gap-x-8 mb-16">
+          <div className="col-span-2 md:col-span-3 lg:col-span-2">
             <Link
               href="/"
               className="text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2 mb-4"
             >
-              <span className="text-primary">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="32"
-                  height="32"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
-                  <path d="m9 12 2 2 4-4" />
-                </svg>
-              </span>
-              Drip Pilot
+              <Image
+                src="/assets/logo.png"
+                alt="Logo"
+                width={100}
+                height={100}
+              />
             </Link>
             <p className="text-slate-500 text-sm mb-6 max-w-xs">
               Automate your sales outreach and close more deals with the power
@@ -69,17 +83,19 @@ export const Footer = () => {
               </Link>
             </div>
           </div>
-          {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category}>
-              <h4 className="font-bold text-slate-900 mb-4">{category}</h4>
+          {footerLinks.map((category) => (
+            <div key={category.category}>
+              <h4 className="font-bold text-slate-900 mb-4">
+                {category.category}
+              </h4>
               <ul className="space-y-3 text-sm text-slate-600">
-                {links.map((link) => (
-                  <li key={link}>
+                {category.links.map((link) => (
+                  <li key={link.label}>
                     <Link
-                      href="#"
+                      href={link.href}
                       className="hover:text-primary transition-colors"
                     >
-                      {link}
+                      {link.label}
                     </Link>
                   </li>
                 ))}

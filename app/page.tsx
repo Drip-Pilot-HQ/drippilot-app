@@ -18,12 +18,12 @@ export default function Home() {
       <main className="grow">
         <Hero />
         <Metrics />
-        <CampaignRouting />
-        <RealTimePush />
         <CampaignBuilder />
+        <RealTimePush />
+        <CampaignRouting />
         <Features />
-        <Solutions />
         <HowItWorks />
+        <Solutions />
         <WhyChoose />
         <CTA />
       </main>

@@ -13,9 +13,12 @@ import {
 
 export const CampaignBuilder = () => {
   return (
-    <section className="flex items-center py-24 bg-white" id="builder">
+    <section
+      className="flex items-center py-16 md:py-24 lg:py-32 bg-white"
+      id="builder"
+    >
       <Container>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
           {/* Content Column - Left */}
           <div>
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-6 border border-primary/20 uppercase tracking-wider">
@@ -23,7 +26,9 @@ export const CampaignBuilder = () => {
               Smart Sequencing
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 font-serif tracking-tight">
-              Build sequences visually
+              Build sequences{" "}
+              <span className="italic text-primary">visually</span> that
+              convert.
             </h2>
             <p className="text-lg text-slate-500 mb-10 leading-relaxed font-light">
               Design complex, multi-touch campaigns with an intuitive
@@ -35,7 +40,7 @@ export const CampaignBuilder = () => {
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
                   <MousePointer2 className="w-5 h-5" />
                 </div>
-                <span className="text-slate-700 font-medium whitespace-nowrap">
+                <span className="text-slate-700 font-medium">
                   Drag-and-drop workflow builder
                 </span>
               </li>
@@ -43,7 +48,7 @@ export const CampaignBuilder = () => {
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
                   <Split className="w-5 h-5" />
                 </div>
-                <span className="text-slate-700 font-medium whitespace-nowrap">
+                <span className="text-slate-700 font-medium">
                   Parallel path A/B testing
                 </span>
               </li>
@@ -51,7 +56,7 @@ export const CampaignBuilder = () => {
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
                   <Workflow className="w-5 h-5" />
                 </div>
-                <span className="text-slate-700 font-medium whitespace-nowrap">
+                <span className="text-slate-700 font-medium">
                   Timezone-aware delivery logic
                 </span>
               </li>
@@ -64,7 +69,7 @@ export const CampaignBuilder = () => {
             <div className="absolute -inset-4 bg-linear-to-tr from-primary/5 to-secondary/5 rounded-[40px] blur-2xl"></div>
 
             {/* Main Mockup Card */}
-            <div className="relative bg-white rounded-[40px] shadow-2xl border border-slate-100 p-10 overflow-hidden">
+            <div className="relative bg-white rounded-[32px] lg:rounded-[40px] shadow-2xl border border-slate-100 p-6 sm:p-10 overflow-hidden">
               <div className="flex items-center justify-between mb-8 border-b border-slate-50 pb-6">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
