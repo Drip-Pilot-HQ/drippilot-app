@@ -7,18 +7,18 @@ export const Hero = () => {
     <section className="relative pt-32 pb-12 md:pb-20 lg:pt-48 lg:pb-32 overflow-hidden mesh-gradient">
       <div className="absolute inset-0 grid-pattern opacity-30 pointer-events-none"></div>
       <Container className="relative z-10 text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-8 border border-primary/20 uppercase tracking-wider">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold mb-8 border border-primary/20 uppercase tracking-widest shadow-sm">
           Advanced Marketing Platform
         </div>
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 max-w-4xl mx-auto leading-[1.1] text-slate-900">
-          Drip Pilot - Your <br />
-          <span className="text-gradient">AI-Powered</span>
+        <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] mb-8 max-w-4xl mx-auto text-slate-900">
+          Your Outreach
           <br />
-          Sales <span className="italic">Assistant</span>
+          Just Got{" "}
+          <span className="italic text-gradient font-serif">Smarter</span>
         </h1>
-        <p className="text-xl md:text-2xl text-slate-600 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
-          Automate your outreach, engage leads instantly, and close deals faster
-          with the smartest drip campaign assistant.
+        <p className="text-xl md:text-2xl text-slate-500 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+          Launch AI-powered outreach campaigns that start conversations, nurture
+          leads, and close deals automatically.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
           <Button

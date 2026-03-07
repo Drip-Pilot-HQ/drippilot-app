@@ -6,9 +6,9 @@ import {
   Plus,
   ChevronRight,
   Zap,
-  MousePointer2,
   Workflow,
   Split,
+  Globe,
 } from "lucide-react";
 
 export const CampaignBuilder = () => {
@@ -20,28 +20,27 @@ export const CampaignBuilder = () => {
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
           {/* Content Column - Left */}
-          <div>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-6 border border-primary/20 uppercase tracking-wider">
+          <div className="text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold mb-6 border border-primary/20 uppercase tracking-widest shadow-sm">
               <Zap className="w-3.5 h-3.5 fill-primary" />
               Smart Sequencing
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 font-serif tracking-tight">
-              Build sequences{" "}
-              <span className="italic text-primary">visually</span> that
-              convert.
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 font-serif tracking-tight leading-[1.1]">
+              Build <span className="italic text-gradient">sequences</span> that
+              convert
             </h2>
-            <p className="text-lg text-slate-500 mb-10 leading-relaxed font-light">
+            <p className="text-lg md:text-xl text-slate-500 mb-10 leading-relaxed font-light max-w-2xl mx-auto lg:mx-0">
               Design complex, multi-touch campaigns with an intuitive
               drag-and-drop builder. Add conditional logic, delays, and A/B
               tests in seconds.
             </p>
-            <ul className="space-y-6">
+            <ul className="space-y-6 text-left">
               <li className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                  <MousePointer2 className="w-5 h-5" />
+                  <Workflow className="w-5 h-5" />
                 </div>
                 <span className="text-slate-700 font-medium">
-                  Drag-and-drop workflow builder
+                  Multi linear campaign steps
                 </span>
               </li>
               <li className="flex items-center gap-4">
@@ -49,12 +48,12 @@ export const CampaignBuilder = () => {
                   <Split className="w-5 h-5" />
                 </div>
                 <span className="text-slate-700 font-medium">
-                  Parallel path A/B testing
+                  Omnichannel drip campaigns
                 </span>
               </li>
               <li className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                  <Workflow className="w-5 h-5" />
+                  <Globe className="w-5 h-5" />
                 </div>
                 <span className="text-slate-700 font-medium">
                   Timezone-aware delivery logic
@@ -76,9 +75,9 @@ export const CampaignBuilder = () => {
                     <Workflow className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900 leading-tight">
+                    <h3 className="font-bold text-slate-900 leading-tight">
                       Sequence Designer
-                    </h4>
+                    </h3>
                     <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-widest mt-0.5">
                       Editor: Live Mode
                     </p>
@@ -97,9 +96,9 @@ export const CampaignBuilder = () => {
                       <Mail className="w-5 h-5" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-slate-800 text-xs">
+                      <h3 className="font-bold text-slate-800 text-xs">
                         Action: Send Email
-                      </h4>
+                      </h3>
                       <p className="text-[10px] text-slate-400">
                         Template: Q3 Pitch
                       </p>
@@ -126,9 +125,9 @@ export const CampaignBuilder = () => {
                       <MessageSquare className="w-5 h-5" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-slate-800 text-xs">
+                      <h3 className="font-bold text-slate-800 text-xs">
                         Action: Send SMS
-                      </h4>
+                      </h3>
                       <p className="text-[10px] text-slate-400">
                         Template: Reminder
                       </p>

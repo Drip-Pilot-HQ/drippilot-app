@@ -7,9 +7,15 @@ import { AboutStory } from "@/components/about/AboutStory";
 import { LifeAtDrip } from "@/components/about/LifeAtDrip";
 
 export const metadata: Metadata = {
-  title: "About Us | Drip Pilot - Mission & Values",
+  title: "About Us",
   description:
     "Learn about the mission, values, and story behind Drip Pilot. We are building the future of outbound sales with AI precision.",
+  openGraph: {
+    title: "About Us | Drip Pilot",
+    description:
+      "Learn about the mission, values, and story behind Drip Pilot. We are building the future of outbound sales with AI precision.",
+    url: "https://drippilot.com/about",
+  },
 };
 
 export default function AboutPage() {

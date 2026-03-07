@@ -1,4 +1,4 @@
-export const YEARLY_DISCOUNT = 20;
+export const YEARLY_DISCOUNT = 5;
 
 export const PRICING_PLANS = [
   {

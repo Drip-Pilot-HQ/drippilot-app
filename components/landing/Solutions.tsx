@@ -68,15 +68,15 @@ export const Solutions = () => {
     >
       <Container>
         <div className="text-center mb-10 lg:mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-6 border border-primary/20 uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold mb-6 border border-primary/20 uppercase tracking-widest shadow-sm">
             Perfect For Sales Teams
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-            Who is Drip Pilot for?
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 font-serif tracking-tight leading-[1.1]">
+            Who is <span className="italic text-gradient">Drip Pilot</span> for?
           </h2>
 
-          <p className="text-lg text-slate-500 max-w-3xl mx-auto font-light leading-relaxed">
+          <p className="text-lg md:text-xl text-slate-500 max-w-3xl mx-auto font-light leading-relaxed">
             Tailored solutions for industries that rely on high-volume,
             high-quality follow-ups.
           </p>

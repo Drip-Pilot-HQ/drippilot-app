@@ -23,14 +23,13 @@ export const AboutStory = () => {
             </div>
           </div>
 
-          {/* Right: Text */}
-          <div className="space-y-8">
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 font-serif leading-tight">
+          <div className="text-center lg:text-left space-y-8">
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 font-serif tracking-tight leading-[1.1]">
               The genesis of <br />
               <span className="italic text-primary">a new standard.</span>
             </h2>
 
-            <div className="space-y-6 text-slate-500 font-medium text-base leading-relaxed">
+            <div className="space-y-6 text-slate-500 font-light text-lg md:text-xl leading-relaxed max-w-2xl mx-auto lg:mx-0">
               <p>
                 In 2024, our founders looked at the landscape of sales
                 engagement platforms and saw a sea of complexity. Teams were

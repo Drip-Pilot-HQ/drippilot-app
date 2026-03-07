@@ -34,16 +34,17 @@ export const HowItWorks = () => {
     <section className="py-16 md:py-24 lg:py-32 bg-white" id="how-it-works">
       <Container>
         <div className="text-center mb-12 lg:mb-24">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-6 border border-primary/20 uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold mb-6 border border-primary/20 uppercase tracking-widest shadow-sm">
             Fast Setup
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-slate-900">
-            Three steps to hyper-growth
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 text-slate-900 font-serif tracking-tight leading-[1.1]">
+            Three steps to hyper{" "}
+            <span className="italic text-gradient">growth</span>
           </h2>
 
-          <p className="text-lg text-slate-500 max-w-2xl mx-auto font-light leading-relaxed">
-            Get your first campaign running in less than 5 minutes.
+          <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto font-light leading-relaxed">
+            Get your first campaign running in less than 10 minutes.
           </p>
         </div>
 

@@ -43,7 +43,7 @@ export const FEATURES = [
     label: "Lead Detection",
     title: "Know if a lead is hot, warm, or cold",
     description:
-      "DripPilot's scoring engine analyzes open rates, click patterns, and reply behavior to classify each lead automatically. Prioritize the right people at exactly the right time.",
+      "Drip Pilot's scoring engine analyzes open rates, click patterns, and reply behavior to classify each lead automatically. Prioritize the right people at exactly the right time.",
     stats: [
       { value: "98%", label: "Detection accuracy" },
       { value: "2.4×", label: "More closed deals" },

@@ -30,15 +30,15 @@ export const WhyChoose = () => {
     >
       <Container className="pb-16 lg:pb-32">
         <div className="text-center mb-10 lg:mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-6 border border-primary/20 uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold mb-6 border border-primary/20 uppercase tracking-widest shadow-sm">
             Why Us
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Why choose Drip Pilot?
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 font-serif tracking-tight leading-[1.1]">
+            Why choose <span className="italic text-gradient">Drip Pilot?</span>
           </h2>
 
-          <p className="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto font-light leading-relaxed">
             The intelligent choice for modern sales teams who demand results.
           </p>
         </div>

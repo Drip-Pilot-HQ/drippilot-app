@@ -19,17 +19,17 @@ const MobileFeatures = () => (
     className="lg:hidden py-12 md:py-20 bg-slate-950 relative overflow-hidden"
     id="features"
   >
-    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 pointer-events-none"></div>
+    <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none"></div>
     <div className="absolute -top-24 -left-24 w-64 h-64 bg-primary/10 blur-[100px] rounded-full pointer-events-none"></div>
 
     <Container className="relative">
-      <div className="mb-8">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest mb-6 border border-primary/30">
+      <div className="mb-12 text-center lg:text-left">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/20 text-primary text-xs font-bold uppercase tracking-widest mb-6 border border-primary/30">
           All-In-One Platform
         </div>
-        <h2 className="text-3xl sm:text-4xl font-bold text-white font-serif">
+        <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white font-serif tracking-tight leading-tight">
           Everything you need to{" "}
-          <span className="italic text-primary">scale</span>
+          <span className="italic text-gradient">scale</span>
         </h2>
       </div>
 
@@ -45,7 +45,7 @@ const MobileFeatures = () => (
               <div className="flex items-start gap-4 mb-4">
                 <div
                   className={cn(
-                    "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0",
+                    "w-10 h-10 rounded-xl flex items-center justify-center shrink-0",
                     styles.bg,
                   )}
                 >
@@ -60,9 +60,9 @@ const MobileFeatures = () => (
                   >
                     {feature.label}
                   </div>
-                  <h3 className="font-bold text-white text-base leading-snug">
+                  <h4 className="font-bold text-white text-base leading-snug">
                     {feature.title}
-                  </h3>
+                  </h4>
                 </div>
               </div>
               <p className="text-slate-400 text-sm leading-relaxed mb-5 font-medium">
@@ -131,7 +131,7 @@ const DesktopFeatures = () => {
     >
       <div className="sticky top-0 h-screen bg-slate-950 flex items-center overflow-hidden">
         {/* Pattern & Glow Overlays */}
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 pointer-events-none"></div>
+        <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none"></div>
         <div className="absolute -top-48 -left-48 w-96 h-96 bg-primary/10 blur-[150px] rounded-full pointer-events-none"></div>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] bg-primary/5 blur-[120px] rounded-full pointer-events-none"></div>
 
@@ -150,7 +150,7 @@ const DesktopFeatures = () => {
                   </div>
                   <div className="flex-1 bg-black/40 rounded-xl h-6 flex items-center px-4 border border-white/5">
                     <span className="text-[11px] text-slate-500 font-bold tracking-tight">
-                      app.drippilot.com &rsaquo;{" "}
+                      drippilot.com &rsaquo;{" "}
                       <span className="text-slate-300">
                         {FEATURES[activeIndex].label
                           .toLowerCase()
@@ -171,11 +171,11 @@ const DesktopFeatures = () => {
 
             {/* Right: Feature accordion */}
             <div className="col-span-5">
-              <div className="mb-7">
+              <div className="mb-7 text-center">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest mb-6 border border-primary/30">
                   All-In-One Platform
                 </div>
-                <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight font-serif">
+                <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight font-serif">
                   Everything you need to{" "}
                   <span className="italic text-primary">scale</span>
                 </h2>
@@ -184,12 +184,12 @@ const DesktopFeatures = () => {
               {/* Progress track + feature list */}
               <div className="flex gap-4">
                 {/* Vertical progress line */}
-                <div className="flex flex-col items-center flex-shrink-0 pt-1.5">
+                <div className="flex flex-col items-center shrink-0 pt-1.5">
                   {FEATURES.map((feat, i) => (
                     <React.Fragment key={i}>
                       <div
                         className={cn(
-                          "w-2 h-2 rounded-full transition-all duration-500 flex-shrink-0",
+                          "w-2 h-2 rounded-full transition-all duration-500 shrink-0",
                           i <= activeIndex
                             ? ACCENT_STYLES[feat.accent].dot
                             : "bg-white/10",
@@ -230,16 +230,16 @@ const DesktopFeatures = () => {
                           "rounded-[20px] border p-4 transition-all duration-500",
                           isActive
                             ? cn(
-                                "bg-white/[0.05] border-white/20 shadow-2xl",
+                                "bg-white/5 border-white/20 shadow-2xl",
                                 styles.activeBg,
                               )
-                            : "bg-white/[0.02] border-white/5 opacity-40 hover:opacity-100",
+                            : "bg-white/2 border-white/5 opacity-40 hover:opacity-100",
                         )}
                       >
                         <div className="flex items-center gap-3">
                           <div
                             className={cn(
-                              "w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0",
+                              "w-9 h-9 rounded-xl flex items-center justify-center shrink-0",
                               styles.bg,
                             )}
                           >

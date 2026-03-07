@@ -9,21 +9,21 @@ export const CampaignRouting = () => {
     >
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-6 border border-primary/20 uppercase tracking-wider">
+          <div className="text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold mb-6 border border-primary/20 uppercase tracking-widest shadow-sm">
               <Zap className="w-3.5 h-3.5 fill-primary" />
               Intelligent Routing
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 font-serif tracking-tight">
-              Smart leads <span className="italic text-primary">routing</span>{" "}
-              to campaigns.
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 font-serif tracking-tight leading-[1.1]">
+              Smart leads routing to{" "}
+              <span className="italic text-gradient pr-0">campaigns</span>
             </h2>
-            <p className="text-lg text-slate-500 mb-10 leading-relaxed font-light">
+            <p className="text-lg md:text-xl text-slate-500 mb-10 leading-relaxed font-light max-w-2xl mx-auto lg:mx-0">
               Import leads via your CRM using webhooks with intelligent routing.
               Automate lead distribution based on complex logic and multi-rule
               sets.
             </p>
-            <ul className="space-y-6">
+            <ul className="space-y-6 text-left">
               <li className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                   <GitBranch className="w-5 h-5" />
@@ -63,9 +63,9 @@ export const CampaignRouting = () => {
                     <Webhook className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900 leading-tight">
+                    <h3 className="font-bold text-slate-900 leading-tight">
                       Incoming CRM Leads
-                    </h4>
+                    </h3>
                     <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-widest mt-0.5">
                       Webhook Integration
                     </p>

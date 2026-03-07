@@ -1,7 +1,13 @@
+import { Metadata } from "next";
 import Link from "next/link";
 import { Home, LifeBuoy } from "lucide-react";
 import { Container } from "@/components/branding/Container";
 import { Button } from "@/components/branding/Button";
+
+export const metadata: Metadata = {
+  title: "Page Not Found",
+  robots: { index: false, follow: true },
+};
 
 export default function NotFound() {
   return (
@@ -18,17 +24,17 @@ export default function NotFound() {
         <div className="flex flex-col items-center">
           {/* Animated 404 Illustration */}
           <div className="relative mb-32 group">
-            <h1 className="text-[12rem] md:text-[20rem] font-black leading-none text-slate-100 select-none transition-all duration-700 group-hover:text-slate-200/50">
+            <div className="text-[12rem] md:text-[20rem] font-black leading-none text-slate-100 select-none transition-all duration-700 group-hover:text-slate-200/50">
               404
-            </h1>
+            </div>
           </div>
 
           {/* Text Content */}
           <div className="max-w-2xl mx-auto -mt-12 md:-mt-20">
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 font-serif tracking-tight">
+            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 font-serif tracking-tight">
               Oops! You&apos;ve drifted <br />
-              <span className="text-gradient">off-course</span>.
-            </h2>
+              <span className="text-gradient">off-course</span>
+            </h1>
             <p className="text-xl text-slate-500 mb-10 leading-relaxed font-light">
               The page you&apos;re looking for has either been moved, deleted,
               or never existed in this dimension. Don&apos;t worry, we&apos;ll
@@ -67,7 +73,7 @@ export default function NotFound() {
         {/* Bottom Decorative Links */}
         <div className="mt-20 flex items-center justify-center gap-8 text-xs font-bold text-slate-400 uppercase tracking-widest border-t border-slate-100 pt-10">
           <Link
-            href="/privacy"
+            href="/privacy-policy"
             className="hover:text-primary transition-colors"
           >
             Privacy Policy

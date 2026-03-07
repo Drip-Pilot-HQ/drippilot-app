@@ -1,4 +1,3 @@
-import React from "react";
 import { Container } from "@/components/branding/Container";
 import { Eye, Lightbulb, User } from "lucide-react";
 
@@ -29,7 +28,7 @@ export const CoreValues = () => {
       <div className="absolute top-0 inset-x-0 h-40 bg-linear-to-b from-white to-transparent"></div>
 
       <Container className="relative z-10 text-center mb-16">
-        <h2 className="text-3xl font-bold text-slate-900 mb-6 font-serif tracking-tight">
+        <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6 font-serif tracking-tight">
           Our Core Values
         </h2>
         <p className="max-w-xl mx-auto text-slate-500 font-medium text-sm leading-relaxed">

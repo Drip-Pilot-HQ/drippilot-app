@@ -8,9 +8,8 @@ import Image from "next/image";
 
 export const Header = () => {
   const navLinks = [
-    { href: "/#features", label: "Platform" },
     { href: "/pricing", label: "Pricing" },
-    { href: "/about", label: "About Us" },
+    { href: "/privacy-policy", label: "Privacy Policy" },
     { href: "/contact", label: "Contact Us" },
   ];
 
@@ -30,7 +29,7 @@ export const Header = () => {
                 <div className="text-primary transition-transform group-hover:scale-110 duration-300">
                   <Image
                     src="/assets/logo.png"
-                    alt="Logo"
+                    alt="Drip Pilot Logo"
                     width={100}
                     height={100}
                   />
@@ -44,7 +43,7 @@ export const Header = () => {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="px-5 py-2 text-sm font-semibold text-slate-600 hover:text-primary rounded-full hover:bg-primary/5 transition-all duration-300"
+                  className="px-5 py-2 text-md font-semibold text-slate-600 hover:text-primary rounded-full hover:bg-primary/5 transition-all duration-300"
                 >
                   {link.label}
                 </Link>
@@ -54,8 +53,8 @@ export const Header = () => {
             {/* CTA & Actions */}
             <div className="hidden lg:flex items-center space-x-6">
               <Link
-                href="#"
-                className="text-sm font-bold text-slate-600 hover:text-primary transition-colors px-2"
+                href="/login"
+                className="text-md font-bold text-slate-600 hover:text-primary transition-colors px-2"
               >
                 Log in
               </Link>

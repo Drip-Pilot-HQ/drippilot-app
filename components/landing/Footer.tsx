@@ -28,7 +28,7 @@ const footerLinks = [
       { label: "About Us", href: "/about" },
       { label: "Careers", href: "#" },
       { label: "Contact", href: "/contact" },
-      { label: "Privacy & Terms", href: "/privacy" },
+      { label: "Privacy & Terms", href: "/privacy-policy" },
     ],
   },
 ];
@@ -45,7 +45,7 @@ export const Footer = () => {
             >
               <Image
                 src="/assets/logo.png"
-                alt="Logo"
+                alt="Drip Pilot Logo"
                 width={100}
                 height={100}
               />
@@ -56,7 +56,9 @@ export const Footer = () => {
             </p>
             <div className="flex space-x-4">
               <Link
-                href="#"
+                href="https://twitter.com/drippilot"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors"
               >
                 <span className="sr-only">Twitter</span>
@@ -69,7 +71,9 @@ export const Footer = () => {
                 </svg>
               </Link>
               <Link
-                href="#"
+                href="https://linkedin.com/company/drippilot"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors"
               >
                 <span className="sr-only">LinkedIn</span>
@@ -85,9 +89,9 @@ export const Footer = () => {
           </div>
           {footerLinks.map((category) => (
             <div key={category.category}>
-              <h4 className="font-bold text-slate-900 mb-4">
+              <h3 className="font-bold text-slate-900 mb-4">
                 {category.category}
-              </h4>
+              </h3>
               <ul className="space-y-3 text-sm text-slate-600">
                 {category.links.map((link) => (
                   <li key={link.label}>

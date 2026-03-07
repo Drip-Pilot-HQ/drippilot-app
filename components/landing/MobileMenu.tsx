@@ -33,21 +33,30 @@ export const MobileMenu = ({ links }: MobileMenuProps) => {
       {/* Toggle Button */}
       <button
         onClick={toggleMenu}
-        className="p-2 text-slate-600 hover:text-slate-900 transition-colors relative z-[70]"
+        className="p-2 text-slate-600 hover:text-slate-900 transition-colors relative z-70"
         aria-label={isOpen ? "Close menu" : "Open menu"}
+        aria-expanded={isOpen}
+        aria-controls="mobile-menu"
       >
         {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
 
       {/* Full Screen Overlay */}
       <div
+        id="mobile-menu"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="mobile-menu-title"
         className={cn(
-          "fixed top-0 left-0 w-screen h-screen z-[65] bg-slate-950 transition-all duration-500 flex flex-col items-center justify-center p-8",
+          "fixed top-0 left-0 w-screen h-screen z-65 bg-slate-950 transition-all duration-500 flex flex-col items-center justify-center p-8",
           isOpen
             ? "opacity-100 translate-y-0"
             : "opacity-0 -translate-y-full pointer-events-none",
         )}
       >
+        <h2 id="mobile-menu-title" className="sr-only">
+          Navigation Menu
+        </h2>
         {/* Decorative Grid */}
         <div className="absolute inset-0 pointer-events-none opacity-[0.05] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:32px_32px]"></div>
 
@@ -86,7 +95,7 @@ export const MobileMenu = ({ links }: MobileMenuProps) => {
             )}
           >
             <Link
-              href="#"
+              href="/login"
               onClick={closeMenu}
               className="text-center text-xl font-semibold text-slate-400 hover:text-white transition-colors py-2"
             >

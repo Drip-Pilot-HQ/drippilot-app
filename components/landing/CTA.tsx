@@ -9,8 +9,7 @@ export const CTA = () => {
       <Container>
         <div className="relative overflow-hidden bg-slate-950 rounded-[40px] p-8 md:p-16 lg:p-20 shadow-2xl">
           {/* Authentic Patterns & Glows from the Overage Banner */}
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 pointer-events-none"></div>
-          <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none"></div>
           <div className="absolute top-0 right-0 w-1/2 h-full bg-linear-to-l from-primary/20 to-transparent pointer-events-none"></div>
 
           <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20">

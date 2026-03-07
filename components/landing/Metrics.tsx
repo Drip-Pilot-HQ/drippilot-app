@@ -10,13 +10,14 @@ export const Metrics = () => {
     >
       <Container>
         <div className="text-center mb-10 lg:mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-6 border border-primary/20 uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold mb-6 border border-primary/20 uppercase tracking-widest shadow-sm">
             Industry Success Data
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-            Numbers that define your growth.
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 font-serif tracking-tight leading-[1.1]">
+            Numbers that define{" "}
+            <span className="italic text-gradient">your growth</span>
           </h2>
-          <p className="text-lg text-slate-500 max-w-3xl mx-auto font-light">
+          <p className="text-lg md:text-xl text-slate-500 max-w-3xl mx-auto font-light leading-relaxed">
             We help thousands of sales professionals quantify their impact with
             performance tracking and industry benchmarks.
           </p>
@@ -29,7 +30,12 @@ export const Metrics = () => {
                 <p className="text-sm font-medium text-slate-500 mb-1 uppercase tracking-wider">
                   Messages Sent
                 </p>
-                <h3 className="text-3xl font-bold text-slate-900">761,264+</h3>
+                <div
+                  className="text-3xl font-bold text-slate-900"
+                  aria-label="Over 761,264 messages sent"
+                >
+                  761,264+
+                </div>
                 <div className="mt-3 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
                   <div className="h-full bg-secondary w-3/4"></div>
                 </div>
@@ -38,7 +44,12 @@ export const Metrics = () => {
                 <p className="text-sm font-medium text-slate-500 mb-1 uppercase tracking-wider">
                   Leads Engaged
                 </p>
-                <h3 className="text-3xl font-bold text-slate-900">347,641</h3>
+                <div
+                  className="text-3xl font-bold text-slate-900"
+                  aria-label="347,641 leads engaged"
+                >
+                  347,641
+                </div>
                 <div className="mt-3 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
                   <div className="h-full bg-primary w-1/2"></div>
                 </div>
@@ -49,7 +60,12 @@ export const Metrics = () => {
                 <p className="text-slate-400 text-sm mb-1 uppercase font-semibold">
                   Pipeline Value
                 </p>
-                <h3 className="text-4xl font-bold">$30K+</h3>
+                <div
+                  className="text-4xl font-bold"
+                  aria-label="Over 30,000 dollars in pipeline value"
+                >
+                  $30K+
+                </div>
               </div>
               <TrendingUp className="w-10 h-10 text-primary" />
             </div>

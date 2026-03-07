@@ -1,4 +1,3 @@
-import React from "react";
 import { Container } from "@/components/branding/Container";
 import { CheckCircle2 } from "lucide-react";
 
@@ -8,10 +7,10 @@ export const LifeAtDrip = () => {
       <div className="absolute bottom-0 left-0 w-full h-1/2 bg-linear-to-t from-white/80 to-transparent"></div>
 
       <Container className="relative z-10 text-center mb-16">
-        <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6 font-serif tracking-tight">
-          Life at Drip Pilot
+        <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 font-serif tracking-tight leading-[1.1]">
+          Life at <span className="italic text-primary">Drip Pilot</span>
         </h2>
-        <p className="max-w-xl mx-auto text-slate-500 font-medium text-base leading-relaxed">
+        <p className="max-w-xl mx-auto text-slate-500 font-light text-lg md:text-xl leading-relaxed">
           We are a remote-first collective of engineers, designers, and growth
           experts dedicated to building premium software.
         </p>

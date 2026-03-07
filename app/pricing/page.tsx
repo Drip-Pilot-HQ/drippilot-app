@@ -8,9 +8,15 @@ import { FeatureComparison } from "@/components/landing/FeatureComparison";
 import { CTA } from "@/components/landing/CTA";
 
 export const metadata: Metadata = {
-  title: "Pricing | Drip Pilot - Data-Driven Growth Engine",
+  title: "Pricing",
   description:
     "Flexible, predictable pricing for teams of all sizes. Choose the Drip Pilot plan that fits your outreach goals.",
+  openGraph: {
+    title: "Pricing | Drip Pilot",
+    description:
+      "Flexible, predictable pricing for teams of all sizes. Choose the Drip Pilot plan that fits your outreach goals.",
+    url: "https://drippilot.com/pricing",
+  },
 };
 
 export default function PricingPage() {

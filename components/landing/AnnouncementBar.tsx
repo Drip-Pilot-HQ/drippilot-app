@@ -9,7 +9,7 @@ export const AnnouncementBar = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="bg-primary px-4 py-2 text-white relative z-[60] overflow-hidden">
+    <div className="bg-primary px-4 py-2 text-white relative z-60 overflow-hidden">
       {" "}
       <div className="absolute inset-0 bg-linear-to-r from-primary via-orange-400 to-primary opacity-50 animate-pulse"></div>
       <div className="max-w-7xl mx-auto flex items-center justify-center relative z-10">
@@ -19,7 +19,7 @@ export const AnnouncementBar = () => {
           </span>
           Drip Pilot Beta is now live!
           <a
-            href="#"
+            href="/signup"
             className="underline decoration-white/30 underline-offset-4 hover:decoration-white transition-all inline-flex items-center gap-1 font-bold"
           >
             Try it for free <ArrowRight className="w-3 h-3" />

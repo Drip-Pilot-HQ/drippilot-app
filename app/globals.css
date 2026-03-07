@@ -92,10 +92,30 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .text-gradient {
-  @apply text-transparent bg-clip-text bg-linear-to-r from-accent via-secondary to-primary;
+  @apply inline-block text-transparent bg-clip-text bg-linear-to-r from-primary to-accent;
+  padding-right: 0.3em;
 }
 
 .grid-pattern {
   background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
   background-size: 40px 40px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid theme("colors.primary.DEFAULT");
+  outline-offset: 2px;
 }

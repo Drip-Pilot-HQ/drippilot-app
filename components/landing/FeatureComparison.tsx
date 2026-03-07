@@ -27,19 +27,34 @@ export const FeatureComparison = () => {
           <table className="w-full border-collapse text-left">
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50/50">
-                <th className="p-8 text-sm font-bold text-slate-400 uppercase tracking-widest">
+                <th
+                  scope="col"
+                  className="p-8 text-sm font-bold text-slate-400 uppercase tracking-widest"
+                >
                   Features
                 </th>
-                <th className="p-8 text-center text-sm font-bold text-slate-900">
+                <th
+                  scope="col"
+                  className="p-8 text-center text-sm font-bold text-slate-900"
+                >
                   Starter
                 </th>
-                <th className="p-8 text-center text-sm font-bold text-accent">
+                <th
+                  scope="col"
+                  className="p-8 text-center text-sm font-bold text-accent"
+                >
                   Pro
                 </th>
-                <th className="p-8 text-center text-sm font-bold text-primary transition-all">
+                <th
+                  scope="col"
+                  className="p-8 text-center text-sm font-bold text-primary transition-all"
+                >
                   Teams
                 </th>
-                <th className="p-8 text-center text-sm font-bold text-slate-950">
+                <th
+                  scope="col"
+                  className="p-8 text-center text-sm font-bold text-slate-950"
+                >
                   Enterprise
                 </th>
               </tr>
@@ -93,7 +108,7 @@ export const FeatureComparison = () => {
 };
 
 const renderValue = (
-  value: boolean | string | null,
+  value: boolean | string | number | null,
   plan: "starter" | "pro" | "teams" | "enterprise",
 ) => {
   const styles = {

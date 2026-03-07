@@ -1,5 +1,5 @@
 import { Container } from "@/components/branding/Container";
-import { BellRing, Smartphone, Globe, BarChart3 } from "lucide-react";
+import { BellRing, Smartphone, BarChart3, Airplay } from "lucide-react";
 
 export const RealTimePush = () => {
   return (
@@ -20,9 +20,9 @@ export const RealTimePush = () => {
                   <BellRing className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-900 leading-tight">
+                  <h3 className="font-bold text-slate-900 leading-tight">
                     Instant Alerts
-                  </h4>
+                  </h3>
                   <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-widest mt-0.5 whitespace-nowrap">
                     Real-time Engagement Tracking
                   </p>
@@ -77,27 +77,27 @@ export const RealTimePush = () => {
           </div>
 
           {/* Content Column - Right on Desktop */}
-          <div className="order-1 lg:order-2">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-6 border border-primary/20 uppercase tracking-wider">
+          <div className="order-1 lg:order-2 text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold mb-6 border border-primary/20 uppercase tracking-widest shadow-sm">
               <Smartphone className="w-3.5 h-3.5" />
               Instant Outreach
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight text-slate-900 font-serif tracking-tight">
-              Act when they&apos;re{" "}
-              <span className="text-primary italic">actually</span> interested.
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-8 leading-[1.1] text-slate-900 font-serif tracking-tight">
+              Act when they&apos;re actually{" "}
+              <span className="text-gradient italic">interested</span>
             </h2>
-            <p className="text-lg text-slate-600 mb-10 leading-relaxed font-light">
-              Get instant alerts on your phone, desktop, and smartwatch the
-              moment a lead shows buying intent. Strike while the iron is hot.{" "}
+            <p className="text-lg md:text-xl text-slate-500 mb-10 leading-relaxed font-light max-w-2xl mx-auto lg:mx-0">
+              Get instant alerts on your phone, desktop, and tablet the moment a
+              lead shows buying intent. Strike while the iron is hot.{" "}
               <span className="text-primary font-medium underline decoration-primary/20 underline-offset-4">
                 Precision engagement, zero delays.
               </span>
             </p>
 
-            <ul className="space-y-6 mb-12">
+            <ul className="space-y-6 mb-12 text-left">
               <li className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                  <Globe className="w-5 h-5" />
+                  <Airplay className="w-5 h-5" />
                 </div>
                 <div>
                   <span className="text-slate-700 font-medium block">
@@ -114,7 +114,7 @@ export const RealTimePush = () => {
                 </div>
                 <div>
                   <span className="text-slate-700 font-medium block">
-                    Lead Intent Scoring
+                    Lead Intent Detection
                   </span>
                   <span className="text-sm text-slate-500">
                     Only get notified for high-value engagement signals.
