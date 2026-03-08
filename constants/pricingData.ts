@@ -10,7 +10,6 @@ export const PRICING_PLANS = [
       "10 Knowledge Base Docs",
       "1 Email Alias",
       "1 SMS Number",
-      "5 Webhook Trigger",
     ],
     buttonText: "Start Now",
     buttonVariant: "secondary" as const,
@@ -27,7 +26,6 @@ export const PRICING_PLANS = [
       "20 Knowledge Base Docs",
       "2 Email Alias",
       "2 SMS Number",
-      "10 Webhook Trigger",
     ],
     buttonText: "Upgrade to Pro",
     buttonVariant: "accent" as const,
@@ -43,7 +41,6 @@ export const PRICING_PLANS = [
       "30 Knowledge Base Docs",
       "4 Email Alias",
       "4 SMS Number",
-      "Unlimited Webhook Triggers",
     ],
     buttonText: "Launch Team",
     buttonVariant: "primary" as const,
@@ -58,9 +55,8 @@ export const PRICING_PLANS = [
     features: [
       "Custom Shared Credits",
       "Custom Knowledge Base Docs",
-      "Unlimited Email Aliases",
+      "Custom Email Aliases",
       "Custom SMS Numbers",
-      "Unlimited Webhook Triggers",
     ],
     buttonText: "Contact Sales",
     buttonVariant: "dark" as const,
@@ -137,7 +133,7 @@ export const COMPARISON_FEATURES = [
         starter: 1,
         pro: 2,
         teams: 4,
-        enterprise: "Unlimited",
+        enterprise: true,
       },
       {
         name: "SMS Numbers",
@@ -148,10 +144,10 @@ export const COMPARISON_FEATURES = [
       },
       {
         name: "Webhook Triggers",
-        starter: 5,
-        pro: 10,
-        teams: "Unlimited",
-        enterprise: "Unlimited",
+        starter: true,
+        pro: true,
+        teams: true,
+        enterprise: true,
       },
     ],
   },
@@ -198,7 +194,7 @@ export const COMPARISON_FEATURES = [
 export const ADDONS = [
   {
     name: "Additional Seats",
-    price: 45,
+    price: 49,
     unit: "seat/mo",
     description:
       "Expand your team collaboration and manage more campaigns together with additional seats.",
@@ -214,7 +210,7 @@ export const ADDONS = [
   },
   {
     name: "Knowledge Base Docs",
-    price: 1,
+    price: 2,
     unit: "10 doc/mo",
     description:
       "Train your Drip AI on more documents and complex knowledge sets regarding your business.",
