@@ -1,6 +1,7 @@
 import { Button } from "@/components/branding/Button";
 import { Container } from "@/components/branding/Container";
 import { PlayCircle } from "lucide-react";
+import Link from "next/link";
 
 export const Hero = () => {
   return (
@@ -21,13 +22,15 @@ export const Hero = () => {
           leads, and close deals automatically.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-          <Button
-            variant="primary"
-            size="md"
-            className="shadow-xl shadow-primary/20 w-full sm:w-auto"
-          >
-            Start free trial
-          </Button>
+          <Link href="/auth/signup" className="w-full sm:w-auto">
+            <Button
+              variant="primary"
+              size="md"
+              className="shadow-xl shadow-primary/20 w-full"
+            >
+              Start free trial
+            </Button>
+          </Link>
           <Button
             variant="outline"
             size="md"

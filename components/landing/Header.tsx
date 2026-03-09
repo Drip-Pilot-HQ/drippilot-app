@@ -26,14 +26,12 @@ export const Header = () => {
                 href="/"
                 className="text-xl md:text-2xl font-bold text-slate-900 flex items-center gap-2 group"
               >
-                <div className="text-primary transition-transform group-hover:scale-110 duration-300">
-                  <Image
-                    src="/assets/logo.png"
-                    alt="Drip Pilot Logo"
-                    width={100}
-                    height={100}
-                  />
-                </div>
+                <Image
+                  src="/assets/logo.png"
+                  alt="Drip Pilot Logo"
+                  width={100}
+                  height={100}
+                />
               </Link>
             </div>
 
@@ -53,19 +51,21 @@ export const Header = () => {
             {/* CTA & Actions */}
             <div className="hidden lg:flex items-center space-x-6">
               <Link
-                href="/login"
+                href="/auth/login"
                 className="text-md font-bold text-slate-600 hover:text-primary transition-colors px-2"
               >
                 Log in
               </Link>
-              <Button
-                variant="primary"
-                size="md"
-                className="shadow-lg shadow-primary/20 hover:shadow-primary/30 group"
-              >
-                Join the Beta{" "}
-                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
+              <Link href="/auth/signup">
+                <Button
+                  variant="primary"
+                  size="md"
+                  className="shadow-lg shadow-primary/20 hover:shadow-primary/30 group"
+                >
+                  Join the Beta{" "}
+                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
             </div>
 
             {/* Mobile Menu (Client Component) */}

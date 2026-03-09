@@ -90,7 +90,7 @@ export const PricingAddons = () => {
               </p>
             </div>
 
-            <div className="relative w-full max-w-[450px] aspect-square lg:aspect-video bg-white/[0.03] border border-white/10 rounded-3xl p-6 backdrop-blur-sm overflow-hidden flex items-center justify-center group/visual">
+            <div className="relative w-full max-w-[450px] aspect-square lg:aspect-video bg-white/3 border border-white/10 rounded-3xl p-6 backdrop-blur-sm overflow-hidden flex items-center justify-center group/visual">
               {/* Abstract Visual Design Item */}
               <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-transparent to-transparent opacity-50"></div>
 
@@ -218,7 +218,7 @@ export const PricingAddons = () => {
           </div>
 
           <div className="p-8 md:p-10 bg-slate-50/50 border-t border-slate-100 flex flex-col md:flex-row items-center justify-center gap-6">
-            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.1em]">
+            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
               All prices are in USD and subject to regional tax where
               applicable.
             </p>

@@ -2,6 +2,7 @@ import { Container } from "@/components/branding/Container";
 import { Button } from "@/components/branding/Button";
 import { Sparkles, ArrowRight, CheckCircle } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export const CTA = () => {
   return (
@@ -49,14 +50,16 @@ export const CTA = () => {
             {/* Right Content: Buttons and Trust Visuals */}
             <div className="flex flex-col items-center lg:items-end gap-8 min-w-[320px]">
               <div className="flex flex-col gap-4 w-full">
-                <Button
-                  variant="primary"
-                  size="md"
-                  className="shadow-2xl shadow-primary/25 group/btn text-xl h-auto"
-                >
-                  Start Free Trial
-                  <ArrowRight className="w-5 h-5 ml-2 group-hover/btn:translate-x-1 transition-transform" />
-                </Button>
+                <Link href="/auth/signup" className="w-full">
+                  <Button
+                    variant="primary"
+                    size="md"
+                    className="shadow-2xl shadow-primary/25 group/btn text-xl h-auto w-full"
+                  >
+                    Join the Beta
+                    <ArrowRight className="w-5 h-5 ml-2 group-hover/btn:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
 
                 <Button
                   variant="dark"

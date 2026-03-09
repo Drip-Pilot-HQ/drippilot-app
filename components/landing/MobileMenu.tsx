@@ -58,7 +58,7 @@ export const MobileMenu = ({ links }: MobileMenuProps) => {
           Navigation Menu
         </h2>
         {/* Decorative Grid */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.05] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:32px_32px]"></div>
+        <div className="absolute inset-0 pointer-events-none opacity-[0.05] bg-[radial-gradient(#fff_1px,transparent_1px)] bg-size-[32px_32px]"></div>
 
         {/* Glow effect */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-primary/20 rounded-full blur-[100px] pointer-events-none"></div>
@@ -95,19 +95,21 @@ export const MobileMenu = ({ links }: MobileMenuProps) => {
             )}
           >
             <Link
-              href="/login"
+              href="/auth/login"
               onClick={closeMenu}
               className="text-center text-xl font-semibold text-slate-400 hover:text-white transition-colors py-2"
             >
               Log in
             </Link>
-            <Button
-              variant="primary"
-              size="xl"
-              className="w-full text-lg shadow-2xl shadow-primary/20"
-            >
-              Get Started Free <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
+            <Link href="/auth/signup" className="w-full">
+              <Button
+                variant="primary"
+                size="xl"
+                className="w-full text-lg shadow-2xl shadow-primary/20"
+              >
+                Get Started Free <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
           </div>
         </nav>
 
