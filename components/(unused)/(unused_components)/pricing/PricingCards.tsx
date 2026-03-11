@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { Container } from "@/components/branding/Container";
 import { Button } from "@/components/branding/Button";
-import { PRICING_PLANS, YEARLY_DISCOUNT } from "@/constants/pricingData";
+import {
+  PRICING_PLANS,
+  YEARLY_DISCOUNT,
+} from "@/components/(unused)/(unused_constants)/pricingData";
 import {
   CheckCircle2,
   ShoppingCart,

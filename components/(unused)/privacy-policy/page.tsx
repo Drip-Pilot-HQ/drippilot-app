@@ -1,7 +1,7 @@
-import { Header } from "@/components/landing/Header";
-import { Footer } from "@/components/landing/Footer";
-import { PrivacyHero } from "@/components/legal/PrivacyHero";
-import { PrivacyContent } from "@/components/legal/PrivacyContent";
+import { Header } from "@/components/(unused)/(unused_components)/landing/Header";
+import { Footer } from "@/components/(unused)/(unused_components)/landing/Footer";
+import { PrivacyHero } from "@/components/(unused)/(unused_components)/legal/PrivacyHero";
+import { PrivacyContent } from "@/components/(unused)/(unused_components)/legal/PrivacyContent";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

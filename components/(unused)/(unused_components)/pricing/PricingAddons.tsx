@@ -1,5 +1,8 @@
 import { Container } from "@/components/branding/Container";
-import { ADDONS, CREDIT_GUIDE } from "@/constants/pricingData";
+import {
+  ADDONS,
+  CREDIT_GUIDE,
+} from "@/components/(unused)/(unused_constants)/pricingData";
 import {
   Users,
   Phone,

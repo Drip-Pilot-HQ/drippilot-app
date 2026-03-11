@@ -7,9 +7,9 @@ import type { NavGroup, UserProfile } from "@/types/layout";
 const navGroups: NavGroup[] = [
   {
     items: [
-      { name: "Workspaces", href: "/workspaces", icon: Layers },
-      { name: "Profile", href: "/settings/profile", icon: Settings },
-      { name: "API Tokens", href: "/settings/tokens", icon: Key },
+      { name: "Workspaces", href: "/account/workspaces", icon: Layers },
+      { name: "Profile", href: "/account/profile", icon: Settings },
+      { name: "API Tokens", href: "/account/tokens", icon: Key },
     ],
   },
 ];

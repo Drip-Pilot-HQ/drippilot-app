@@ -1,11 +1,11 @@
 import { Metadata } from "next";
-import { Header } from "@/components/landing/Header";
-import { Footer } from "@/components/landing/Footer";
-import { PricingHero } from "@/components/pricing/PricingHero";
-import { PricingCards } from "@/components/pricing/PricingCards";
-import { PricingAddons } from "@/components/pricing/PricingAddons";
-import { FeatureComparison } from "@/components/landing/FeatureComparison";
-import { CTA } from "@/components/landing/CTA";
+import { Header } from "@/components/(unused)/(unused_components)/landing/Header";
+import { Footer } from "@/components/(unused)/(unused_components)/landing/Footer";
+import { PricingHero } from "@/components/(unused)/(unused_components)/pricing/PricingHero";
+import { PricingCards } from "@/components/(unused)/(unused_components)/pricing/PricingCards";
+import { PricingAddons } from "@/components/(unused)/(unused_components)/pricing/PricingAddons";
+import { FeatureComparison } from "@/components/(unused)/(unused_components)/landing/FeatureComparison";
+import { CTA } from "@/components/(unused)/(unused_components)/landing/CTA";
 
 export const metadata: Metadata = {
   title: "Pricing",

@@ -1,6 +1,6 @@
 import React from "react";
 import { Container } from "@/components/branding/Container";
-import { COMPARISON_FEATURES } from "@/constants/pricingData";
+import { COMPARISON_FEATURES } from "@/components/(unused)/(unused_constants)/pricingData";
 import { Check, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
 

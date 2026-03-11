@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Domine, Source_Sans_3 } from "next/font/google";
+import { Domine, Poppins, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 
 const sourceSans = Source_Sans_3({
@@ -8,8 +8,9 @@ const sourceSans = Source_Sans_3({
   subsets: ["latin"],
 });
 
-const domine = Domine({
-  variable: "--font-domine",
+const poppins = Poppins({
+  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700", "800", "900"],
   subsets: ["latin"],
 });
 
@@ -100,7 +101,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${sourceSans.variable} ${domine.variable} font-sans antialiased bg-white text-slate-900`}
+        className={`${sourceSans.variable} ${poppins.variable} font-sans antialiased bg-white text-slate-900`}
       >
         {children}
       </body>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Container } from "@/components/branding/Container";
-import { PRIVACY_SECTIONS } from "@/constants/privacyData";
+import { PRIVACY_SECTIONS } from "@/components/(unused)/(unused_constants)/privacyData";
 import { Lightbulb, ShieldCheck, Mail, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 

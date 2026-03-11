@@ -6,7 +6,10 @@ import { cn } from "@/lib/utils";
 import { AIFollowUpMock } from "./Mockups/AIFollowUpMock";
 import { SmartRoutingMock } from "./Mockups/SmartRoutingMock";
 import { WorkflowBuilderMock } from "./Mockups/WorkflowBuilderMock";
-import { ACCENT_STYLES, FEATURES } from "@/constants/featureData";
+import {
+  ACCENT_STYLES,
+  FEATURES,
+} from "@/components/(unused)/(unused_constants)/featureData";
 import { LeadDetectionMock } from "./Mockups/LeadDetectionMock";
 import { RealTimeAlertsMock } from "./Mockups/RealTimeAlertsMock";
 

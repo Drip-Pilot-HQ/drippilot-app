@@ -1,10 +1,10 @@
 import { Metadata } from "next";
-import { Header } from "@/components/landing/Header";
-import { Footer } from "@/components/landing/Footer";
-import { AboutHero } from "@/components/about/AboutHero";
-import { CoreValues } from "@/components/about/CoreValues";
-import { AboutStory } from "@/components/about/AboutStory";
-import { LifeAtDrip } from "@/components/about/LifeAtDrip";
+import { Header } from "@/components/(unused)/(unused_components)/landing/Header";
+import { Footer } from "@/components/(unused)/(unused_components)/landing/Footer";
+import { AboutHero } from "@/components/(unused)/(unused_components)/about/AboutHero";
+import { CoreValues } from "@/components/(unused)/(unused_components)/about/CoreValues";
+import { AboutStory } from "@/components/(unused)/(unused_components)/about/AboutStory";
+import { LifeAtDrip } from "@/components/(unused)/(unused_components)/about/LifeAtDrip";
 
 export const metadata: Metadata = {
   title: "About Us",
