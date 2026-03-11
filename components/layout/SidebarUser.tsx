@@ -1,3 +1,4 @@
+import { useLogoutMutation } from "@/store/server/auth.queries";
 import { LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { UserProfile } from "@/types/layout";
@@ -9,6 +10,12 @@ interface SidebarUserProps {
 }
 
 export function SidebarUser({ user, isCollapsed, onLogout }: SidebarUserProps) {
+  const logoutMutation = useLogoutMutation();
+
+  const handleLogout = () => {
+    if (onLogout) onLogout();
+    logoutMutation.mutate();
+  };
   const initials = user.name
     .split(" ")
     .map((n) => n[0])
@@ -41,7 +48,7 @@ export function SidebarUser({ user, isCollapsed, onLogout }: SidebarUserProps) {
             </p>
           </div>
           <button
-            onClick={onLogout}
+            onClick={handleLogout}
             className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition-all shrink-0"
             aria-label="Sign out"
           >

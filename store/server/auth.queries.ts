@@ -1,0 +1,87 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { createClient } from '../../lib/supabase/client'
+import { SignInWithPasswordCredentials, SignUpWithPasswordCredentials } from '@supabase/supabase-js'
+import { useAuthStore } from '../client/useAuthStore'
+
+
+export const useLoginMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (credentials: SignInWithPasswordCredentials) => {
+      const supabase = createClient()
+      const { data, error } = await supabase.auth.signInWithPassword(credentials)
+      if (error) {
+        throw new Error(error.message)
+      }
+      return data
+    },
+    onSuccess: (data) => {
+      if (data.session && data.user) {
+        useAuthStore.getState().setSession(data.session)
+        useAuthStore.getState().setUser(data.user)
+      }
+      queryClient.invalidateQueries({ queryKey: ['user'] })
+    },
+  })
+}
+
+export const useRegisterMutation = () => {
+  return useMutation({
+    mutationFn: async (credentials: SignUpWithPasswordCredentials) => {
+      const supabase = createClient()
+      const { data, error } = await supabase.auth.signUp({
+        ...credentials,
+      })
+      if (error) {
+        throw new Error(error.message)
+      }
+      return data
+    },
+  })
+}
+
+export const useLogoutMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async () => {
+      const supabase = createClient()
+      const { error } = await supabase.auth.signOut()
+      if (error) {
+        throw new Error(error.message)
+      }
+    },
+    onSuccess: () => {
+      useAuthStore.getState().clearAuth()
+      queryClient.clear()
+      window.location.href = '/auth/login'
+    },
+  })
+}
+
+export const useForgotPasswordMutation = () => {
+  return useMutation({
+    mutationFn: async (email: string) => {
+      const supabase = createClient()
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth/callback?next=/auth/reset-password`,
+      })
+      if (error) {
+        throw new Error(error.message)
+      }
+    },
+  })
+}
+
+export const useResetPasswordMutation = () => {
+  return useMutation({
+    mutationFn: async (password: string) => {
+      const supabase = createClient()
+      const { error } = await supabase.auth.updateUser({
+        password: password,
+      })
+      if (error) {
+        throw new Error(error.message)
+      }
+    },
+  })
+}

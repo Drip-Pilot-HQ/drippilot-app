@@ -9,7 +9,6 @@ import {
   MoreVertical,
   ArrowUpRight,
   ArrowDownRight,
-  TrendingUp,
   ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";

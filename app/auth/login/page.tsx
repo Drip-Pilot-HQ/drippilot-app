@@ -1,18 +1,34 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/branding/Button";
 import { useRouter } from "next/navigation";
 import { AuthInput } from "@/components/auth/AuthInput";
+import { useLoginMutation } from "@/store/server/auth.queries";
 
 export default function LoginPage() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const loginMutation = useLoginMutation();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/workspaces");
+    setErrorMsg("");
+    loginMutation.mutate(
+      { email, password },
+      {
+        onSuccess: () => {
+          router.push("/account/workspaces");
+        },
+        onError: (err) => {
+          setErrorMsg(err.message);
+        },
+      },
+    );
   };
 
   return (
@@ -27,14 +43,22 @@ export default function LoginPage() {
         </p>
       </div>
 
+      {errorMsg && (
+        <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm font-semibold">
+          {errorMsg}
+        </div>
+      )}
+
       {/* Form Section */}
-      <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+      <form className="space-y-6" onSubmit={handleSubmit}>
         <AuthInput
           label="Email Address"
           icon={Mail}
           type="email"
           placeholder="alex@company.com"
           required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         <div className="space-y-2">
@@ -55,6 +79,8 @@ export default function LoginPage() {
             type="password"
             placeholder="••••••••"
             required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
 
@@ -92,8 +118,9 @@ export default function LoginPage() {
           variant="primary"
           size="md"
           className="w-full shadow-2xl shadow-primary/30 group py-4"
+          disabled={loginMutation.isPending}
         >
-          <span>Log In</span>
+          <span>{loginMutation.isPending ? "Logging In..." : "Log In"}</span>
           <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </Button>
       </form>

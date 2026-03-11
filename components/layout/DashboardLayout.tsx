@@ -1,6 +1,7 @@
 "use client";
 
 import { AppLayout } from "./AppLayout";
+import { useAuthStore } from "@/store/client/useAuthStore";
 import { Settings, Key, Layers } from "lucide-react";
 import type { NavGroup, UserProfile } from "@/types/layout";
 
@@ -14,15 +15,16 @@ const navGroups: NavGroup[] = [
   },
 ];
 
-// TODO: replace with real user from auth context
-const MOCK_USER: UserProfile = {
-  name: "Alex Rivera",
-  email: "alex@drippilot.com",
-};
-
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const { user } = useAuthStore();
+
+  const activeUser: UserProfile = {
+    name: user?.user_metadata?.name || user?.email?.split("@")[0] || "User",
+    email: user?.email || "",
+  };
+
   return (
-    <AppLayout navGroups={navGroups} user={MOCK_USER} collapseMode="hide">
+    <AppLayout navGroups={navGroups} user={activeUser} collapseMode="hide">
       {children}
     </AppLayout>
   );

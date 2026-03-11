@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { Domine, Poppins, Source_Sans_3 } from "next/font/google";
+import { Poppins, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
+import { TanstackQueryProvider } from "../store/server/queryProvider";
+import { AuthProvider } from "../components/auth/AuthProvider";
 
 const sourceSans = Source_Sans_3({
   variable: "--font-source-sans-pro",
@@ -103,7 +105,9 @@ export default function RootLayout({
       <body
         className={`${sourceSans.variable} ${poppins.variable} font-sans antialiased bg-white text-slate-900`}
       >
-        {children}
+        <TanstackQueryProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </TanstackQueryProvider>
       </body>
     </html>
   );

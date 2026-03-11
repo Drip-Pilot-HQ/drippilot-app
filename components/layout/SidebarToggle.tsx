@@ -7,7 +7,11 @@ interface SidebarToggleProps {
   className?: string;
 }
 
-export function SidebarToggle({ isOpen, onClick, className }: SidebarToggleProps) {
+export function SidebarToggle({
+  isOpen,
+  onClick,
+  className,
+}: SidebarToggleProps) {
   return (
     <button
       onClick={onClick}

@@ -36,7 +36,9 @@ export function SidebarItem({
       <Icon
         className={cn(
           "w-[18px] h-[18px] shrink-0 transition-colors",
-          isActive ? "text-primary" : "text-slate-400 group-hover:text-slate-600",
+          isActive
+            ? "text-primary"
+            : "text-slate-400 group-hover:text-slate-600",
         )}
       />
 

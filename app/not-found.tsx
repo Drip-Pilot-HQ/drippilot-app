@@ -48,7 +48,10 @@ export default function NotFound() {
                 size="md"
                 className="rounded-full shadow-2xl shadow-primary/20"
               >
-                <Link href="https://drippilot.com" className="flex items-center gap-2">
+                <Link
+                  href="https://drippilot.com"
+                  className="flex items-center gap-2"
+                >
                   <Home className="w-4 h-4" />
                   Back to Drippilot
                 </Link>

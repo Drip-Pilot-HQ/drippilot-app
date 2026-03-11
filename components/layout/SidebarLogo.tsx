@@ -7,7 +7,12 @@ interface SidebarLogoProps {
 
 export function SidebarLogo({ collapsed }: SidebarLogoProps) {
   return (
-    <div className={cn("flex items-center shrink-0", collapsed && "justify-center")}>
+    <div
+      className={cn(
+        "flex items-center shrink-0",
+        collapsed && "justify-center",
+      )}
+    >
       <Image
         src="/assets/logo-icon.png"
         alt="Drip Pilot"

@@ -1,9 +1,7 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { AuthVisual } from "@/components/auth/AuthVisual";
 
 export default function AuthLayout({

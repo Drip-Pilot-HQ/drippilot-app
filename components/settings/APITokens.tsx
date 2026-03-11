@@ -40,7 +40,11 @@ export function APITokens() {
           </p>
         </div>
 
-        <Button variant="primary" size="md" className="gap-2 shrink-0 mx-auto md:mx-0">
+        <Button
+          variant="primary"
+          size="md"
+          className="gap-2 shrink-0 mx-auto md:mx-0"
+        >
           <Plus className="w-5 h-5" />
           <span>New Token</span>
         </Button>
