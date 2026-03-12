@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ArrowUpDown, Check, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type LeadSortField = "createdAt" | "updatedAt" | "name" | "tags";
+export type LeadSortField = "createdAt" | "updatedAt" | "name";
 export type LeadSortOrder = "asc" | "desc";
 
 interface LeadsSortProps {
@@ -21,8 +21,6 @@ export function LeadsSort({ sortBy, sortOrder, onSortChange }: LeadsSortProps) {
     { label: "Oldest Created", field: "createdAt", order: "asc" },
     { label: "Name (A-Z)", field: "name", order: "asc" },
     { label: "Name (Z-A)", field: "name", order: "desc" },
-    { label: "Tags (A-Z)", field: "tags", order: "asc" },
-    { label: "Tags (Z-A)", field: "tags", order: "desc" },
   ] as const;
 
   const currentOption =

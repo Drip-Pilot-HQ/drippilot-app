@@ -39,7 +39,7 @@ export const WorkflowBuilderMock = ({ active }: { active: boolean }) => {
 
       <div className="flex flex-col items-center">
         {/* Step 1: Email */}
-        <div className="w-full bg-white/[0.03] border border-white/10 rounded-2xl p-4 flex items-center justify-between shadow-2xl backdrop-blur-sm">
+        <div className="w-full bg-white/3 border border-white/10 rounded-2xl p-4 flex items-center justify-between shadow-2xl backdrop-blur-sm">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center border border-primary/20">
               <Mail className="w-3.5 h-3.5 text-primary" />
@@ -73,7 +73,7 @@ export const WorkflowBuilderMock = ({ active }: { active: boolean }) => {
         </div>
 
         {/* Step 2: SMS */}
-        <div className="w-full bg-white/[0.03] border border-white/5 rounded-2xl p-4 flex items-center justify-between opacity-60 backdrop-blur-sm text-slate-400">
+        <div className="w-full bg-white/3 border border-white/5 rounded-2xl p-4 flex items-center justify-between opacity-60 backdrop-blur-sm text-slate-400">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center border border-accent/20">
               <MessageSquare className="w-3.5 h-3.5 text-accent" />

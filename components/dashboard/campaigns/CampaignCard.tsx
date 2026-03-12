@@ -19,6 +19,7 @@ import {
 } from "@/store/server/campaign.queries";
 import { useState } from "react";
 import { useConfirm } from "@/components/branding/ConfirmProvider";
+import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,6 +34,7 @@ interface CampaignCardProps {
 }
 
 export function CampaignCard({ campaign, onEdit }: CampaignCardProps) {
+  const router = useRouter();
   const deleteMutation = useDeleteCampaignMutation();
   const statusMutation = useUpdateCampaignStatusMutation();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -70,8 +72,9 @@ export function CampaignCard({ campaign, onEdit }: CampaignCardProps) {
 
   return (
     <div
-      className="group relative bg-white border border-slate-200/80 rounded-2xl p-5 
-    shadow-sm hover:shadow-xl hover:-translate-y-[2px] 
+      onClick={() => router.push(`/dashboard/campaigns/${campaign.id}`)}
+      className="group relative bg-white border border-slate-200/80 rounded-2xl p-5
+    shadow-sm hover:shadow-xl hover:-translate-y-[2px] cursor-pointer
     hover:border-primary/30 transition-all duration-300"
     >
       {/* subtle gradient glow */}
@@ -92,7 +95,10 @@ export function CampaignCard({ campaign, onEdit }: CampaignCardProps) {
           <Rocket className="w-5 h-5" />
         </div>
 
-        <div className="flex items-center gap-2">
+        <div
+          className="flex items-center gap-2"
+          onClick={(e) => e.stopPropagation()}
+        >
           <span
             className={cn(
               "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest transition-all shadow-sm",

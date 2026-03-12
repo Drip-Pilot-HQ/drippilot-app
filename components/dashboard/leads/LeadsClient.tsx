@@ -21,17 +21,19 @@ export function LeadsClient() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [selectedStatuses, setSelectedStatuses] = useState<LeadStatus[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<LeadSortField>("createdAt");
   const [sortOrder, setSortOrder] = useState<LeadSortOrder>("desc");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
 
   const { data, isLoading } = useLeadsQuery({
-    ...(debouncedSearch ? { search: debouncedSearch } : { search: "" }),
-    ...(selectedStatuses.length > 0 ? { status: selectedStatuses } : {}),
+    search: debouncedSearch || undefined,
+    status: selectedStatuses.length > 0 ? selectedStatuses : undefined,
+    tags: selectedTags.length > 0 ? selectedTags : undefined,
     page,
     limit,
-    sortBy: sortBy === "tags" ? "createdAt" : sortBy,
+    sortBy,
     sortOrder,
   });
 
@@ -55,9 +57,6 @@ export function LeadsClient() {
         return sortOrder === "asc"
           ? nameA.localeCompare(nameB)
           : nameB.localeCompare(nameA);
-      } else if (sortBy === "tags") {
-        valA = (a.tags || []).join(", ").toLowerCase();
-        valB = (b.tags || []).join(", ").toLowerCase();
       } else if (sortBy === "createdAt" || sortBy === "updatedAt") {
         valA = new Date(a[sortBy] || 0).getTime();
         valB = new Date(b[sortBy] || 0).getTime();
@@ -135,8 +134,18 @@ export function LeadsClient() {
         <LeadsFilters
           selectedStatuses={selectedStatuses}
           onToggleStatus={toggleStatusFilter}
+          selectedTags={selectedTags}
+          onAddTag={(tag) => {
+            setSelectedTags((prev) => [...prev, tag]);
+            setPage(1);
+          }}
+          onRemoveTag={(tag) => {
+            setSelectedTags((prev) => prev.filter((t) => t !== tag));
+            setPage(1);
+          }}
           onClearAll={() => {
             setSelectedStatuses([]);
+            setSelectedTags([]);
             setPage(1);
           }}
         />

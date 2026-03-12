@@ -25,6 +25,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/common/DropdownMenu";
+import { EnrollLeadSubmenu } from "./EnrollLeadSubmenu";
 
 interface LeadRowProps {
   lead: Lead;
@@ -187,6 +188,9 @@ export function LeadRow({ lead, onEdit }: LeadRowProps) {
               <Edit2 className="w-4 h-4" />
               Edit Lead
             </DropdownMenuItem>
+
+            <EnrollLeadSubmenu leadId={lead.id} />
+
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={handleDelete}

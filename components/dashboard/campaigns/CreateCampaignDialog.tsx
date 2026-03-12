@@ -1,14 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import {
-  X,
-  Rocket,
-  Sparkles,
-  Loader2,
-  Mail,
-  MessageSquare,
-} from "lucide-react";
+import { X, Rocket, Sparkles, Mail, MessageSquare } from "lucide-react";
+import { toast } from "sonner";
 import { CreateCampaignDto, Campaign } from "@/types/campaign";
 import {
   useCreateCampaignMutation,
@@ -45,12 +39,7 @@ export function CreateCampaignDialog({
         phoneAliasId: editCampaign.phoneAliasId,
       };
     }
-    return {
-      name: "",
-      description: "",
-      emailBased: true,
-      smsBased: false,
-    };
+    return { name: "", description: "", emailBased: true, smsBased: false };
   });
 
   const createMutation = useCreateCampaignMutation();
@@ -59,16 +48,58 @@ export function CreateCampaignDialog({
     useEmailAliasesQuery();
   const { data: phoneNumbers, isLoading: isLoadingPhoneNumbers } =
     usePhoneNumbersQuery();
-  const isLoading =
-    createMutation.isPending ||
-    updateMutation.isPending ||
-    isLoadingEmailAliases ||
-    isLoadingPhoneNumbers;
+
+  const isMutating = createMutation.isPending || updateMutation.isPending;
+
+  const isFormValid =
+    formData.name.trim().length > 0 &&
+    (formData.emailBased === true || formData.smsBased === true) &&
+    (!formData.emailBased || !!formData.emailAliasId) &&
+    (!formData.smsBased || !!formData.phoneAliasId);
 
   if (!isOpen) return null;
 
+  const toggleEmail = () => {
+    const next = !formData.emailBased;
+    setFormData((prev) => ({
+      ...prev,
+      emailBased: next,
+      emailAliasId: next ? prev.emailAliasId : undefined,
+    }));
+  };
+
+  const toggleSms = () => {
+    const next = !formData.smsBased;
+    setFormData((prev) => ({
+      ...prev,
+      smsBased: next,
+      phoneAliasId: next ? prev.phoneAliasId : undefined,
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!formData.name.trim()) {
+      toast.error("Campaign name is required");
+      return;
+    }
+
+    if (!formData.emailBased && !formData.smsBased) {
+      toast.error("Select at least one channel — Email or SMS");
+      return;
+    }
+
+    if (formData.emailBased && !formData.emailAliasId) {
+      toast.error("Select an email sender asset for this campaign");
+      return;
+    }
+
+    if (formData.smsBased && !formData.phoneAliasId) {
+      toast.error("Select a phone number asset for this campaign");
+      return;
+    }
+
     try {
       if (editCampaign) {
         await updateMutation.mutateAsync({
@@ -86,8 +117,8 @@ export function CreateCampaignDialog({
         await createMutation.mutateAsync(formData);
       }
       onClose();
-    } catch (error) {
-      console.error("Failed to save campaign", error);
+    } catch {
+      // API-level errors are handled globally
     }
   };
 
@@ -128,7 +159,6 @@ export function CreateCampaignDialog({
                 Campaign Title
               </label>
               <input
-                required
                 value={formData.name}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
@@ -156,12 +186,7 @@ export function CreateCampaignDialog({
             <div className="grid grid-cols-2 gap-4">
               <button
                 type="button"
-                onClick={() =>
-                  setFormData({
-                    ...formData,
-                    emailBased: !formData.emailBased,
-                  })
-                }
+                onClick={toggleEmail}
                 className={cn(
                   "flex flex-col items-center gap-2.5 p-4 rounded-2xl border transition-all",
                   formData.emailBased
@@ -191,9 +216,7 @@ export function CreateCampaignDialog({
 
               <button
                 type="button"
-                onClick={() =>
-                  setFormData({ ...formData, smsBased: !formData.smsBased })
-                }
+                onClick={toggleSms}
                 className={cn(
                   "flex flex-col items-center gap-2.5 p-4 rounded-2xl border transition-all",
                   formData.smsBased
@@ -277,12 +300,11 @@ export function CreateCampaignDialog({
               </Button>
               <Button
                 type="submit"
-                disabled={isLoading || !formData.name}
+                disabled={isMutating || !isFormValid}
+                isLoading={isMutating}
                 className="flex-2 rounded-xl h-12 text-sm"
               >
-                {isLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
+                {!isMutating && (
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4" />
                     <span>
