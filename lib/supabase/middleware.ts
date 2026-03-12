@@ -38,7 +38,7 @@ export async function updateSession(request: NextRequest) {
   // Middleware routing protections
   const isProtectedPath =
     request.nextUrl.pathname.startsWith("/account") ||
-    request.nextUrl.pathname.startsWith("/workspace");
+    request.nextUrl.pathname.startsWith("/dashboard");
   const isAuthRoute = request.nextUrl.pathname.startsWith("/auth");
 
   if (!user && isProtectedPath) {
@@ -48,6 +48,19 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Workspace Context Protection
+  if (user) {
+    const workspaceId = request.cookies.get("x-workspace-id")?.value;
+    const isDashboardPath = request.nextUrl.pathname.startsWith("/dashboard");
+
+    // Only enforce workspace selection for dashboard-related routes
+    if (!workspaceId && isDashboardPath) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/account/workspaces";
+      return NextResponse.redirect(url);
+    }
+  }
+
   if (
     user &&
     isAuthRoute &&
@@ -55,8 +68,6 @@ export async function updateSession(request: NextRequest) {
     !request.nextUrl.pathname.startsWith("/auth/reset-password")
   ) {
     // If user is already logged in, no need to show them auth routes
-
-    // take him to land in /account/workspaces as requested
     const url = request.nextUrl.clone();
     url.pathname = "/account/workspaces";
     return NextResponse.redirect(url);

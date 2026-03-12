@@ -28,17 +28,15 @@ export function SidebarItem({
       className={cn(
         "relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-150 group",
         isActive
-          ? "bg-primary/10 text-primary font-semibold"
-          : "text-slate-600 font-medium hover:bg-slate-50 hover:text-slate-900",
+          ? "bg-primary/10 text-primary font-semibold shadow-inner"
+          : "text-zinc-400 font-medium hover:bg-white/5 hover:text-white",
         isCollapsed && "justify-center px-0 w-10 h-10 mx-auto",
       )}
     >
       <Icon
         className={cn(
           "w-[18px] h-[18px] shrink-0 transition-colors",
-          isActive
-            ? "text-primary"
-            : "text-slate-400 group-hover:text-slate-600",
+          isActive ? "text-primary" : "text-zinc-500 group-hover:text-zinc-300",
         )}
       />
 

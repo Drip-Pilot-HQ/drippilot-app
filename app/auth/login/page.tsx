@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/branding/Button";
 import { useRouter } from "next/navigation";
@@ -84,35 +85,6 @@ export default function LoginPage() {
           />
         </div>
 
-        {/* Remember Me */}
-        <div className="flex items-center gap-3 px-1">
-          <label className="flex items-center gap-3 cursor-pointer group">
-            <div className="relative flex items-center justify-center">
-              <input
-                type="checkbox"
-                className="peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-slate-200 bg-slate-50 checked:bg-primary checked:border-primary transition-all duration-300"
-              />
-              <svg
-                className="absolute w-3 h-3 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity duration-300"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-            </div>
-            <span className="text-sm font-semibold text-slate-500 hover:text-slate-700 transition-colors">
-              Keep me signed in
-            </span>
-          </label>
-        </div>
-
         {/* Action Button */}
         <Button
           variant="primary"
@@ -141,10 +113,13 @@ export default function LoginPage() {
           type="button"
           className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all font-bold text-slate-600 text-sm cursor-pointer"
         >
-          <img
+          <Image
             src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png"
             alt="Google"
+            width={12}
+            height={12}
             className="w-3 h-3"
+            unoptimized
           />
           <span>Sign in with Google</span>
         </button>

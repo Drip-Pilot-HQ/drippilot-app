@@ -16,7 +16,7 @@ export function SidebarToggle({
     <button
       onClick={onClick}
       className={cn(
-        "p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all duration-150 shrink-0",
+        "p-2 rounded-lg text-zinc-500 hover:text-white hover:bg-white/10 transition-all duration-150 shrink-0",
         className,
       )}
       aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}

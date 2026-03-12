@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { User, Mail, Lock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/branding/Button";
 import { AuthInput } from "@/components/auth/AuthInput";
@@ -67,10 +68,13 @@ export default function SignupPage() {
           type="button"
           className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all font-bold text-slate-600 text-sm cursor-pointer"
         >
-          <img
+          <Image
             src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png"
             alt="Google"
+            width={12}
+            height={12}
             className="w-3 h-3"
+            unoptimized
           />
           <span>Sign up with Google</span>
         </button>

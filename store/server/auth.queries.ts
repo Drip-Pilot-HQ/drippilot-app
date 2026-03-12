@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createClient } from '../../lib/supabase/client'
 import { SignInWithPasswordCredentials, SignUpWithPasswordCredentials } from '@supabase/supabase-js'
 import { useAuthStore } from '../client/useAuthStore'
+import { useAccountStore } from '../client/useAccountStore'
 
 
 export const useLoginMutation = () => {
@@ -52,6 +53,7 @@ export const useLogoutMutation = () => {
     },
     onSuccess: () => {
       useAuthStore.getState().clearAuth()
+      useAccountStore.getState().clearAccountState()
       queryClient.clear()
       window.location.href = '/auth/login'
     },

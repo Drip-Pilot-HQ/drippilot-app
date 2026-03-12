@@ -6,9 +6,9 @@ interface AuthVisualProps {
   type: "login" | "signup" | "forgot" | "reset";
 }
 
-export function AuthVisual({ type }: AuthVisualProps) {
+export function AuthVisual({}: AuthVisualProps) {
   const bgImageUrl =
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuCCn9CIRBkiOpi7kSWHE0LGJjD86dN9D6RQN8MWAA4EMFR8sD0ouKqSG3Z6isgcP8B0s5Hxz6DGlsxx3mkCwV0Ft2HgubGE8eDyduXTItajqhJlr6Ik0_3cYJNSvLOVT17r8_MXnY_NAdym7zkTQ8K0bK5-aSIROoX_cZW4EekzduVyAfQ3jfe6mcYxonoCcYpJpNxj0GvtftqgwY0LxJosFUCsdW4q4c6ETlWUK229Sj5Z3KHUkua7u5MBeS83yl9RMXK7ZkZQacs";
+    "https://lh3.googleusercontent.com/aida-public/AB6AXuCCn9CIRBkiOpi7kSWHE0LGJjD86dN9D6RQN8MWAA4EMFR8sD0ouKqSG3Z6isgcP8B0s5Hxz2DGlsxx3mkCwV0Ft2HgubGE8eDyduXTItajqhJlr6Ik0_3cYJNSvLOVT17r8_MXnY_NAdym7zkTQ8K0bK5-aSIROoX_cZW4EekzduVyAfQ3jfe6mcYxonoCcYpJpNxj0GvtftqgwY0LxJosFUCsdW4q4c6ETlWUK229Sj5Z3KHUkua7u5MBeS83yl9RMXK7ZkZQacs";
 
   return (
     <div

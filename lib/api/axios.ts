@@ -1,11 +1,16 @@
 import axios from "axios";
 import { createClient } from "../supabase/client";
 import { useAuthStore } from "../../store/client/useAuthStore";
+import { useAccountStore } from "../../store/client/useAccountStore";
+import { handleApiError } from "./error-handler";
 
 export const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "/api",
   headers: {
     "Content-Type": "application/json",
+  },
+  paramsSerializer: {
+    indexes: null, // Important: This prevents adding brackets like status[] and sends status=value instead
   },
 });
 
@@ -26,9 +31,10 @@ const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue = [];
 };
 
-// Interceptor to add access token to headers
+// Interceptor to add auth and workspace context to headers
 apiClient.interceptors.request.use(
   async (config) => {
+    // Auth Token
     const supabase = createClient();
     const {
       data: { session },
@@ -37,6 +43,13 @@ apiClient.interceptors.request.use(
     if (session?.access_token) {
       config.headers.Authorization = `Bearer ${session.access_token}`;
     }
+
+    // Workspace Context
+    const activeWorkspace = useAccountStore.getState().activeWorkspace;
+    if (activeWorkspace?.id) {
+      config.headers["x-workspace-id"] = activeWorkspace.id;
+    }
+
     return config;
   },
   (error) => {
@@ -102,6 +115,11 @@ apiClient.interceptors.response.use(
       } finally {
         isRefreshing = false;
       }
+    }
+
+    // Don't show global toast for 401s as they are handled by refresh logic or redirect
+    if (error.response?.status !== 401) {
+      handleApiError(error);
     }
 
     return Promise.reject(error);
