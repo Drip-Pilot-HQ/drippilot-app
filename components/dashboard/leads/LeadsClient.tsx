@@ -14,6 +14,7 @@ import { Lead, LeadStatus } from "@/types/lead";
 import { Button } from "@/components/branding/Button";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 import { useMemo } from "react";
+import { ImportLeadsDialog } from "./ImportLeadsDialog";
 
 export function LeadsClient() {
   const [searchInput, setSearchInput] = useState("");
@@ -25,6 +26,7 @@ export function LeadsClient() {
   const [sortBy, setSortBy] = useState<LeadSortField>("createdAt");
   const [sortOrder, setSortOrder] = useState<LeadSortOrder>("desc");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isImportOpen, setIsImportOpen] = useState(false);
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
 
   const { data, isLoading } = useLeadsQuery({
@@ -105,6 +107,7 @@ export function LeadsClient() {
         <div className="flex items-center gap-3 w-full md:w-auto">
           <Button
             variant="outline"
+            onClick={() => setIsImportOpen(true)}
             className="rounded-xl h-10 px-4 hidden sm:flex text-sm flex-1 md:flex-none"
           >
             <Upload className="w-4 h-4 mr-2" />
@@ -205,6 +208,7 @@ export function LeadsClient() {
               </Button>
               <Button
                 variant="outline"
+                onClick={() => setIsImportOpen(true)}
                 className="rounded-2xl px-8 h-12 border-2"
               >
                 <Upload className="w-5 h-5 mr-2" />
@@ -220,6 +224,11 @@ export function LeadsClient() {
         isOpen={isCreateOpen}
         onClose={closeDialog}
         editLead={editingLead}
+      />
+
+      <ImportLeadsDialog
+        isOpen={isImportOpen}
+        onClose={() => setIsImportOpen(false)}
       />
     </div>
   );

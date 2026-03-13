@@ -33,10 +33,15 @@ export function CreateLeadDialog({
 }: CreateLeadDialogProps) {
   const [formData, setFormData] = useState<CreateLeadDto>(() => {
     if (editLead) {
+      const fallbackName = (
+        (editLead.firstName || "") +
+        " " +
+        (editLead.lastName || "")
+      ).trim();
       return {
         email: editLead.email || "",
         phone: editLead.phone || "",
-        name: editLead.name || "",
+        name: editLead.name || fallbackName,
         firstName: editLead.firstName || "",
         lastName: editLead.lastName || "",
         leadStatus: editLead.leadStatus,
@@ -55,6 +60,7 @@ export function CreateLeadDialog({
   });
 
   const [tagInput, setTagInput] = useState("");
+  const [consentAgreed, setConsentAgreed] = useState(false);
 
   const createMutation = useCreateLeadMutation();
   const updateMutation = useUpdateLeadMutation();
@@ -64,6 +70,13 @@ export function CreateLeadDialog({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!consentAgreed) {
+      toast.error(
+        "You must agree to the communication consent to save this lead",
+      );
+      return;
+    }
 
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       toast.error("Please enter a valid email address");
@@ -154,9 +167,18 @@ export function CreateLeadDialog({
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
                   value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
+                  onChange={(e) => {
+                    const fullName = e.target.value;
+                    const parts = fullName.trim().split(/\s+/);
+                    const firstName = parts[0] || "";
+                    const lastName = parts.slice(1).join(" ") || "";
+                    setFormData({
+                      ...formData,
+                      name: fullName,
+                      firstName,
+                      lastName,
+                    });
+                  }}
                   placeholder="e.g. John Doe"
                   className="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-bold text-slate-900 text-sm"
                 />
@@ -266,6 +288,38 @@ export function CreateLeadDialog({
               </div>
             </div>
 
+            {/* Terms and Conditions Checkbox */}
+            <div className="col-span-2 space-y-3 p-5 border border-orange-100 rounded-3xl bg-orange-50/30">
+              <div className="flex items-start space-x-3">
+                <div className="relative flex items-center">
+                  <input
+                    id="consent"
+                    type="checkbox"
+                    checked={consentAgreed}
+                    onChange={(e) => setConsentAgreed(e.target.checked)}
+                    className="w-5 h-5 rounded-md border-slate-300 text-primary focus:ring-primary/20 accent-primary cursor-pointer mt-0.5"
+                    required
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label
+                    htmlFor="consent"
+                    className="text-sm font-black text-slate-800 leading-5 cursor-pointer"
+                  >
+                    Communication Consent Confirmation
+                  </label>
+                  <p className="text-[11px] text-slate-500 font-medium leading-normal">
+                    I confirm that this lead has{" "}
+                    <strong>explicitly consented</strong> to receive messages
+                    related to our services. I understand that Drippilot is not
+                    liable for any compliance issues arising from leads added
+                    without proper consent. All communications must comply with
+                    applicable laws and regulations.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div className="pt-4 col-span-2 flex items-center gap-3">
               <Button
                 type="button"
@@ -277,7 +331,11 @@ export function CreateLeadDialog({
               </Button>
               <Button
                 type="submit"
-                disabled={isLoading || (!formData.email && !formData.phone)}
+                disabled={
+                  isLoading ||
+                  !consentAgreed ||
+                  (!formData.email && !formData.phone)
+                }
                 className="flex-2 rounded-xl h-12"
               >
                 {isLoading ? (

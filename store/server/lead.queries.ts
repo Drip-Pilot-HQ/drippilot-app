@@ -84,3 +84,22 @@ export const useDeleteLeadMutation = () => {
     },
   })
 }
+
+export const useImportLeadsMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData()
+      formData.append('file', file)
+      const { data } = await apiClient.post('/leads/import', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      return data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['leads'] })
+    },
+  })
+}

@@ -14,6 +14,8 @@ import {
   DeEnrollLeadsDto,
   GetEnrolledLeadsDto,
   PaginatedEnrolledLeadsResponse,
+  GetExecutionLogsDto,
+  PaginatedExecutionLogsResponse,
 } from '@/types/campaign'
 
 export const useCampaignsQuery = (query: SearchCampaignsDto = {}) => {
@@ -184,5 +186,19 @@ export const useRemoveEnrolledLeadsMutation = (campaignId: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['enrolled-leads', campaignId] })
     },
+  })
+}
+
+export const useExecutionLogsQuery = (campaignId: string, query: GetExecutionLogsDto = {}) => {
+  return useQuery({
+    queryKey: ['execution-logs', campaignId, query],
+    queryFn: async () => {
+      const { data } = await apiClient.get<PaginatedExecutionLogsResponse>(
+        `/campaigns/${campaignId}/execution-logs`,
+        { params: query },
+      )
+      return data
+    },
+    enabled: !!campaignId,
   })
 }

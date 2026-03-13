@@ -47,6 +47,9 @@ export function EnrollLeadsDrawer({
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
+  const [enrollingType, setEnrollingType] = useState<"selected" | "all" | null>(
+    null,
+  );
 
   const { data, isLoading } = useLeadsQuery({
     search: debouncedSearch || undefined,
@@ -115,6 +118,7 @@ export function EnrollLeadsDrawer({
 
   const handleEnrollSelected = async () => {
     if (selectedIds.size === 0) return;
+    setEnrollingType("selected");
     try {
       await enrollMutation.mutateAsync({
         campaignId: campaign.id,
@@ -130,10 +134,13 @@ export function EnrollLeadsDrawer({
       onClose();
     } catch {
       toast.error("Failed to enroll leads");
+    } finally {
+      setEnrollingType(null);
     }
   };
 
   const handleEnrollAll = async () => {
+    setEnrollingType("all");
     try {
       await enrollMutation.mutateAsync({
         campaignId: campaign.id,
@@ -143,6 +150,8 @@ export function EnrollLeadsDrawer({
       onClose();
     } catch {
       toast.error("Failed to enroll leads");
+    } finally {
+      setEnrollingType(null);
     }
   };
 
@@ -253,6 +262,8 @@ export function EnrollLeadsDrawer({
 
         <EnrollLeadsFooter
           selectedIdsCount={selectedIds.size}
+          isEnrollingSelected={enrollingType === "selected"}
+          isEnrollingAll={enrollingType === "all"}
           isMutating={enrollMutation.isPending}
           onEnrollSelected={handleEnrollSelected}
           onEnrollAll={handleEnrollAll}

@@ -6,6 +6,8 @@ import { Button } from "@/components/branding/Button";
 interface EnrollLeadsFooterProps {
   selectedIdsCount: number;
   isMutating: boolean;
+  isEnrollingSelected: boolean;
+  isEnrollingAll: boolean;
   onEnrollSelected: () => void;
   onEnrollAll: () => void;
 }
@@ -13,6 +15,8 @@ interface EnrollLeadsFooterProps {
 export function EnrollLeadsFooter({
   selectedIdsCount,
   isMutating,
+  isEnrollingSelected,
+  isEnrollingAll,
   onEnrollSelected,
   onEnrollAll,
 }: EnrollLeadsFooterProps) {
@@ -23,7 +27,7 @@ export function EnrollLeadsFooter({
         onClick={onEnrollSelected}
         className="w-full rounded-xl h-11"
       >
-        {isMutating ? (
+        {isEnrollingSelected ? (
           <Loader2 className="w-4 h-4 animate-spin" />
         ) : (
           <>
@@ -38,7 +42,7 @@ export function EnrollLeadsFooter({
         onClick={onEnrollAll}
         className="w-full rounded-xl h-11"
       >
-        {isMutating ? (
+        {isEnrollingAll ? (
           <Loader2 className="w-4 h-4 animate-spin" />
         ) : (
           <>

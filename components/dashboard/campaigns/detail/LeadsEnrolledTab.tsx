@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { Users } from "lucide-react";
 import { Campaign, CampaignStatus } from "@/types/campaign";
 import {
   useEnrolledLeadsQuery,
@@ -101,55 +102,82 @@ export function LeadsEnrolledTab({ campaign }: LeadsEnrolledTabProps) {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="space-y-6 max-w-[1200px] mx-auto animate-in fade-in duration-700">
       <LeadsEnrolledWarning isActive={isActive} />
 
-      <LeadsEnrolledToolbar
-        searchInput={searchInput}
-        onSearchChange={(val) => {
-          setSearchInput(val);
-          setPage(1);
-        }}
-        sortBy={sortBy}
-        sortOrder={sortOrder}
-        onSortChange={(field, order) => {
-          setSortBy(field);
-          setSortOrder(order);
-          setIsSortOpen(false);
-          setPage(1);
-        }}
-        isSortOpen={isSortOpen}
-        onToggleSort={() => setIsSortOpen(!isSortOpen)}
-        onCloseSort={() => setIsSortOpen(false)}
-        selectedIdsCount={selectedIds.size}
-        isActive={isActive}
-        isRemoving={removeMutation.isPending}
-        onRemoveSelected={handleRemoveSelected}
-        onOpenDrawer={() => setIsDrawerOpen(true)}
-      />
+      <div className="bg-white border border-slate-200/80 rounded-[24px] md:rounded-[32px] shadow-sm overflow-hidden flex flex-col">
+        {/* Header Section */}
+        <div className="px-5 py-5 md:px-8 md:py-6 border-b border-slate-50 flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-slate-50/20">
+          <div>
+            <div className="flex items-center gap-2.5 mb-1.5">
+              <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                <Users className="w-4 h-4 text-primary" />
+              </div>
+              <h1 className="text-xl font-black text-slate-800 tracking-tight">
+                Enrolled Leads
+              </h1>
+            </div>
+            <p className="text-sm text-slate-500 font-medium">
+              Manage all leads currently active in your campaign sequence.
+            </p>
+          </div>
 
-      <LeadsEnrolledTable
-        isLoading={isLoading}
-        leads={sortedLeads}
-        selectedIds={selectedIds}
-        allOnPageSelected={allOnPageSelected}
-        someSelected={someSelected}
-        onToggleSelect={toggleSelect}
-        onToggleSelectAll={toggleSelectAll}
-        isSearching={!!debouncedSearch}
-      />
+          <LeadsEnrolledToolbar
+            searchInput={searchInput}
+            onSearchChange={(val) => {
+              setSearchInput(val);
+              setPage(1);
+            }}
+            sortBy={sortBy}
+            sortOrder={sortOrder}
+            onSortChange={(field, order) => {
+              setSortBy(field);
+              setSortOrder(order);
+              setIsSortOpen(false);
+              setPage(1);
+            }}
+            isSortOpen={isSortOpen}
+            onToggleSort={() => setIsSortOpen(!isSortOpen)}
+            onCloseSort={() => setIsSortOpen(false)}
+            selectedIdsCount={selectedIds.size}
+            isActive={isActive}
+            isRemoving={removeMutation.isPending}
+            onRemoveSelected={handleRemoveSelected}
+            onOpenDrawer={() => setIsDrawerOpen(true)}
+          />
+        </div>
 
-      <LeadsEnrolledPagination
-        pagination={pagination!}
-        page={page}
-        limit={limit}
-        onPageChange={setPage}
-        onLimitChange={(l) => {
-          setLimit(l);
-          setPage(1);
-        }}
-        leadsOnPage={sortedLeads.length}
-      />
+        {/* Table Section */}
+        <div className="flex-1 min-h-[400px]">
+          <LeadsEnrolledTable
+            isLoading={isLoading}
+            leads={sortedLeads}
+            selectedIds={selectedIds}
+            allOnPageSelected={allOnPageSelected}
+            someSelected={someSelected}
+            onToggleSelect={toggleSelect}
+            onToggleSelectAll={toggleSelectAll}
+            isSearching={!!debouncedSearch}
+          />
+        </div>
+
+        {/* Pagination Section */}
+        {pagination && pagination.totalPages > 0 && (
+          <div className="px-5 py-5 md:px-8 md:py-6 border-t border-slate-50 bg-slate-50/10">
+            <LeadsEnrolledPagination
+              pagination={pagination}
+              page={page}
+              limit={limit}
+              onPageChange={setPage}
+              onLimitChange={(l) => {
+                setLimit(l);
+                setPage(1);
+              }}
+              leadsOnPage={sortedLeads.length}
+            />
+          </div>
+        )}
+      </div>
 
       <EnrollLeadsDrawer
         campaign={campaign}

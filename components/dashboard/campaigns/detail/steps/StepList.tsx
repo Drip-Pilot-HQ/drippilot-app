@@ -1,16 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, GitBranch } from "lucide-react";
+import { ChevronDown, Workflow } from "lucide-react";
 import { CampaignStep } from "@/types/campaign";
 import { TemplateChannel } from "@/types/template";
 import { Campaign } from "@/types/campaign";
 import { StepCard } from "./StepCard";
 import { AddStepButton } from "./AddStepButton";
-import {
-  StepCardSkeleton,
-  StepConnectorSkeleton,
-} from "../CampaignDetailSkeleton";
+import { StepCardSkeleton } from "../CampaignDetailSkeleton";
 
 interface StepListProps {
   steps: CampaignStep[];
@@ -29,11 +26,11 @@ export function StepList({
 
   if (isLoading) {
     return (
-      <div className="flex flex-col space-y-0 w-full">
+      <div className="flex flex-col w-full max-w-2xl mx-auto px-4">
         {[1, 2, 3].map((i, idx) => (
-          <div key={i}>
+          <div key={i} className="flex flex-col items-center">
             <StepCardSkeleton />
-            {idx < 2 && <StepConnectorSkeleton />}
+            {idx < 2 && <StepConnector />}
           </div>
         ))}
       </div>
@@ -43,47 +40,56 @@ export function StepList({
   const sorted = [...steps].sort((a, b) => a.stepNumber - b.stepNumber);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full max-w-2xl mx-auto px-4 pb-20">
       {sorted.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center bg-white border border-dashed border-slate-200 rounded-2xl mb-6">
-          <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mb-4">
-            <GitBranch className="w-6 h-6 text-slate-300" />
+        <div className="flex flex-col items-center justify-center py-20 text-center bg-white border border-dashed border-slate-200 rounded-[32px] md:rounded-[40px] mb-8 relative px-4">
+          <div className="w-20 h-20 md:w-24 md:h-24 rounded-[30px] md:rounded-[36px] bg-slate-50 flex items-center justify-center mb-6">
+            <Workflow className="w-10 h-10 md:w-12 md:h-12 text-slate-200" />
           </div>
-          <h3 className="text-sm font-black text-slate-900 mb-1">
-            No steps yet
+          <h3 className="text-xl md:text-2xl font-black text-slate-900 mb-2">
+            Build your sequence
           </h3>
-          <p className="text-xs text-slate-400 font-medium max-w-[220px] leading-relaxed">
-            Build your drip sequence by adding action and delay steps below.
+          <p className="text-sm text-slate-500 font-medium max-w-[320px] leading-relaxed">
+            Your sequence is empty. Start adding steps to automate your
+            outreach.
           </p>
         </div>
       ) : (
-        sorted.map((step, index) => (
-          <div key={step.id} className="flex flex-col">
-            <StepCard
-              step={step}
-              campaign={campaign}
-              isEditing={editingStepId === step.id}
-              onEditStart={() => setEditingStepId(step.id)}
-              onEditEnd={() => setEditingStepId(null)}
-            />
-            {index < sorted.length - 1 && <StepConnector />}
-          </div>
-        ))
+        <div className="flex flex-col">
+          {sorted.map((step, index) => (
+            <div key={step.id} className="flex flex-col items-center">
+              <div className="w-full">
+                <StepCard
+                  step={step}
+                  campaign={campaign}
+                  isEditing={editingStepId === step.id}
+                  onEditStart={() => setEditingStepId(step.id)}
+                  onEditEnd={() => setEditingStepId(null)}
+                />
+              </div>
+              {/* Connector between steps */}
+              {index < sorted.length - 1 && <StepConnector />}
+            </div>
+          ))}
+          {/* Connector before Add Step button */}
+          <StepConnector />
+        </div>
       )}
 
-      {sorted.length > 0 && <StepConnector />}
-
-      <AddStepButton campaign={campaign} allowedChannels={allowedChannels} />
+      {/* "Add Step" section */}
+      <div className="w-full">
+        <AddStepButton campaign={campaign} allowedChannels={allowedChannels} />
+      </div>
     </div>
   );
 }
 
 function StepConnector() {
   return (
-    <div className="flex flex-col items-center py-0.5 select-none pointer-events-none">
-      <div className="w-px h-3 bg-slate-400" />
-      <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
-      <div className="w-px h-3 bg-slate-400" />
+    <div className="flex flex-col items-center py-4 select-none pointer-events-none">
+      <div className="w-1 h-6 bg-slate-200 rounded-full" />
+      <ChevronDown className="w-5 h-5 text-slate-300 -mt-1" />
+      <div className="w-1 h-2 bg-slate-100 rounded-full opacity-50 mt-1" />
     </div>
   );
 }

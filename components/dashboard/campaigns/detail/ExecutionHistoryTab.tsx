@@ -1,83 +1,69 @@
-import { Clock, Lock, CheckCircle2, XCircle, SkipForward } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import { Clock } from "lucide-react";
+import { useExecutionLogsQuery } from "@/store/server/campaign.queries";
+import { ExecutionLogTable } from "./execution-history/ExecutionLogTable";
+import { ExecutionLogPagination } from "./execution-history/ExecutionLogPagination";
+import { ExecutionLogStats } from "./execution-history/ExecutionLogStats";
 
 interface ExecutionHistoryTabProps {
   campaignId: string;
 }
 
-const PREVIEW_ROWS = [
-  {
-    status: "success",
-    label: "Sent",
-    icon: <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />,
-    bg: "bg-emerald-50 text-emerald-700",
-  },
-  {
-    status: "failed",
-    label: "Failed",
-    icon: <XCircle className="w-3.5 h-3.5 text-rose-500" />,
-    bg: "bg-rose-50 text-rose-700",
-  },
-  {
-    status: "skipped",
-    label: "Skipped",
-    icon: <SkipForward className="w-3.5 h-3.5 text-slate-400" />,
-    bg: "bg-slate-100 text-slate-500",
-  },
-];
-
 export function ExecutionHistoryTab({ campaignId }: ExecutionHistoryTabProps) {
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(20);
+
+  const { data, isLoading } = useExecutionLogsQuery(campaignId, {
+    page,
+    limit,
+  });
+
   return (
-    <div className="max-w-3xl" data-campaign-id={campaignId}>
-      <div className="relative rounded-2xl border border-slate-200 bg-white overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-slate-400" />
-            <span className="text-sm font-black text-slate-700">
-              Execution Log
-            </span>
+    <div className="w-full max-w-[1200px] mx-auto animate-in fade-in duration-700">
+      <div className="bg-white border border-slate-200/80 rounded-[24px] md:rounded-[32px] shadow-sm overflow-hidden flex flex-col">
+        {/* Header Section */}
+        <div className="px-5 py-5 md:px-8 md:py-6 border-b border-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-slate-50/20">
+          <div>
+            <div className="flex items-center gap-2.5 mb-1.5">
+              <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                <Clock className="w-4 h-4 text-primary" />
+              </div>
+              <h1 className="text-xl font-black text-slate-800 tracking-tight">
+                Execution History
+              </h1>
+            </div>
+            <p className="text-sm text-slate-500 font-medium">
+              Real-time audit trail of all campaign outreach activities.
+            </p>
           </div>
-          <div className="flex items-center gap-3">
-            {PREVIEW_ROWS.map((row) => (
-              <span
-                key={row.status}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold"
-              >
-                {row.icon}
-                {row.label}
-              </span>
-            ))}
-          </div>
+
+          <ExecutionLogStats total={data?.pagination.total || 0} />
         </div>
 
-        <div className="divide-y divide-slate-100 opacity-30 pointer-events-none select-none">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="px-5 py-3.5 flex items-center gap-4">
-              <div className="w-24 h-3.5 bg-slate-200 rounded" />
-              <div className="w-32 h-3.5 bg-slate-200 rounded" />
-              <div className="flex-1 h-3.5 bg-slate-200 rounded" />
-              <div className="w-16 h-5 bg-slate-200 rounded-full" />
-              <div className="w-20 h-3 bg-slate-200 rounded" />
-            </div>
-          ))}
+        {/* Content Section */}
+        <div className="flex-1 min-h-[400px]">
+          <ExecutionLogTable logs={data?.data || []} isLoading={isLoading} />
         </div>
 
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-[2px]">
-          <div className="relative mb-5">
-            <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center">
-              <Clock className="w-6 h-6 text-slate-300" />
-            </div>
-            <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center">
-              <Lock className="w-3 h-3 text-slate-400" />
-            </div>
-          </div>
-          <h3 className="text-base font-black text-slate-900 mb-2">
-            Execution History — Coming Soon
-          </h3>
-          <p className="text-sm text-slate-500 font-medium text-center max-w-xs leading-relaxed">
-            A full audit trail of every message sent, skipped, or failed across
-            this campaign will appear here.
-          </p>
-        </div>
+        {/* Pagination Section */}
+        {data && data.pagination.totalPages > 0 && (
+          <ExecutionLogPagination
+            currentPage={page}
+            totalPages={data.pagination.totalPages}
+            totalResults={data.pagination.total}
+            showingResults={data.data.length}
+            limit={limit}
+            onPageChange={setPage}
+            onLimitChange={(l) => {
+              setLimit(l);
+              setPage(1);
+            }}
+            hasPrev={page > 1}
+            hasNext={page < data.pagination.totalPages}
+          />
+        )}
       </div>
     </div>
   );

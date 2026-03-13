@@ -47,14 +47,7 @@ const ALL_STATUSES: {
     emoji: "✅",
     desc: "Deal closed",
     activeClass: "bg-emerald-50 border-emerald-300 text-emerald-700",
-  },
-  {
-    value: "unsubscribed",
-    label: "Unsubscribed",
-    emoji: "🚫",
-    desc: "Opted out",
-    activeClass: "bg-slate-100 border-slate-300 text-slate-600",
-  },
+  }
 ];
 
 // Outer component — handles loading state, gates inner form on data

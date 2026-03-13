@@ -8,11 +8,11 @@ const STATUS_CONFIG: Record<
   { label: string; className: string }
 > = {
   [EnrollmentStatus.PENDING]: {
-    label: "Pending",
+    label: "Scheduled",
     className: "bg-amber-50 text-amber-600 border-amber-100",
   },
   [EnrollmentStatus.PROCESSING]: {
-    label: "Processing",
+    label: "Sending...",
     className: "bg-blue-50 text-blue-600 border-blue-100",
   },
   [EnrollmentStatus.FAILED]: {
@@ -39,46 +39,52 @@ export function LeadsEnrolledRow({
   return (
     <tr
       className={cn(
-        "transition-colors cursor-pointer",
-        isSelected ? "bg-primary/5" : "hover:bg-slate-50",
+        "transition-all cursor-pointer duration-200",
+        isSelected ? "bg-primary/5" : "hover:bg-slate-50/50",
       )}
       onClick={onToggle}
     >
-      <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
+      <td className="px-5 py-4 w-12" onClick={(e) => e.stopPropagation()}>
         <input
           type="checkbox"
           checked={isSelected}
           onChange={onToggle}
-          className="rounded w-4 h-4 accent-primary cursor-pointer"
+          className="rounded-lg w-5 h-5 accent-primary cursor-pointer border-slate-200 transition-all"
         />
       </td>
-      <td className="px-4 py-3">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-black shrink-0">
+      <td className="px-5 py-4">
+        <div className="flex items-center gap-3.5">
+          <div className="w-10 h-10 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center text-primary text-sm font-black shrink-0 shadow-sm">
             {initial}
           </div>
-          <div>
-            <p className="text-sm font-bold text-slate-900 leading-none mb-0.5">
+          <div className="min-w-0">
+            <p className="text-sm font-black text-slate-900 leading-tight truncate">
               {lead.name || "—"}
             </p>
-            <p className="text-xs text-slate-400 font-medium">
+            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
               {lead.email || "—"}
             </p>
           </div>
         </div>
       </td>
-      <td className="px-4 py-3 hidden sm:table-cell">
+      <td className="px-5 py-4 hidden sm:table-cell">
         <span
           className={cn(
-            "inline-flex items-center px-2 py-1 rounded-lg border text-[10px] font-black uppercase tracking-wider",
+            "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px] font-black uppercase tracking-widest shadow-sm",
             statusConfig.className,
           )}
         >
+          {lead.status === EnrollmentStatus.PROCESSING && (
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
+            </span>
+          )}
           {statusConfig.label}
         </span>
       </td>
-      <td className="px-4 py-3 hidden md:table-cell">
-        <span className="text-xs text-slate-500 font-medium">
+      <td className="px-5 py-4 hidden md:table-cell text-right">
+        <span className="text-[11px] text-slate-500 font-black uppercase tracking-tight bg-slate-50 px-2 py-1 rounded-md border border-slate-100">
           {new Date(lead.enrolledAt).toLocaleDateString("en-US", {
             month: "short",
             day: "numeric",

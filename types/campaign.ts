@@ -128,3 +128,35 @@ export interface PaginatedEnrolledLeadsResponse {
     totalPages: number;
   };
 }
+
+export enum ExecutionLogStatus {
+  SUCCESS = 'success',
+  SKIPPED = 'skipped',
+  FAILED = 'failed',
+}
+
+export interface GetExecutionLogsDto {
+  page?: number;
+  limit?: number;
+}
+
+export interface ExecutionLog {
+  id: string;
+  leadId: string;
+  leadName?: string;
+  stepId?: string;
+  stepNumber: number;
+  status: ExecutionLogStatus;
+  logMessage?: string;
+  executedAt: string;
+}
+
+export interface PaginatedExecutionLogsResponse {
+  data: ExecutionLog[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}

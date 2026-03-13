@@ -20,17 +20,17 @@ const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
   {
     id: "workflow",
     label: "Workflow",
-    icon: <Workflow className="w-3.5 h-3.5" />,
+    icon: <Workflow className="w-4 h-4" />,
   },
   {
     id: "leads",
     label: "Leads Enrolled",
-    icon: <Users className="w-3.5 h-3.5" />,
+    icon: <Users className="w-4 h-4" />,
   },
   {
     id: "history",
     label: "Execution History",
-    icon: <Clock className="w-3.5 h-3.5" />,
+    icon: <Clock className="w-4 h-4" />,
   },
 ];
 
@@ -91,7 +91,7 @@ export function CampaignDetailClient({
   return (
     <div className="animate-in fade-in duration-500 mx-auto">
       <div className="pb-6">
-        <CampaignDetailHeader campaign={campaign} />
+        <CampaignDetailHeader campaign={campaign} stepsCount={steps.length} />
       </div>
 
       <div className="border-b border-slate-200">

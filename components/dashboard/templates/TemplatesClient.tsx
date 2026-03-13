@@ -262,6 +262,7 @@ export function TemplatesClient() {
       </div>
 
       <CreateTemplateDialog
+        key={isCreateOpen ? editingTemplate?.id || "new" : "closed"}
         isOpen={isCreateOpen}
         onClose={closeDialog}
         editTemplate={editingTemplate}

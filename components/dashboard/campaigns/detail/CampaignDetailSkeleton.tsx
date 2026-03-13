@@ -9,7 +9,7 @@ function Pulse({ className }: { className?: string }) {
 
 export function StepCardSkeleton() {
   return (
-    <div className="relative rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden h-[120px]">
+    <div className="relative rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden h-[120px] w-full">
       {/* Accent bar */}
       <div className="absolute left-0 top-0 bottom-0 w-1 bg-slate-100" />
 
@@ -47,10 +47,10 @@ export function StepCardSkeleton() {
 
 export function StepConnectorSkeleton() {
   return (
-    <div className="flex flex-col items-center py-0.5 select-none pointer-events-none opacity-40">
-      <div className="w-px h-3 bg-slate-400" />
-      <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
-      <div className="w-px h-3 bg-slate-400" />
+    <div className="flex flex-col items-center py-4 select-none pointer-events-none opacity-40">
+      <div className="w-1 h-6 bg-slate-200 rounded-full" />
+      <ChevronDown className="w-5 h-5 text-slate-300 -mt-1" />
+      <div className="w-1 h-2 bg-slate-100 rounded-full opacity-50 mt-1" />
     </div>
   );
 }
@@ -123,10 +123,10 @@ export function CampaignDetailSkeleton() {
 
       <TabsSkeleton />
 
-      <div className="pt-8 max-w-2xl mx-auto">
+      <div className="pt-8 max-w-2xl mx-auto px-4">
         <div className="space-y-0">
           {[1, 2, 3].map((i, idx) => (
-            <div key={i}>
+            <div key={i} className="flex flex-col items-center">
               <StepCardSkeleton />
               {idx < 2 && <StepConnectorSkeleton />}
             </div>

@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 
 interface CampaignDetailHeaderProps {
   campaign: Campaign;
+  stepsCount: number;
 }
 
 const STATUS_CONFIG: Record<
@@ -65,7 +66,10 @@ function getActionConfig(status: CampaignStatus): {
   };
 }
 
-export function CampaignDetailHeader({ campaign }: CampaignDetailHeaderProps) {
+export function CampaignDetailHeader({
+  campaign,
+  stepsCount,
+}: CampaignDetailHeaderProps) {
   const router = useRouter();
   const [isEditOpen, setIsEditOpen] = useState(false);
   const statusMutation = useUpdateCampaignStatusMutation();
@@ -74,11 +78,18 @@ export function CampaignDetailHeader({ campaign }: CampaignDetailHeaderProps) {
   const actionConfig = getActionConfig(campaign.status);
 
   const handleStatusChange = async () => {
+    if (actionConfig.nextStatus === CampaignStatus.ACTIVE && stepsCount === 0) {
+      return;
+    }
     await statusMutation.mutateAsync({
       id: campaign.id,
       status: { status: actionConfig.nextStatus },
     });
   };
+
+  const isTransitionDisabled =
+    statusMutation.isPending ||
+    (actionConfig.nextStatus === CampaignStatus.ACTIVE && stepsCount === 0);
 
   return (
     <>
@@ -147,20 +158,30 @@ export function CampaignDetailHeader({ campaign }: CampaignDetailHeaderProps) {
               <span className="hidden sm:inline">Edit</span>
             </button>
 
-            <Button
-              size="sm"
-              variant={actionConfig.variant}
-              onClick={handleStatusChange}
-              disabled={statusMutation.isPending}
-              className="h-9 px-4 text-xs rounded-xl gap-1.5"
+            <div
+              title={
+                stepsCount === 0 &&
+                actionConfig.nextStatus === CampaignStatus.ACTIVE
+                  ? "Add steps to your workflow before activating"
+                  : undefined
+              }
+              className="w-fit"
             >
-              {statusMutation.isPending ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              ) : (
-                actionConfig.icon
-              )}
-              {actionConfig.label}
-            </Button>
+              <Button
+                size="sm"
+                variant={actionConfig.variant}
+                onClick={handleStatusChange}
+                disabled={isTransitionDisabled}
+                className="h-9 px-4 text-xs rounded-xl gap-1.5"
+              >
+                {statusMutation.isPending ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  actionConfig.icon
+                )}
+                {actionConfig.label}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
