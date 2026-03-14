@@ -58,7 +58,7 @@ export function ActionStepForm({
   return (
     <div className="space-y-5">
       <div className="space-y-1.5">
-        <label className="text-xs font-black text-slate-600 uppercase tracking-wider">
+        <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">
           Template <span className="text-rose-500">*</span>
         </label>
 
@@ -129,7 +129,7 @@ export function ActionStepForm({
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <label className="text-xs font-black text-slate-600 uppercase tracking-wider">
+          <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">
             Send Time
           </label>
           <TimeSelector value={sendAt} onChange={setSendAt} />
@@ -139,7 +139,7 @@ export function ActionStepForm({
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs font-black text-slate-600 uppercase tracking-wider">
+          <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">
             Timezone
           </label>
           <TimezoneSelector value={timezone} onChange={setTimezone} />

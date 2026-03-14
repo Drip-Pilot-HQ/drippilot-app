@@ -31,8 +31,11 @@ export interface OutreachMessage {
 
 export interface LostThread {
   id: string
+  workspaceId: string
   leadEmail: string | null
   leadPhone: string | null
+  aiResponseEnabled: boolean
+  createdAt: string
   updatedAt: string
 }
 
@@ -43,4 +46,38 @@ export interface SendReplyDto {
 
 export interface ToggleAiResponseDto {
   enabled: boolean
+}
+
+export interface ThreadChannels {
+  hasEmail: boolean
+  hasPhone: boolean
+  isEmailThread: boolean
+  defaultChannel: OutreachChannel
+}
+
+export function getThreadChannels(
+  thread: Pick<OutreachThread, 'leadEmail' | 'leadPhone' | 'senderEmail'>,
+): ThreadChannels {
+  const hasEmail = !!thread.leadEmail?.trim()
+  const hasPhone = !!thread.leadPhone?.trim()
+  const isEmailThread = hasEmail || !!thread.senderEmail?.trim()
+  const defaultChannel: OutreachChannel = hasEmail ? 'email' : 'sms'
+  return { hasEmail, hasPhone, isEmailThread, defaultChannel }
+}
+
+export function lostThreadToOutreach(lost: LostThread): OutreachThread {
+  return {
+    id: lost.id,
+    workspaceId: lost.workspaceId,
+    leadId: null,
+    leadEmail: lost.leadEmail,
+    leadPhone: lost.leadPhone,
+    senderEmail: null,
+    senderPhone: null,
+    campaignId: null,
+    aiResponseEnabled: lost.aiResponseEnabled,
+    isUnmatched: true,
+    createdAt: lost.createdAt,
+    updatedAt: lost.updatedAt,
+  }
 }

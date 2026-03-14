@@ -112,6 +112,7 @@ export const useToggleAiResponseMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['outreach-threads'] })
+      queryClient.invalidateQueries({ queryKey: ['outreach-threads-lost'] })
     },
   })
 }

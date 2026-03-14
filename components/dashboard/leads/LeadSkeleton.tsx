@@ -6,8 +6,13 @@ export function LeadRowSkeleton() {
           <div className="w-10 h-10 rounded-xl bg-slate-100" />
           <div className="space-y-2">
             <div className="h-4 w-32 bg-slate-100 rounded" />
-            <div className="h-3 w-48 bg-slate-100 rounded" />
           </div>
+        </div>
+      </td>
+      <td className="px-8 py-6">
+        <div className="space-y-1.5">
+          <div className="h-3 w-40 bg-slate-100 rounded" />
+          <div className="h-3 w-28 bg-slate-100 rounded" />
         </div>
       </td>
       <td className="px-8 py-6">
@@ -33,7 +38,7 @@ export function LeadListSkeleton() {
         <table className="w-full text-left">
           <thead>
             <tr className="bg-slate-50/50">
-              {[1, 2, 3, 4].map((i) => (
+              {[1, 2, 3, 4, 5].map((i) => (
                 <th key={i} className="px-8 py-5 h-10">
                   <div className="h-3 w-20 bg-slate-100 rounded" />
                 </th>

@@ -73,7 +73,7 @@ export function CustomSelect({
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 top-full overflow-hidden mt-1.5 w-full rounded-xl border border-slate-200 bg-white shadow-xl animate-in fade-in zoom-in-95 duration-200">
+        <div className="absolute z-60 top-full overflow-hidden mt-1.5 w-full rounded-xl border border-slate-200 bg-white shadow-xl animate-in fade-in zoom-in-95 duration-200">
           <div className="max-h-60 overflow-y-auto w-full p-1">
             {options.length === 0 ? (
               <div className="py-6 text-center text-sm text-slate-500">

@@ -93,21 +93,27 @@ export function LeadRow({ lead, onEdit }: LeadRowProps) {
                   ? `${lead.firstName || ""} ${lead.lastName || ""}`.trim()
                   : "Unnamed Lead")}
             </p>
-            <div className="flex items-center gap-2.5 mt-0.5">
-              {lead.email && (
-                <span className="flex items-center gap-1.5 text-[11px] text-slate-400 font-medium">
-                  <Mail className="w-3 h-3" />
-                  {lead.email}
-                </span>
-              )}
-              {lead.phone && (
-                <span className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-                  <Phone className="w-3 h-3" />
-                  {lead.phone}
-                </span>
-              )}
-            </div>
           </div>
+        </div>
+      </td>
+      <td className="px-6 py-4">
+        <div className="flex flex-col gap-1">
+          {lead.email ? (
+            <span className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium">
+              <Mail className="w-3 h-3 shrink-0 text-slate-400" />
+              {lead.email}
+            </span>
+          ) : (
+            <span className="text-[11px] text-slate-300 italic">No email</span>
+          )}
+          {lead.phone ? (
+            <span className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium">
+              <Phone className="w-3 h-3 shrink-0 text-slate-400" />
+              {lead.phone}
+            </span>
+          ) : (
+            <span className="text-[11px] text-slate-300 italic">No phone</span>
+          )}
         </div>
       </td>
       <td className="px-6 py-4">

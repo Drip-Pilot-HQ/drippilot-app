@@ -76,7 +76,7 @@ export function TimezoneSelector({ value, onChange }: TimezoneSelectorProps) {
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 top-full mt-1.5 w-full rounded-xl border border-slate-200 bg-white shadow-xl animate-in fade-in zoom-in-95 duration-200">
+        <div className="absolute z-60 top-full mt-1.5 w-full rounded-xl border border-slate-200 bg-white shadow-xl animate-in fade-in zoom-in-95 duration-200">
           <div className="p-2 border-b border-slate-100">
             <div className="flex items-center gap-2 px-2">
               <Search className="w-3.5 h-3.5 text-slate-400 shrink-0" />

@@ -16,13 +16,13 @@ export function ExecutionLogTable({ logs, isLoading }: ExecutionLogTableProps) {
         {Array.from({ length: 5 }).map((_, i) => (
           <div
             key={i}
-            className="px-5 py-5 flex items-center gap-6 animate-pulse"
+            className="px-5 py-4 flex items-center gap-5 animate-pulse"
           >
-            <div className="w-32 h-4 bg-slate-100 rounded" />
-            <div className="w-48 h-4 bg-slate-100 rounded-xl" />
-            <div className="w-24 h-4 bg-slate-100 rounded-md" />
-            <div className="flex-1 h-4 bg-slate-100 rounded" />
-            <div className="w-24 h-4 bg-slate-100 rounded-full" />
+            <div className="w-28 h-3.5 bg-slate-100 rounded" />
+            <div className="w-40 h-3.5 bg-slate-100 rounded" />
+            <div className="w-20 h-3.5 bg-slate-100 rounded" />
+            <div className="flex-1 h-3.5 bg-slate-100 rounded" />
+            <div className="w-20 h-5 bg-slate-100 rounded-md" />
           </div>
         ))}
       </div>
@@ -31,14 +31,14 @@ export function ExecutionLogTable({ logs, isLoading }: ExecutionLogTableProps) {
 
   if (logs.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
-        <div className="w-20 h-20 rounded-[30px] bg-slate-50 flex items-center justify-center mb-6">
-          <Inbox className="w-10 h-10 text-slate-200" />
+      <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
+        <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mb-5">
+          <Inbox className="w-7 h-7 text-slate-300" />
         </div>
-        <h3 className="text-xl font-black text-slate-900 mb-2">
+        <h3 className="text-lg font-semibold text-slate-800 mb-1.5">
           No history found
         </h3>
-        <p className="text-slate-500 max-w-sm font-medium">
+        <p className="text-sm text-slate-400 max-w-sm font-medium leading-relaxed">
           There are no execution logs for this campaign yet. Start enrolling
           leads to see the activity.
         </p>
@@ -47,7 +47,7 @@ export function ExecutionLogTable({ logs, isLoading }: ExecutionLogTableProps) {
   }
 
   return (
-    <div className="divide-y divide-slate-50 transition-all duration-500">
+    <div className="divide-y divide-slate-50">
       {logs.map((log) => (
         <ExecutionLogRow key={log.id} log={log} />
       ))}

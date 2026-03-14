@@ -21,20 +21,20 @@ export function ExecutionHistoryTab({ campaignId }: ExecutionHistoryTabProps) {
   });
 
   return (
-    <div className="w-full max-w-[1200px] mx-auto animate-in fade-in duration-700">
-      <div className="bg-white border border-slate-200/80 rounded-[24px] md:rounded-[32px] shadow-sm overflow-hidden flex flex-col">
+    <div className="w-full max-w-[1200px] mx-auto animate-in fade-in duration-500">
+      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
         {/* Header Section */}
-        <div className="px-5 py-5 md:px-8 md:py-6 border-b border-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-slate-50/20">
+        <div className="px-5 py-4 md:px-6 md:py-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-5">
           <div>
-            <div className="flex items-center gap-2.5 mb-1.5">
-              <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
+            <div className="flex items-center gap-2.5 mb-1">
+              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
                 <Clock className="w-4 h-4 text-primary" />
               </div>
-              <h1 className="text-xl font-black text-slate-800 tracking-tight">
+              <h1 className="text-lg font-semibold text-slate-800">
                 Execution History
               </h1>
             </div>
-            <p className="text-sm text-slate-500 font-medium">
+            <p className="text-sm text-slate-400 font-medium">
               Real-time audit trail of all campaign outreach activities.
             </p>
           </div>

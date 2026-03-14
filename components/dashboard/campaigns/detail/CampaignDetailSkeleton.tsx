@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { ChevronDown } from "lucide-react";
 
 function Pulse({ className }: { className?: string }) {
   return (
@@ -10,34 +9,26 @@ function Pulse({ className }: { className?: string }) {
 export function StepCardSkeleton() {
   return (
     <div className="relative rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden h-[120px] w-full">
-      {/* Accent bar */}
-      <div className="absolute left-0 top-0 bottom-0 w-1 bg-slate-100" />
-
-      <div className="pl-4">
-        {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-50">
-          <div className="flex items-center gap-3">
-            <Pulse className="w-6 h-6 rounded-full" />
-            <Pulse className="h-2 w-16" />
-          </div>
-          <div className="flex gap-1">
-            <Pulse className="w-6 h-6 rounded-lg" />
-            <Pulse className="w-6 h-6 rounded-lg" />
-          </div>
+      {/* Header */}
+      <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100">
+        <div className="flex items-center gap-2.5">
+          <Pulse className="w-6 h-6 rounded-lg" />
+          <Pulse className="h-3 w-20" />
         </div>
+        <div className="flex gap-1">
+          <Pulse className="w-6 h-6 rounded-lg" />
+          <Pulse className="w-6 h-6 rounded-lg" />
+        </div>
+      </div>
 
-        {/* Body */}
-        <div className="px-4 py-4 flex items-center gap-3">
-          <Pulse className="w-9 h-9 rounded-xl shrink-0" />
-          <div className="space-y-2 flex-1">
-            <div className="flex items-center gap-2">
-              <Pulse className="h-3.5 w-32" />
-              <Pulse className="h-3 w-12" />
-            </div>
-            <div className="flex gap-3">
-              <Pulse className="h-2.5 w-16" />
-              <Pulse className="h-2.5 w-24" />
-            </div>
+      {/* Body */}
+      <div className="px-5 py-4 flex items-center gap-4">
+        <Pulse className="w-10 h-10 rounded-xl shrink-0" />
+        <div className="space-y-2 flex-1">
+          <Pulse className="h-3.5 w-36" />
+          <div className="flex gap-2.5">
+            <Pulse className="h-3 w-16" />
+            <Pulse className="h-3 w-24" />
           </div>
         </div>
       </div>
@@ -47,10 +38,10 @@ export function StepCardSkeleton() {
 
 export function StepConnectorSkeleton() {
   return (
-    <div className="flex flex-col items-center py-4 select-none pointer-events-none opacity-40">
-      <div className="w-1 h-6 bg-slate-200 rounded-full" />
-      <ChevronDown className="w-5 h-5 text-slate-300 -mt-1" />
-      <div className="w-1 h-2 bg-slate-100 rounded-full opacity-50 mt-1" />
+    <div className="flex flex-col items-center py-2 select-none pointer-events-none opacity-40">
+      <div className="w-px h-5 bg-slate-200" />
+      <div className="w-1.5 h-1.5 rounded-full bg-slate-300 my-0.5" />
+      <div className="w-px h-5 bg-slate-200" />
     </div>
   );
 }

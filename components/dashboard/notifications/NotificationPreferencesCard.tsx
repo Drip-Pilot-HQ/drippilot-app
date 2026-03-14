@@ -47,7 +47,7 @@ const ALL_STATUSES: {
     emoji: "✅",
     desc: "Deal closed",
     activeClass: "bg-emerald-50 border-emerald-300 text-emerald-700",
-  }
+  },
 ];
 
 // Outer component — handles loading state, gates inner form on data
