@@ -11,8 +11,8 @@ self.addEventListener('push', (event) => {
 
   const options = {
     body: payload.body || 'You have a new notification',
-    icon: '/assets/favicon.ico',
-    badge: '/assets/favicon.ico',
+    icon: '/assets/logo-icon.png',
+    badge: '/assets/logo-icon.png',
     data: payload.data || {},
     tag: `drippilot-${payload.data?.leadId || Date.now()}`,
     renotify: true,
@@ -26,7 +26,7 @@ self.addEventListener('push', (event) => {
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const url = event.notification.data?.url || '/dashboard/notifications';
+  const url = '/dashboard/notifications';
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
       for (const client of list) {
