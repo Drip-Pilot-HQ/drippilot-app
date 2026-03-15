@@ -1,5 +1,6 @@
 import { PanelLeftOpen } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface MobileHeaderProps {
   onMenuClick: () => void;
@@ -15,17 +16,15 @@ export function MobileHeader({ onMenuClick }: MobileHeaderProps) {
       >
         <PanelLeftOpen className="w-5 h-5" />
       </button>
-
-      <Image
-        src="/assets/logo-icon.png"
-        alt="Drip Pilot"
-        width={32}
-        height={32}
-        className="object-contain"
-      />
-
-      {/* Balances the button so the logo stays centered */}
-      <div className="w-9" aria-hidden />
+      <Link href="/">
+        <Image
+          src="/assets/logo-icon.png"
+          alt="Drip Pilot"
+          width={32}
+          height={32}
+          className="object-contain"
+        />
+      </Link>
     </header>
   );
 }

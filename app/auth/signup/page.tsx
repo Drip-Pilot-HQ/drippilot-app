@@ -1,12 +1,42 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { User, Mail, Lock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/branding/Button";
 import { AuthInput } from "@/components/auth/AuthInput";
+import { useRegisterMutation } from "@/store/server/auth.queries";
 
 export default function SignupPage() {
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+  const registerMutation = useRegisterMutation();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    registerMutation.mutate(
+      { email, password, options: { data: { full_name: fullName } } },
+      {
+        onSuccess: (data) => {
+          if (data.user?.identities?.length === 0) {
+            setErrorMsg("Email address is already taken.");
+          } else {
+            setSuccessMsg("Check your email for the verification link!");
+          }
+        },
+        onError: (err) => {
+          setErrorMsg(err.message);
+        },
+      },
+    );
+  };
+
   return (
     <div className="space-y-8">
       {/* Title & Description */}
@@ -19,17 +49,32 @@ export default function SignupPage() {
         </p>
       </div>
 
+      {errorMsg && (
+        <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm font-semibold">
+          {errorMsg}
+        </div>
+      )}
+
+      {successMsg && (
+        <div className="bg-green-50 text-green-600 p-3 rounded-md text-sm font-semibold">
+          {successMsg}
+        </div>
+      )}
+
       {/* Social Register Separator */}
-      <div className="flex justify-center">
+      {/* <div className="flex justify-center">
         <button
           type="button"
           className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all font-bold text-slate-600 text-sm cursor-pointer"
         >
-            <img
-              src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png"
-              alt="Google"
-              className="w-3 h-3"
-            />
+          <Image
+            src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png"
+            alt="Google"
+            width={12}
+            height={12}
+            className="w-3 h-3"
+            unoptimized
+          />
           <span>Sign up with Google</span>
         </button>
       </div>
@@ -41,16 +86,18 @@ export default function SignupPage() {
         <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
           <span className="bg-white px-4 text-slate-400">Or use email</span>
         </div>
-      </div>
+      </div> */}
 
       {/* Form Section */}
-      <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+      <form className="space-y-6" onSubmit={handleSubmit}>
         <AuthInput
           label="Full Name"
           icon={User}
           type="text"
           placeholder="Alex Rivera"
           required
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
         />
 
         <AuthInput
@@ -59,6 +106,8 @@ export default function SignupPage() {
           type="email"
           placeholder="alex@company.com"
           required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         <AuthInput
@@ -67,6 +116,8 @@ export default function SignupPage() {
           type="password"
           placeholder="••••••••"
           required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
 
         {/* Term & Conditions */}
@@ -74,14 +125,14 @@ export default function SignupPage() {
           <p className="text-[11px] font-semibold text-slate-400 leading-relaxed">
             By creating an account, you agree to our{" "}
             <Link
-              href="/terms"
+              href="https://www.drippilot.com/terms"
               className="text-slate-600 hover:text-primary underline underline-offset-4 decoration-slate-200 hover:decoration-primary transition-all"
             >
               Terms of Service
             </Link>{" "}
             and{" "}
             <Link
-              href="/privacy-policy"
+              href="https://www.drippilot.com/privacy-policy"
               className="text-slate-600 hover:text-primary underline underline-offset-4 decoration-slate-200 hover:decoration-primary transition-all"
             >
               Privacy Policy
@@ -94,9 +145,14 @@ export default function SignupPage() {
         <Button
           variant="primary"
           size="md"
-          className="w-full shadow-2xl shadow-primary/30 group py-4"
+          className="w-full shadow-2xl shadow-primary/30 group py-4 rounded-xl"
+          disabled={registerMutation.isPending}
         >
-          <span>Create Account</span>
+          <span>
+            {registerMutation.isPending
+              ? "Creating Account..."
+              : "Create Account"}
+          </span>
           <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </Button>
       </form>

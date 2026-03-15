@@ -57,8 +57,14 @@ export function AppLayout({
        */}
       <div
         className={cn(
-          "hidden lg:flex shrink-0 border-r border-slate-200 overflow-hidden transition-all duration-300 ease-in-out",
-          collapseMode === "hide" && (isCollapsed ? "w-0" : "w-72"),
+          "hidden lg:flex shrink-0 border-r border-slate-200 transition-all duration-300 ease-in-out z-30",
+          collapseMode === "hide"
+            ? isCollapsed
+              ? "w-0 overflow-hidden"
+              : "w-72"
+            : isCollapsed
+              ? "w-[72px] overflow-visible"
+              : "w-72",
         )}
       >
         <Sidebar

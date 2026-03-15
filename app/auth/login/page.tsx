@@ -1,18 +1,34 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/branding/Button";
 import { useRouter } from "next/navigation";
 import { AuthInput } from "@/components/auth/AuthInput";
+import { useLoginMutation } from "@/store/server/auth.queries";
 
 export default function LoginPage() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const loginMutation = useLoginMutation();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/workspaces");
+    setErrorMsg("");
+    loginMutation.mutate(
+      { email, password },
+      {
+        onSuccess: () => {
+          router.push("/account/workspaces");
+        },
+        onError: (err) => {
+          setErrorMsg(err.message);
+        },
+      },
+    );
   };
 
   return (
@@ -27,14 +43,22 @@ export default function LoginPage() {
         </p>
       </div>
 
+      {errorMsg && (
+        <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm font-semibold">
+          {errorMsg}
+        </div>
+      )}
+
       {/* Form Section */}
-      <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+      <form className="space-y-6" onSubmit={handleSubmit}>
         <AuthInput
           label="Email Address"
           icon={Mail}
           type="email"
           placeholder="alex@company.com"
           required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         <div className="space-y-2">
@@ -55,73 +79,50 @@ export default function LoginPage() {
             type="password"
             placeholder="••••••••"
             required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
-        </div>
-
-        {/* Remember Me */}
-        <div className="flex items-center gap-3 px-1">
-          <label className="flex items-center gap-3 cursor-pointer group">
-            <div className="relative flex items-center justify-center">
-              <input
-                type="checkbox"
-                className="peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-slate-200 bg-slate-50 checked:bg-primary checked:border-primary transition-all duration-300"
-              />
-              <svg
-                className="absolute w-3 h-3 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity duration-300"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-            </div>
-            <span className="text-sm font-semibold text-slate-500 hover:text-slate-700 transition-colors">
-              Keep me signed in
-            </span>
-          </label>
         </div>
 
         {/* Action Button */}
         <Button
           variant="primary"
           size="md"
-          className="w-full shadow-2xl shadow-primary/30 group py-4"
+          className="w-full shadow-2xl shadow-primary/30 group py-4 rounded-xl"
+          disabled={loginMutation.isPending}
         >
-          <span>Log In</span>
+          <span>{loginMutation.isPending ? "Logging In..." : "Log In"}</span>
           <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </Button>
       </form>
 
       {/* Social Login Separator */}
-      <div className="relative py-2">
+      {/* <div className="relative py-2">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-slate-100" />
         </div>
         <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
           <span className="bg-white px-4 text-slate-400">Or sign in with</span>
         </div>
-      </div>
+      </div> */}
 
       {/* Social Login Buttons */}
-      <div className="flex justify-center">
+      {/* <div className="flex justify-center">
         <button
           type="button"
           className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all font-bold text-slate-600 text-sm cursor-pointer"
         >
-          <img
+          <Image
             src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png"
             alt="Google"
+            width={12}
+            height={12}
             className="w-3 h-3"
+            unoptimized
           />
           <span>Sign in with Google</span>
         </button>
-      </div>
+      </div> */}
 
       {/* Footer Link */}
       <p className="text-center text-slate-500 font-semibold text-sm">

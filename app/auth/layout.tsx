@@ -1,9 +1,7 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { AuthVisual } from "@/components/auth/AuthVisual";
 
 export default function AuthLayout({
@@ -24,7 +22,7 @@ export default function AuthLayout({
   return (
     <div className="min-h-screen bg-white flex overflow-hidden relative">
       {/* Back to Home Button */}
-      <div className="fixed top-6 left-0 right-0 z-50 flex justify-center pointer-events-none">
+      {/* <div className="fixed top-6 left-0 right-0 z-50 flex justify-center pointer-events-none">
         <Link
           href="/"
           className="pointer-events-auto flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/80 backdrop-blur-xl border border-slate-200 text-slate-600 hover:text-primary hover:border-primary/30 transition-all font-bold text-sm shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] group"
@@ -32,7 +30,7 @@ export default function AuthLayout({
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           <span>Back to Home</span>
         </Link>
-      </div>
+      </div> */}
 
       {/* Form Section (Left) */}
       <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-6 sm:p-12 relative bg-white">

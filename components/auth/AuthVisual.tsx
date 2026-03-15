@@ -6,9 +6,8 @@ interface AuthVisualProps {
   type: "login" | "signup" | "forgot" | "reset";
 }
 
-export function AuthVisual({ type }: AuthVisualProps) {
-  const bgImageUrl =
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuCCn9CIRBkiOpi7kSWHE0LGJjD86dN9D6RQN8MWAA4EMFR8sD0ouKqSG3Z6isgcP8B0s5Hxz6DGlsxx3mkCwV0Ft2HgubGE8eDyduXTItajqhJlr6Ik0_3cYJNSvLOVT17r8_MXnY_NAdym7zkTQ8K0bK5-aSIROoX_cZW4EekzduVyAfQ3jfe6mcYxonoCcYpJpNxj0GvtftqgwY0LxJosFUCsdW4q4c6ETlWUK229Sj5Z3KHUkua7u5MBeS83yl9RMXK7ZkZQacs";
+export function AuthVisual({}: AuthVisualProps) {
+  const bgImageUrl = "/assets/auth.png";
 
   return (
     <div
@@ -46,7 +45,7 @@ export function AuthVisual({ type }: AuthVisualProps) {
             <p className="text-2xl font-black text-slate-800 tracking-tighter">
               99.9%
             </p>
-            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+            <p className="text-[10px] font-black text-slate-700 uppercase tracking-widest">
               Uptime
             </p>
           </div>
@@ -54,7 +53,7 @@ export function AuthVisual({ type }: AuthVisualProps) {
             <p className="text-2xl font-black text-slate-800 tracking-tighter">
               256-bit
             </p>
-            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+            <p className="text-[10px] font-black text-slate-700 uppercase tracking-widest">
               Security
             </p>
           </div>
@@ -62,7 +61,7 @@ export function AuthVisual({ type }: AuthVisualProps) {
             <p className="text-2xl font-black text-slate-800 tracking-tighter">
               24/7
             </p>
-            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+            <p className="text-[10px] font-black text-slate-700 uppercase tracking-widest">
               Support
             </p>
           </div>
@@ -70,7 +69,7 @@ export function AuthVisual({ type }: AuthVisualProps) {
       </div>
 
       {/* Subtle Texture overlay */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+      {/* <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" /> */}
     </div>
   );
 }
