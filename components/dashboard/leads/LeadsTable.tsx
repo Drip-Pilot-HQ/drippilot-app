@@ -10,10 +10,10 @@ interface LeadsTableProps {
 
 export function LeadsTable({ leads, onEdit }: LeadsTableProps) {
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col min-h-0 max-h-[calc(100vh-300px)]">
-      <div className="overflow-x-auto overflow-y-auto custom-scrollbar flex-1">
+    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+      <div className="overflow-x-auto custom-scrollbar">
         <table className="w-full text-left border-collapse min-w-[1000px]">
-          <thead className="sticky top-0 z-10 bg-slate-50/90 backdrop-blur-sm shadow-sm">
+          <thead className="bg-slate-50/90 shadow-sm">
             <tr>
               <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-200">
                 Name

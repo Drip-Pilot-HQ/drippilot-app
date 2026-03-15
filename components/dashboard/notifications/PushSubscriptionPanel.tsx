@@ -7,12 +7,118 @@ import {
   Send,
   AlertTriangle,
   Info,
+  X,
+  Smartphone,
 } from "lucide-react";
 import { usePushSubscription } from "@/lib/push/usePushSubscription";
 import { useSendTestPushMutation } from "@/store/server/notification.queries";
 import { useAccountStore } from "@/store/client/useAccountStore";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useState } from "react";
+
+type MobilePlatform = "ios" | "android" | null;
+
+type HintState = {
+  platform: MobilePlatform;
+  isStandalone: boolean;
+  dismissed: boolean;
+};
+
+function usePwaInstallHint() {
+  const [hint, setHint] = useState<HintState>(() => {
+    if (typeof window === "undefined") {
+      return { platform: null, isStandalone: true, dismissed: true };
+    }
+    const ua = navigator.userAgent;
+    const standalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (navigator as any).standalone === true;
+
+    let platform: MobilePlatform = null;
+    if (/iPhone|iPad|iPod/.test(ua)) platform = "ios";
+    else if (/Android/.test(ua)) platform = "android";
+
+    return {
+      platform,
+      isStandalone: standalone,
+      dismissed: !!localStorage.getItem("dp-pwa-hint-dismissed"),
+    };
+  });
+
+  const dismiss = () => {
+    localStorage.setItem("dp-pwa-hint-dismissed", "1");
+    setHint((prev) => (prev ? { ...prev, dismissed: true } : prev));
+  };
+
+  const visible =
+    hint !== null &&
+    hint.platform !== null &&
+    !hint.isStandalone &&
+    !hint.dismissed;
+
+  return { platform: hint?.platform ?? null, visible, dismiss };
+}
+
+const IOS_STEPS = [
+  { icon: "1", label: "Open this page in Safari" },
+  { icon: "2", label: "Tap the Share button (□↑) at the bottom" },
+  { icon: "3", label: '"Add to Home Screen" → Add' },
+  { icon: "4", label: "Open the app from your home screen" },
+  { icon: "5", label: "Come back here and enable notifications" },
+];
+
+const ANDROID_STEPS = [
+  { icon: "1", label: "Open this page in Chrome" },
+  { icon: "2", label: 'Tap ⋮ menu → "Add to Home Screen" or "Install app"' },
+  { icon: "3", label: "Open the app from your home screen" },
+  { icon: "4", label: "Come back here and enable notifications" },
+];
+
+function PwaInstallHint() {
+  const { platform, visible, dismiss } = usePwaInstallHint();
+
+  if (!visible) return null;
+
+  const steps = platform === "ios" ? IOS_STEPS : ANDROID_STEPS;
+  const platformLabel = platform === "ios" ? "iPhone / iPad" : "Android";
+
+  return (
+    <div className="relative rounded-xl border border-primary/20 bg-primary/5 px-4 py-3.5 text-xs">
+      <button
+        type="button"
+        onClick={dismiss}
+        aria-label="Dismiss"
+        className="absolute top-2.5 right-2.5 text-slate-400 hover:text-slate-600 transition-colors"
+      >
+        <X className="w-3.5 h-3.5" />
+      </button>
+
+      <div className="flex items-center gap-2 mb-2.5 pr-5">
+        <span className="flex items-center justify-center w-6 h-6 rounded-md bg-primary/15 shrink-0">
+          <Smartphone className="w-3.5 h-3.5 text-primary" />
+        </span>
+        <p className="font-bold text-slate-800 text-[11px] leading-tight">
+          Install on {platformLabel} to enable push notifications
+        </p>
+      </div>
+
+      <ol className="space-y-1.5 pl-1">
+        {steps.map((step) => (
+          <li key={step.icon} className="flex items-start gap-2">
+            <span className="shrink-0 w-4 h-4 rounded-full bg-primary/20 text-primary font-bold text-[9px] flex items-center justify-center mt-px">
+              {step.icon}
+            </span>
+            <span className="text-[11px] text-slate-600 font-medium leading-tight">
+              {step.label}
+            </span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
 
 interface PushSubscriptionPanelProps {
   pushEnabled: boolean;
@@ -142,6 +248,9 @@ export function PushSubscriptionPanel({
           />
         </button>
       </div>
+
+      {/* Mobile install hint */}
+      {!isSubscribed && <PwaInstallHint />}
 
       {/* Test button */}
       {isSubscribed && (

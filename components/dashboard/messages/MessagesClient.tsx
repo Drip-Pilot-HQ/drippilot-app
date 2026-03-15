@@ -50,10 +50,10 @@ export function MessagesClient() {
     <div className="animate-in fade-in duration-500 space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+          <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
             Messages
           </h1>
-          <p className="text-slate-500 font-medium">
+          <p className="hidden sm:block text-slate-500 font-medium">
             View and reply to lead conversations across all channels
           </p>
         </div>
@@ -79,7 +79,7 @@ export function MessagesClient() {
         </div>
       </div>
 
-      <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden h-[calc(100svh-13rem)] lg:h-[calc(100svh-9.5rem)] flex">
+      <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden h-[calc(100svh-10rem)] lg:h-[calc(100svh-9.5rem)] flex">
         <div
           className={cn(
             "w-full lg:w-80 xl:w-96 shrink-0 border-r border-slate-100 flex flex-col",
