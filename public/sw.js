@@ -1,7 +1,69 @@
-// DripPilot Service Worker — Push Notifications
+// DripPilot Service Worker — PWA + Push Notifications
 
-self.addEventListener('install', () => self.skipWaiting());
-self.addEventListener('activate', (event) => event.waitUntil(clients.claim()));
+const CACHE_NAME = 'drippilot-v1';
+const APP_SHELL = [
+  '/icons/icon-192x192.png',
+  '/icons/icon-512x512.png',
+  '/assets/logo-icon.png',
+  '/assets/favicon.ico',
+];
+
+self.addEventListener('install', (event) => {
+  self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
+  );
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    Promise.all([
+      clients.claim(),
+      caches.keys().then((keys) =>
+        Promise.all(
+          keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
+        )
+      ),
+    ])
+  );
+});
+
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  if (request.method !== 'GET') return;
+
+  const url = new URL(request.url);
+
+  if (url.origin !== self.location.origin) return;
+
+  if (url.pathname.startsWith('/_next/')) return;
+
+  // Static assets (images, fonts, icons) — stale-while-revalidate
+  if (/\.(png|jpg|jpeg|svg|ico|webp|woff2?)$/.test(url.pathname)) {
+    event.respondWith(
+      caches.open(CACHE_NAME).then(async (cache) => {
+        const cached = await cache.match(request);
+        const networkFetch = fetch(request)
+          .then((res) => {
+            if (res.ok) cache.put(request, res.clone());
+            return res;
+          })
+          .catch(() => cached);
+        return cached ?? networkFetch;
+      })
+    );
+    return;
+  }
+
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request).catch(() =>
+        caches.match(request).then((cached) => cached ?? Response.error())
+      )
+    );
+    return;
+  }
+});
 
 self.addEventListener('push', (event) => {
   if (!event.data) return;

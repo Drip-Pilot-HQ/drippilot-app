@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 import { TanstackQueryProvider } from "../store/server/queryProvider";
@@ -19,6 +19,13 @@ const poppins = Poppins({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  themeColor: "#fb923c",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://drippilot.com"),
   title: {
@@ -34,8 +41,17 @@ export const metadata: Metadata = {
     "email automation",
     "CRM integration",
   ],
+  manifest: "/manifest.json",
   robots: { index: true, follow: true },
-  icons: { icon: "/assets/favicon.ico" },
+  icons: {
+    icon: "/assets/favicon.ico",
+    apple: "/assets/logo-icon.png",
+  },
+  appleWebApp: {
+    capable: true,
+    title: "Drip Pilot",
+    statusBarStyle: "black-translucent",
+  },
 
   openGraph: {
     type: "website",
@@ -96,6 +112,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta name="mobile-web-app-capable" content="yes" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}

@@ -17,7 +17,7 @@ import {
   useDeleteCampaignMutation,
   useUpdateCampaignStatusMutation,
 } from "@/store/server/campaign.queries";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useConfirm } from "@/components/branding/ConfirmProvider";
 import { useRouter } from "next/navigation";
 import {
@@ -39,6 +39,10 @@ export function CampaignCard({ campaign, onEdit }: CampaignCardProps) {
   const statusMutation = useUpdateCampaignStatusMutation();
   const [isDeleting, setIsDeleting] = useState(false);
   const confirm = useConfirm();
+
+  useEffect(() => {
+    router.prefetch(`/dashboard/campaigns/${campaign.id}`);
+  }, [campaign.id, router]);
 
   const handleDelete = async () => {
     const isConfirmed = await confirm({
@@ -73,9 +77,11 @@ export function CampaignCard({ campaign, onEdit }: CampaignCardProps) {
   return (
     <div
       onClick={() => router.push(`/dashboard/campaigns/${campaign.id}`)}
+      style={{ touchAction: "manipulation" }}
       className="group relative bg-white border border-slate-200/80 rounded-2xl p-5
     shadow-sm hover:shadow-xl hover:-translate-y-[2px] cursor-pointer
-    hover:border-primary/30 transition-all duration-300"
+    hover:border-primary/30 transition-all duration-300
+    active:scale-[0.98] active:shadow-sm active:brightness-95"
     >
       {/* subtle gradient glow */}
       <div

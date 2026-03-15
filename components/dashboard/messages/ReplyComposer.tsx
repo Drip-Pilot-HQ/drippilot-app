@@ -94,7 +94,7 @@ export function ReplyComposer({
         onChange={(e) => setBody(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={isSms ? "Type a message…" : "Type a reply…"}
-        rows={3}
+        rows={2}
         className="w-full resize-none rounded-xl border border-slate-100 bg-slate-50/50 px-4 py-3 text-sm text-slate-700 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary/20 transition-all font-medium leading-relaxed"
       />
 

@@ -32,6 +32,14 @@ interface LeadRowProps {
   onEdit: (lead: Lead) => void;
 }
 
+const STATUS_STYLES: Record<LeadStatus, string> = {
+  [LeadStatus.HOT]: "bg-rose-50 text-rose-600 hover:bg-rose-100",
+  [LeadStatus.WARM]: "bg-orange-50 text-orange-600 hover:bg-orange-100",
+  [LeadStatus.COLD]: "bg-blue-50 text-blue-600 hover:bg-blue-100",
+  [LeadStatus.CONVERTED]: "bg-emerald-50 text-emerald-600 hover:bg-emerald-100",
+  [LeadStatus.UNSUBSCRIBED]: "bg-slate-100 text-slate-600 hover:bg-slate-200",
+};
+
 export function LeadRow({ lead, onEdit }: LeadRowProps) {
   const deleteMutation = useDeleteLeadMutation();
   const statusMutation = useUpdateLeadStatusMutation();
@@ -64,6 +72,10 @@ export function LeadRow({ lead, onEdit }: LeadRowProps) {
     });
   };
 
+  const statusStyle =
+    STATUS_STYLES[lead.leadStatus] ??
+    "bg-slate-100 text-slate-600 hover:bg-slate-200";
+
   return (
     <tr className="group hover:bg-slate-50 transition-colors">
       <td className="px-6 py-4">
@@ -86,14 +98,12 @@ export function LeadRow({ lead, onEdit }: LeadRowProps) {
               <User className="w-4 h-4" />
             )}
           </div>
-          <div>
-            <p className="font-semibold text-slate-900 text-sm leading-tight">
-              {lead.name ||
-                (lead.firstName || lead.lastName
-                  ? `${lead.firstName || ""} ${lead.lastName || ""}`.trim()
-                  : "Unnamed Lead")}
-            </p>
-          </div>
+          <p className="font-semibold text-slate-900 text-sm leading-tight">
+            {lead.name ||
+              (lead.firstName || lead.lastName
+                ? `${lead.firstName || ""} ${lead.lastName || ""}`.trim()
+                : "Unnamed Lead")}
+          </p>
         </div>
       </td>
       <td className="px-6 py-4">
@@ -117,54 +127,41 @@ export function LeadRow({ lead, onEdit }: LeadRowProps) {
         </div>
       </td>
       <td className="px-6 py-4">
-        <div className="relative group/status flex items-center">
-          <span
-            className={cn(
-              "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest transition-all",
-              statusMutation.isPending
-                ? "opacity-50 cursor-wait bg-slate-100 text-slate-400"
-                : "cursor-pointer",
-              !statusMutation.isPending &&
-                (lead.leadStatus === LeadStatus.HOT
-                  ? "bg-rose-50 text-rose-600 hover:bg-rose-100"
-                  : lead.leadStatus === LeadStatus.WARM
-                    ? "bg-orange-50 text-orange-600 hover:bg-orange-100"
-                    : lead.leadStatus === LeadStatus.COLD
-                      ? "bg-blue-50 text-blue-600 hover:bg-blue-100"
-                      : lead.leadStatus === LeadStatus.CONVERTED
-                        ? "bg-emerald-50 text-emerald-600 hover:bg-emerald-100"
-                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"),
-            )}
-          >
-            {statusMutation.isPending && (
-              <Loader2 className="w-2.5 h-2.5 animate-spin" />
-            )}
-            {lead.leadStatus}
-          </span>
-          <div className="absolute left-0 top-full mt-1 w-40 bg-white border border-slate-100 rounded-xl shadow-xl opacity-0 invisible group-hover/status:opacity-100 group-hover/status:visible transition-all z-50 py-1">
-            {!statusMutation.isPending &&
-              Object.values(LeadStatus).map((status) => (
-                <button
-                  key={status}
-                  disabled={lead.leadStatus === status}
-                  onClick={() => handleStatusChange(status)}
-                  className={cn(
-                    "w-full text-left px-4 py-2 text-[10px] font-black uppercase tracking-widest transition-colors",
-                    lead.leadStatus === status
-                      ? "bg-primary/5 text-primary opacity-50 cursor-default"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-primary",
-                  )}
-                >
-                  {status}
-                </button>
-              ))}
-            {statusMutation.isPending && (
-              <div className="px-4 py-3 text-center">
-                <Loader2 className="w-4 h-4 animate-spin mx-auto text-primary/50" />
-              </div>
-            )}
-          </div>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              disabled={statusMutation.isPending}
+              className={cn(
+                "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest transition-all focus:outline-none",
+                statusMutation.isPending
+                  ? "opacity-50 cursor-wait bg-slate-100 text-slate-400"
+                  : statusStyle,
+              )}
+            >
+              {statusMutation.isPending && (
+                <Loader2 className="w-2.5 h-2.5 animate-spin" />
+              )}
+              {lead.leadStatus}
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-40">
+            {Object.values(LeadStatus).map((status) => (
+              <DropdownMenuItem
+                key={status}
+                onClick={() => handleStatusChange(status)}
+                disabled={
+                  lead.leadStatus === status || statusMutation.isPending
+                }
+                className={cn(
+                  "text-[10px] font-black uppercase tracking-widest",
+                  lead.leadStatus === status && "text-primary",
+                )}
+              >
+                {status}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </td>
       <td className="px-6 py-4">
         <div className="flex flex-wrap gap-1">
