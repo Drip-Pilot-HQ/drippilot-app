@@ -5,7 +5,6 @@ import {
   Users,
   UserPlus,
   Wallet,
-  Settings,
   Code,
   BrainCircuit,
   Workflow,
@@ -24,7 +23,6 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
   const navGroups: NavGroup[] = [
     {
-      label: "Automations",
       items: [
         { name: "Overview", href: `${base}`, icon: LayoutGrid },
         { name: "Campaigns", href: `${base}/campaigns`, icon: Workflow },
@@ -39,14 +37,9 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         },
         { name: "Integrations", href: `${base}/integrations`, icon: Webhook },
         { name: "Notifications", href: `${base}/notifications`, icon: Bell },
-      ],
-    },
-    {
-      label: "Administration",
-      items: [
         { name: "Members", href: `${base}/members`, icon: UserPlus },
         { name: "Billings", href: `${base}/billings`, icon: Wallet },
-        { name: "Settings", href: `${base}/settings`, icon: Settings },
+        // { name: "Settings", href: `${base}/settings`, icon: Settings },
       ],
     },
   ];

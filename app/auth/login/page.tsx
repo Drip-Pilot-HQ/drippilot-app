@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/branding/Button";
 import { useRouter } from "next/navigation";
@@ -89,7 +88,7 @@ export default function LoginPage() {
         <Button
           variant="primary"
           size="md"
-          className="w-full shadow-2xl shadow-primary/30 group py-4"
+          className="w-full shadow-2xl shadow-primary/30 group py-4 rounded-xl"
           disabled={loginMutation.isPending}
         >
           <span>{loginMutation.isPending ? "Logging In..." : "Log In"}</span>
@@ -98,17 +97,17 @@ export default function LoginPage() {
       </form>
 
       {/* Social Login Separator */}
-      <div className="relative py-2">
+      {/* <div className="relative py-2">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-slate-100" />
         </div>
         <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
           <span className="bg-white px-4 text-slate-400">Or sign in with</span>
         </div>
-      </div>
+      </div> */}
 
       {/* Social Login Buttons */}
-      <div className="flex justify-center">
+      {/* <div className="flex justify-center">
         <button
           type="button"
           className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all font-bold text-slate-600 text-sm cursor-pointer"
@@ -123,7 +122,7 @@ export default function LoginPage() {
           />
           <span>Sign in with Google</span>
         </button>
-      </div>
+      </div> */}
 
       {/* Footer Link */}
       <p className="text-center text-slate-500 font-semibold text-sm">

@@ -112,8 +112,6 @@ export function MembersClient() {
       m.inviteEmail?.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  if (isLoading) return <MembersSkeleton />;
-
   return (
     <div className="space-y-10 animate-in fade-in duration-500">
       {/* Header section */}
@@ -155,201 +153,205 @@ export function MembersClient() {
       </div>
 
       {/* Members List */}
-      <div className="bg-white border border-slate-200 rounded-[32px] overflow-hidden shadow-sm">
-        <div className="hidden md:grid grid-cols-12 gap-4 px-8 py-5 border-b border-slate-100 bg-slate-50/50">
-          <div className="col-span-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-            Team Member
-          </div>
-          <div className="col-span-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-            Function
-          </div>
-          <div className="col-span-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-            Status
-          </div>
-          <div className="col-span-2 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
-            Joined
-          </div>
-          <div className="col-span-1 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right px-2"></div>
-        </div>
-
-        <div className="divide-y divide-slate-100">
-          {filteredMembers?.length === 0 ? (
-            <div className="py-20 text-center">
-              <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mx-auto mb-4 text-slate-300">
-                <Search className="w-8 h-8" />
-              </div>
-              <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">
-                No teammates found matching your criteria
-              </p>
+      {isLoading ? (
+        <MembersSkeleton />
+      ) : (
+        <div className="bg-white border border-slate-200 rounded-[32px] overflow-hidden shadow-sm">
+          <div className="hidden md:grid grid-cols-12 gap-4 px-8 py-5 border-b border-slate-100 bg-slate-50/50">
+            <div className="col-span-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+              Team Member
             </div>
-          ) : (
-            filteredMembers?.map((member) => {
-              const isSelf = member.userId === currentUser?.id;
-              const showAction =
-                isSelf ||
-                (userRole === WorkspaceRole.OWNER &&
-                  member.role !== WorkspaceRole.OWNER) ||
-                (userRole === WorkspaceRole.ADMIN &&
-                  member.role === WorkspaceRole.MEMBER);
-              const displayDate = member.joinedAt || member.createdAt;
+            <div className="col-span-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+              Function
+            </div>
+            <div className="col-span-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+              Status
+            </div>
+            <div className="col-span-2 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
+              Joined
+            </div>
+            <div className="col-span-1 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right px-2"></div>
+          </div>
 
-              return (
-                <div
-                  key={member.id}
-                  className="group md:grid md:grid-cols-12 md:items-center gap-4 px-6 py-4 md:px-8 md:py-5 hover:bg-slate-50/80 transition-all"
-                >
-                  {/* Member Info */}
-                  <div className="col-span-5 flex items-center gap-4 mb-4 md:mb-0">
-                    <div className="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 font-black group-hover:bg-primary/10 group-hover:text-primary transition-colors relative overflow-hidden shrink-0">
-                      {member.memberName ? (
-                        member.memberName[0].toUpperCase()
-                      ) : (
-                        <User className="w-5 h-5" />
-                      )}
-                      {member.status === WorkspaceStatus.PENDING && (
-                        <div className="absolute inset-0 bg-white/40 flex items-center justify-center">
-                          <Clock className="w-3.5 h-3.5 text-slate-400 animate-pulse" />
-                        </div>
-                      )}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-sm font-black text-slate-900 truncate">
-                          {member.memberName || "Invited User"}
-                        </h3>
-                        {isSelf && (
-                          <span className="px-1.5 py-0.5 rounded-md bg-primary/10 text-primary text-[8px] font-black uppercase tracking-widest">
-                            You
-                          </span>
+          <div className="divide-y divide-slate-100">
+            {filteredMembers?.length === 0 ? (
+              <div className="py-20 text-center">
+                <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mx-auto mb-4 text-slate-300">
+                  <Search className="w-8 h-8" />
+                </div>
+                <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">
+                  No teammates found matching your criteria
+                </p>
+              </div>
+            ) : (
+              filteredMembers?.map((member) => {
+                const isSelf = member.userId === currentUser?.id;
+                const showAction =
+                  isSelf ||
+                  (userRole === WorkspaceRole.OWNER &&
+                    member.role !== WorkspaceRole.OWNER) ||
+                  (userRole === WorkspaceRole.ADMIN &&
+                    member.role === WorkspaceRole.MEMBER);
+                const displayDate = member.joinedAt || member.createdAt;
+
+                return (
+                  <div
+                    key={member.id}
+                    className="group md:grid md:grid-cols-12 md:items-center gap-4 px-6 py-4 md:px-8 md:py-5 hover:bg-slate-50/80 transition-all"
+                  >
+                    {/* Member Info */}
+                    <div className="col-span-5 flex items-center gap-4 mb-4 md:mb-0">
+                      <div className="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 font-black group-hover:bg-primary/10 group-hover:text-primary transition-colors relative overflow-hidden shrink-0">
+                        {member.memberName ? (
+                          member.memberName[0].toUpperCase()
+                        ) : (
+                          <User className="w-5 h-5" />
+                        )}
+                        {member.status === WorkspaceStatus.PENDING && (
+                          <div className="absolute inset-0 bg-white/40 flex items-center justify-center">
+                            <Clock className="w-3.5 h-3.5 text-slate-400 animate-pulse" />
+                          </div>
                         )}
                       </div>
-                      <p className="text-[11px] text-slate-400 font-bold truncate">
-                        {member.inviteEmail || member.userId}
-                      </p>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-sm font-black text-slate-900 truncate">
+                            {member.memberName || "Invited User"}
+                          </h3>
+                          {isSelf && (
+                            <span className="px-1.5 py-0.5 rounded-md bg-primary/10 text-primary text-[8px] font-black uppercase tracking-widest">
+                              You
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[11px] text-slate-400 font-bold truncate">
+                          {member.inviteEmail || member.userId}
+                        </p>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Role */}
-                  <div className="col-span-2 mb-3 md:mb-0">
-                    <div className="md:hidden text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">
-                      Role
+                    {/* Role */}
+                    <div className="col-span-2 mb-3 md:mb-0">
+                      <div className="md:hidden text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                        Role
+                      </div>
+                      <span
+                        className={cn(
+                          "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest",
+                          member.role === WorkspaceRole.OWNER
+                            ? "bg-amber-50 text-amber-600 border border-amber-100"
+                            : member.role === WorkspaceRole.ADMIN
+                              ? "bg-primary/5 text-primary border border-primary/10"
+                              : "bg-slate-50 text-slate-500 border border-slate-100",
+                        )}
+                      >
+                        {member.role === WorkspaceRole.OWNER ? (
+                          <ShieldCheck className="w-3 h-3" />
+                        ) : null}
+                        {member.role}
+                      </span>
                     </div>
-                    <span
-                      className={cn(
-                        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest",
-                        member.role === WorkspaceRole.OWNER
-                          ? "bg-amber-50 text-amber-600 border border-amber-100"
-                          : member.role === WorkspaceRole.ADMIN
-                            ? "bg-primary/5 text-primary border border-primary/10"
-                            : "bg-slate-50 text-slate-500 border border-slate-100",
+
+                    {/* Status */}
+                    <div className="col-span-2 mb-3 md:mb-0">
+                      <div className="md:hidden text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                        Status
+                      </div>
+                      {member.status === WorkspaceStatus.PENDING ? (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 text-rose-500 border border-rose-100 text-[9px] font-black uppercase tracking-widest">
+                          <Clock className="w-3 h-3" />
+                          Awaiting
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 text-[9px] font-black uppercase tracking-widest">
+                          <ShieldCheck className="w-3 h-3" />
+                          Active
+                        </span>
                       )}
-                    >
-                      {member.role === WorkspaceRole.OWNER ? (
-                        <ShieldCheck className="w-3 h-3" />
-                      ) : null}
-                      {member.role}
-                    </span>
-                  </div>
-
-                  {/* Status */}
-                  <div className="col-span-2 mb-3 md:mb-0">
-                    <div className="md:hidden text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">
-                      Status
                     </div>
-                    {member.status === WorkspaceStatus.PENDING ? (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 text-rose-500 border border-rose-100 text-[9px] font-black uppercase tracking-widest">
-                        <Clock className="w-3 h-3" />
-                        Awaiting
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 text-[9px] font-black uppercase tracking-widest">
-                        <ShieldCheck className="w-3 h-3" />
-                        Active
-                      </span>
-                    )}
-                  </div>
 
-                  {/* Joined Date */}
-                  <div className="col-span-2 mb-4 md:mb-0 md:text-center">
-                    <div className="md:hidden text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">
-                      Access Date
+                    {/* Joined Date */}
+                    <div className="col-span-2 mb-4 md:mb-0 md:text-center">
+                      <div className="md:hidden text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                        Access Date
+                      </div>
+                      <div className="flex flex-col md:items-center">
+                        <span className="text-[11px] font-black text-slate-700">
+                          {displayDate
+                            ? formatDistanceToNow(new Date(displayDate), {
+                                addSuffix: true,
+                              })
+                            : "N/A"}
+                        </span>
+                        <span className="text-[8px] text-slate-300 uppercase font-black tracking-widest">
+                          {member.joinedAt ? "Joined" : "Onboarded"}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex flex-col md:items-center">
-                      <span className="text-[11px] font-black text-slate-700">
-                        {displayDate
-                          ? formatDistanceToNow(new Date(displayDate), {
-                              addSuffix: true,
-                            })
-                          : "N/A"}
-                      </span>
-                      <span className="text-[8px] text-slate-300 uppercase font-black tracking-widest">
-                        {member.joinedAt ? "Joined" : "Onboarded"}
-                      </span>
-                    </div>
-                  </div>
 
-                  {/* Actions */}
-                  <div className="col-span-1 flex justify-end">
-                    {showAction && (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <button className="p-2.5 hover:bg-slate-100 rounded-xl transition-all text-slate-400 hover:text-slate-900 border border-transparent hover:border-slate-200 shadow-sm md:shadow-none focus:outline-none outline-none">
-                            <MoreVertical className="w-4 h-4" />
-                          </button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-56 p-2">
-                          {isSelf ? (
-                            <DropdownMenuItem
-                              onClick={() => handleAction(member)}
-                              variant="danger"
-                              className="font-bold py-2"
-                            >
-                              <div className="w-7 h-7 rounded-md bg-rose-100/50 flex items-center justify-center mr-1 text-rose-600">
-                                <LogOut className="w-3.5 h-3.5" />
-                              </div>
-                              Leave Workspace
-                            </DropdownMenuItem>
-                          ) : (
-                            <>
-                              <div className="px-2 py-1.5 mb-1 border-b border-slate-50">
-                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
-                                  Settings
-                                </p>
-                              </div>
-                              {userRole === WorkspaceRole.OWNER &&
-                                member.role === WorkspaceRole.MEMBER && (
-                                  <DropdownMenuItem
-                                    onClick={() => promoteToAdmin(member)}
-                                    className="font-bold py-2 text-slate-700 hover:text-primary"
-                                  >
-                                    <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center text-primary mr-1">
-                                      <ShieldCheck className="w-3.5 h-3.5" />
-                                    </div>
-                                    Promote to Admin
-                                  </DropdownMenuItem>
-                                )}
+                    {/* Actions */}
+                    <div className="col-span-1 flex justify-end">
+                      {showAction && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button className="p-2.5 hover:bg-slate-100 rounded-xl transition-all text-slate-400 hover:text-slate-900 border border-transparent hover:border-slate-200 shadow-sm md:shadow-none focus:outline-none outline-none">
+                              <MoreVertical className="w-4 h-4" />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-56 p-2">
+                            {isSelf ? (
                               <DropdownMenuItem
                                 onClick={() => handleAction(member)}
                                 variant="danger"
                                 className="font-bold py-2"
                               >
                                 <div className="w-7 h-7 rounded-md bg-rose-100/50 flex items-center justify-center mr-1 text-rose-600">
-                                  <Trash2 className="w-3.5 h-3.5" />
+                                  <LogOut className="w-3.5 h-3.5" />
                                 </div>
-                                Remove from team
+                                Leave Workspace
                               </DropdownMenuItem>
-                            </>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    )}
+                            ) : (
+                              <>
+                                <div className="px-2 py-1.5 mb-1 border-b border-slate-50">
+                                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                                    Settings
+                                  </p>
+                                </div>
+                                {userRole === WorkspaceRole.OWNER &&
+                                  member.role === WorkspaceRole.MEMBER && (
+                                    <DropdownMenuItem
+                                      onClick={() => promoteToAdmin(member)}
+                                      className="font-bold py-2 text-slate-700 hover:text-primary"
+                                    >
+                                      <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center text-primary mr-1">
+                                        <ShieldCheck className="w-3.5 h-3.5" />
+                                      </div>
+                                      Promote to Admin
+                                    </DropdownMenuItem>
+                                  )}
+                                <DropdownMenuItem
+                                  onClick={() => handleAction(member)}
+                                  variant="danger"
+                                  className="font-bold py-2"
+                                >
+                                  <div className="w-7 h-7 rounded-md bg-rose-100/50 flex items-center justify-center mr-1 text-rose-600">
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </div>
+                                  Remove from team
+                                </DropdownMenuItem>
+                              </>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
+                    </div>
                   </div>
-                </div>
-              );
-            })
-          )}
+                );
+              })
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       <InviteMemberDialog
         isOpen={isInviteOpen}
@@ -361,36 +363,26 @@ export function MembersClient() {
 
 function MembersSkeleton() {
   return (
-    <div className="space-y-10 animate-pulse">
-      <div className="flex justify-between">
-        <div className="space-y-3">
-          <div className="h-8 w-48 bg-slate-100 rounded-lg" />
-          <div className="h-4 w-64 bg-slate-100 rounded-lg" />
-        </div>
-        <div className="h-10 w-32 bg-slate-100 rounded-xl" />
-      </div>
-      <div className="h-12 w-full bg-white border border-slate-200 rounded-xl shadow-sm" />
-      <div className="bg-white border border-slate-200 rounded-[32px] overflow-hidden">
-        <div className="h-14 bg-slate-50 border-b border-slate-100" />
-        {[1, 2, 3, 4, 5].map((i) => (
-          <div
-            key={i}
-            className="px-8 py-6 border-b border-slate-50 flex items-center justify-between"
-          >
-            <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-xl bg-slate-100" />
-              <div className="space-y-2">
-                <div className="h-4 w-32 bg-slate-100 rounded" />
-                <div className="h-3 w-48 bg-slate-100 rounded" />
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="h-6 w-20 bg-slate-100 rounded-full" />
-              <div className="h-6 w-20 bg-slate-100 rounded-full" />
+    <div className="bg-white border border-slate-200 rounded-[32px] overflow-hidden animate-pulse">
+      <div className="h-14 bg-slate-50 border-b border-slate-100" />
+      {[1, 2, 3, 4, 5].map((i) => (
+        <div
+          key={i}
+          className="px-8 py-6 border-b border-slate-50 flex items-center justify-between"
+        >
+          <div className="flex items-center gap-4">
+            <div className="h-12 w-12 rounded-xl bg-slate-100" />
+            <div className="space-y-2">
+              <div className="h-4 w-32 bg-slate-100 rounded" />
+              <div className="h-3 w-48 bg-slate-100 rounded" />
             </div>
           </div>
-        ))}
-      </div>
+          <div className="flex items-center gap-4 px-4">
+            <div className="h-6 w-20 bg-slate-100 rounded-full" />
+            <div className="h-6 w-20 bg-slate-100 rounded-full" />
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

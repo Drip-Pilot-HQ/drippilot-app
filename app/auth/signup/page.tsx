@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { User, Mail, Lock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/branding/Button";
 import { AuthInput } from "@/components/auth/AuthInput";
@@ -63,7 +62,7 @@ export default function SignupPage() {
       )}
 
       {/* Social Register Separator */}
-      <div className="flex justify-center">
+      {/* <div className="flex justify-center">
         <button
           type="button"
           className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all font-bold text-slate-600 text-sm cursor-pointer"
@@ -87,7 +86,7 @@ export default function SignupPage() {
         <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
           <span className="bg-white px-4 text-slate-400">Or use email</span>
         </div>
-      </div>
+      </div> */}
 
       {/* Form Section */}
       <form className="space-y-6" onSubmit={handleSubmit}>
@@ -126,14 +125,14 @@ export default function SignupPage() {
           <p className="text-[11px] font-semibold text-slate-400 leading-relaxed">
             By creating an account, you agree to our{" "}
             <Link
-              href="/terms"
+              href="https://www.drippilot.com/terms"
               className="text-slate-600 hover:text-primary underline underline-offset-4 decoration-slate-200 hover:decoration-primary transition-all"
             >
               Terms of Service
             </Link>{" "}
             and{" "}
             <Link
-              href="/privacy-policy"
+              href="https://www.drippilot.com/privacy-policy"
               className="text-slate-600 hover:text-primary underline underline-offset-4 decoration-slate-200 hover:decoration-primary transition-all"
             >
               Privacy Policy
@@ -146,7 +145,7 @@ export default function SignupPage() {
         <Button
           variant="primary"
           size="md"
-          className="w-full shadow-2xl shadow-primary/30 group py-4"
+          className="w-full shadow-2xl shadow-primary/30 group py-4 rounded-xl"
           disabled={registerMutation.isPending}
         >
           <span>
