@@ -45,7 +45,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       label: "Administration",
       items: [
         { name: "Members", href: `${base}/members`, icon: UserPlus },
-        { name: "Billing", href: `${base}/billing`, icon: Wallet },
+        { name: "Billings", href: `${base}/billings`, icon: Wallet },
         { name: "Settings", href: `${base}/settings`, icon: Settings },
       ],
     },

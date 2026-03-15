@@ -1,4 +1,4 @@
-import { Check, Plus } from "lucide-react";
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Workspace } from "@/types/account";
 
@@ -60,7 +60,6 @@ export function WorkspaceDropdown({
         onClick={onManage}
         className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 transition-colors text-left text-primary"
       >
-        <Plus className="w-4 h-4" />
         <span className="text-sm font-bold">Manage Workspaces</span>
       </button>
     </div>

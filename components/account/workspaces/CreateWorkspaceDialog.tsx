@@ -82,14 +82,14 @@ export function CreateWorkspaceDialog() {
               <Button
                 type="button"
                 variant="outline"
-                className="flex-1 py-4"
+                className="flex-1 py-4 rounded-xl"
                 onClick={() => setIsOpen(false)}
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
-                className="flex-1 py-4"
+                className="flex-1 py-4 rounded-xl"
                 isLoading={createMutation.isPending}
               >
                 Create Now

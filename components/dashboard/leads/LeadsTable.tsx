@@ -16,7 +16,7 @@ export function LeadsTable({ leads, onEdit }: LeadsTableProps) {
           <thead className="sticky top-0 z-10 bg-slate-50/90 backdrop-blur-sm shadow-sm">
             <tr>
               <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-200">
-                Lead Information
+                Name
               </th>
               <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-200">
                 Contact

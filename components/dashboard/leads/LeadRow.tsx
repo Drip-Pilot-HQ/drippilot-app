@@ -87,7 +87,7 @@ export function LeadRow({ lead, onEdit }: LeadRowProps) {
             )}
           </div>
           <div>
-            <p className="font-bold text-slate-900 text-sm leading-tight">
+            <p className="font-semibold text-slate-900 text-sm leading-tight">
               {lead.name ||
                 (lead.firstName || lead.lastName
                   ? `${lead.firstName || ""} ${lead.lastName || ""}`.trim()

@@ -46,7 +46,7 @@ apiClient.interceptors.request.use(
 
     // Workspace Context
     const activeWorkspace = useAccountStore.getState().activeWorkspace;
-    if (activeWorkspace?.id) {
+    if (activeWorkspace?.id && !config.headers["x-workspace-id"]) {
       config.headers["x-workspace-id"] = activeWorkspace.id;
     }
 

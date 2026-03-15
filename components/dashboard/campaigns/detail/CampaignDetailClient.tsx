@@ -95,7 +95,7 @@ export function CampaignDetailClient({
       </div>
 
       <div className="border-b border-slate-200">
-        <nav className="-mb-px flex gap-0 overflow-x-auto">
+        <nav className="-mb-px flex gap-0 overflow-x-auto custom-scrollbar">
           {TABS.map((tab) => (
             <button
               key={tab.id}

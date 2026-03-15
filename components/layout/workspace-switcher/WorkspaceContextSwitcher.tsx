@@ -54,7 +54,7 @@ export function WorkspaceContextSwitcher({
   const handleSwitch = (workspace: (typeof workspaces)[0]) => {
     setActiveWorkspace(workspace);
     setIsOpen(false);
-    queryClient.invalidateQueries();
+    queryClient.clear();
     router.push("/dashboard");
   };
 

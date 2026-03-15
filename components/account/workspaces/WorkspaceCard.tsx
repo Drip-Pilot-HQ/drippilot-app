@@ -1,3 +1,5 @@
+"use client";
+
 import { ArrowRight, Briefcase, Check, Trash2 } from "lucide-react";
 import { Badge } from "@/components/common/Badge";
 import { Workspace, WorkspaceRole } from "@/types/account";
@@ -5,6 +7,8 @@ import { useAccountStore } from "@/store/client/useAccountStore";
 import { useDeleteWorkspaceMutation } from "@/store/server/account.queries";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { useConfirm } from "@/components/branding/ConfirmProvider";
+import { toast } from "sonner";
 
 interface WorkspaceCardProps {
   workspace: Workspace;
@@ -14,6 +18,7 @@ export function WorkspaceCard({ workspace }: WorkspaceCardProps) {
   const router = useRouter();
   const { activeWorkspace, setActiveWorkspace } = useAccountStore();
   const deleteMutation = useDeleteWorkspaceMutation();
+  const confirm = useConfirm();
   const isActive = activeWorkspace?.id === workspace.id;
   const isOwner = workspace.role === WorkspaceRole.OWNER;
 
@@ -24,18 +29,27 @@ export function WorkspaceCard({ workspace }: WorkspaceCardProps) {
 
   const handleDelete = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (
-      confirm(
-        `Are you sure you want to delete "${workspace.name}"? This action cannot be undone.`,
-      )
-    ) {
+
+    const isConfirmed = await confirm({
+      title: "Delete Workspace",
+      description: `Are you sure you want to delete "${workspace.name}"? This action cannot be undone and will permanently remove all associated data.`,
+      confirmLabel: "Delete Workspace",
+      cancelLabel: "Keep Workspace",
+      variant: "danger",
+    });
+
+    if (isConfirmed) {
       try {
         await deleteMutation.mutateAsync(workspace.id);
+        toast.success("Workspace deleted", {
+          description: `"${workspace.name}" has been successfully removed.`,
+        });
       } catch (error) {
         console.error("Failed to delete workspace", error);
-        alert(
-          "Failed to delete workspace. Ensure it has no other active members or billing issues.",
-        );
+        toast.error("Operation Failed", {
+          description:
+            "Ensure the workspace has no other active members or billing issues before deleting.",
+        });
       }
     }
   };
