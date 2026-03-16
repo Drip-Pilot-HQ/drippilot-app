@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Rocket, Sparkles, Mail, MessageSquare } from "lucide-react";
+import { X, Rocket, Mail, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
 import { CreateCampaignDto, Campaign } from "@/types/campaign";
 import {
@@ -123,37 +123,44 @@ export function CreateCampaignDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4">
       <div
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300"
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-xl bg-white rounded-[40px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
-        <div className="p-8">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                <Rocket className="w-6 h-6" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-black text-slate-900">
-                  {editCampaign ? "Edit Campaign" : "Launch Campaign"}
-                </h2>
-                <p className="text-slate-500 text-sm font-medium">
-                  Define your target and messaging channel
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-slate-50 rounded-full transition-colors"
-            >
-              <X className="w-6 h-6 text-slate-400" />
-            </button>
-          </div>
+      <div className="relative w-full sm:max-w-xl bg-white rounded-t-[28px] sm:rounded-[40px] shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[95vh] animate-in slide-in-from-bottom-4 duration-300">
+        {/* Drag handle — mobile only */}
+        <div className="sm:hidden flex justify-center pt-3 pb-2 shrink-0">
+          <div className="w-10 h-1 rounded-full bg-slate-200" />
+        </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 sm:px-8 pt-3 sm:pt-8 pb-4 shrink-0 border-b border-slate-100">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+              <Rocket className="w-5 h-5 sm:w-6 sm:h-6" />
+            </div>
+            <div>
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900">
+                {editCampaign ? "Edit Campaign" : "Launch Campaign"}
+              </h2>
+              <p className="text-slate-500 text-xs sm:text-sm font-medium">
+                Define your target and messaging channel
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-slate-100 rounded-full transition-colors shrink-0"
+          >
+            <X className="w-5 h-5 text-slate-400" />
+          </button>
+        </div>
+
+        {/* Scrollable body */}
+        <div className="overflow-y-auto flex-1 px-5 sm:px-8 py-5 sm:py-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
                 Campaign Title
@@ -306,10 +313,7 @@ export function CreateCampaignDialog({
               >
                 {!isMutating && (
                   <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4" />
-                    <span>
-                      {editCampaign ? "Update campaign" : "Initialize campaign"}
-                    </span>
+                    {editCampaign ? "Update campaign" : "Create campaign"}
                   </div>
                 )}
               </Button>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { X, Upload, Sparkles, Loader2, FileText, Info } from "lucide-react";
+import { X, Upload, Loader2, FileText, Info } from "lucide-react";
 import { toast } from "sonner";
 import { useImportLeadsMutation } from "@/store/server/lead.queries";
 import { Button } from "@/components/branding/Button";
@@ -212,10 +212,7 @@ export function ImportLeadsDialog({ isOpen, onClose }: ImportLeadsDialogProps) {
                 {importMutation.isPending ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="w-5 h-5" />
-                    <span>Start Import Process</span>
-                  </div>
+                  <div className="flex items-center gap-2">Import Leads</div>
                 )}
               </Button>
             </div>

@@ -4,12 +4,12 @@ import { useState } from "react";
 import {
   X,
   UserPlus,
-  Sparkles,
   Loader2,
   Tag as TagIcon,
   Mail,
   Phone,
   User,
+  Plus,
 } from "lucide-react";
 import { toast } from "sonner";
 import { CreateLeadDto, Lead, LeadStatus } from "@/types/lead";
@@ -85,7 +85,6 @@ export function CreateLeadDialog({
 
     if (formData.phone) {
       const phoneDigits = formData.phone.replace(/[\D]/g, "");
-      // E.164 phone number rough validation (between 10 and 15 digits)
       if (phoneDigits.length < 10 || phoneDigits.length > 15) {
         toast.error("Please enter a valid phone number with country code");
         return;
@@ -128,38 +127,49 @@ export function CreateLeadDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4">
       <div
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300"
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-2xl bg-white rounded-[40px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
-        <div className="p-8">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                <UserPlus className="w-6 h-6" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-black text-slate-900">
-                  {editLead ? "Edit Lead" : "Add New Lead"}
-                </h2>
-                <p className="text-slate-500 text-sm font-medium">
-                  Configure lead identity and status
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-slate-50 rounded-full transition-colors"
-            >
-              <X className="w-6 h-6 text-slate-400" />
-            </button>
-          </div>
+      <div className="relative w-full sm:max-w-2xl bg-white rounded-t-[28px] sm:rounded-[40px] shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[95vh] animate-in slide-in-from-bottom-4 duration-300">
+        {/* Drag handle — mobile only */}
+        <div className="sm:hidden flex justify-center pt-3 pb-2 shrink-0">
+          <div className="w-10 h-1 rounded-full bg-slate-200" />
+        </div>
 
-          <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
-            <div className="col-span-2 space-y-2">
+        {/* Header — non-scrolling */}
+        <div className="flex items-center justify-between px-5 sm:px-8 pt-3 sm:pt-8 pb-4 shrink-0 border-b border-slate-100">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+              <UserPlus className="w-5 h-5 sm:w-6 sm:h-6" />
+            </div>
+            <div>
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900">
+                {editLead ? "Edit Lead" : "Add New Lead"}
+              </h2>
+              <p className="text-slate-500 text-xs sm:text-sm font-medium">
+                Configure lead identity and status
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-slate-100 rounded-full transition-colors shrink-0"
+          >
+            <X className="w-5 h-5 text-slate-400" />
+          </button>
+        </div>
+
+        {/* Scrollable form body */}
+        <div className="overflow-y-auto flex-1 px-5 sm:px-8 py-5 sm:py-6">
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6"
+          >
+            {/* Full Name */}
+            <div className="col-span-1 sm:col-span-2 space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
                 Full Name
               </label>
@@ -185,6 +195,7 @@ export function CreateLeadDialog({
               </div>
             </div>
 
+            {/* Email */}
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
                 Email Address
@@ -203,6 +214,7 @@ export function CreateLeadDialog({
               </div>
             </div>
 
+            {/* Phone */}
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
                 Phone Number
@@ -220,11 +232,12 @@ export function CreateLeadDialog({
               </div>
             </div>
 
-            <div className="space-y-2 col-span-2">
+            {/* Initial Status */}
+            <div className="col-span-1 sm:col-span-2 space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
                 Initial Status
               </label>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                 {Object.values(LeadStatus).map((status) => (
                   <button
                     key={status}
@@ -234,7 +247,7 @@ export function CreateLeadDialog({
                       setFormData({ ...formData, leadStatus: status })
                     }
                     className={cn(
-                      "flex-1 px-3 py-2 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all",
+                      "px-2 py-2 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all truncate",
                       formData.leadStatus === status
                         ? "bg-primary text-white border-primary shadow-md shadow-primary/10"
                         : "bg-slate-50 border-slate-100 text-slate-400 hover:bg-white hover:border-slate-200",
@@ -246,7 +259,8 @@ export function CreateLeadDialog({
               </div>
             </div>
 
-            <div className="col-span-2 space-y-4">
+            {/* Tags */}
+            <div className="col-span-1 sm:col-span-2 space-y-3">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
                 Tags & Classification
               </label>
@@ -256,7 +270,7 @@ export function CreateLeadDialog({
                   <input
                     value={tagInput}
                     onChange={(e) => setTagInput(e.target.value)}
-                    onKeyPress={(e) =>
+                    onKeyDown={(e) =>
                       e.key === "Enter" && (e.preventDefault(), addTag())
                     }
                     placeholder="Add specific tags..."
@@ -267,40 +281,40 @@ export function CreateLeadDialog({
                   type="button"
                   onClick={addTag}
                   variant="outline"
-                  className="rounded-xl h-12 w-12 p-0"
+                  className="rounded-xl h-12 w-12 p-0 shrink-0"
                 >
-                  <UserPlus className="w-4 h-4" />
+                  <Plus className="w-4 h-4" />
                 </Button>
               </div>
-              <div className="flex flex-wrap gap-2">
-                {formData.tags?.map((tag) => (
-                  <span
-                    key={tag}
-                    className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary"
-                  >
-                    {tag}
-                    <X
-                      className="w-3 cursor-pointer hover:text-primary-hover"
-                      onClick={() => removeTag(tag)}
-                    />
-                  </span>
-                ))}
-              </div>
+              {formData.tags && formData.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {formData.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary"
+                    >
+                      {tag}
+                      <X
+                        className="w-3 cursor-pointer hover:text-primary-hover"
+                        onClick={() => removeTag(tag)}
+                      />
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {/* Terms and Conditions Checkbox */}
-            <div className="col-span-2 space-y-3 p-5 border border-orange-100 rounded-3xl bg-orange-50/30">
+            {/* Consent */}
+            <div className="col-span-1 sm:col-span-2 space-y-3 p-4 sm:p-5 border border-orange-100 rounded-3xl bg-orange-50/30">
               <div className="flex items-start space-x-3">
-                <div className="relative flex items-center">
-                  <input
-                    id="consent"
-                    type="checkbox"
-                    checked={consentAgreed}
-                    onChange={(e) => setConsentAgreed(e.target.checked)}
-                    className="w-5 h-5 rounded-md border-slate-300 text-primary focus:ring-primary/20 accent-primary cursor-pointer mt-0.5"
-                    required
-                  />
-                </div>
+                <input
+                  id="consent"
+                  type="checkbox"
+                  checked={consentAgreed}
+                  onChange={(e) => setConsentAgreed(e.target.checked)}
+                  className="w-5 h-5 rounded-md border-slate-300 text-primary focus:ring-primary/20 accent-primary cursor-pointer mt-0.5 shrink-0"
+                  required
+                />
                 <div className="space-y-1">
                   <label
                     htmlFor="consent"
@@ -320,7 +334,8 @@ export function CreateLeadDialog({
               </div>
             </div>
 
-            <div className="pt-4 col-span-2 flex items-center gap-3">
+            {/* Actions */}
+            <div className="col-span-1 sm:col-span-2 pt-2 flex items-center gap-3">
               <Button
                 type="button"
                 variant="outline"
@@ -342,10 +357,7 @@ export function CreateLeadDialog({
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4" />
-                    <span>
-                      {editLead ? "Update details" : "Save lead profile"}
-                    </span>
+                    {editLead ? "Update details" : "Save lead profile"}
                   </div>
                 )}
               </Button>

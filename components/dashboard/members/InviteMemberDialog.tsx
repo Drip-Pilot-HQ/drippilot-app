@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, UserPlus, Sparkles, Loader2, Mail } from "lucide-react";
+import { X, UserPlus, Loader2, Mail } from "lucide-react";
 import { AddMemberDto, WorkspaceRole } from "@/types/account";
 import { useInviteMemberMutation } from "@/store/server/workspace.queries";
 import { cn } from "@/lib/utils";
@@ -165,10 +165,7 @@ export function InviteMemberDialog({
                 {isLoading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4" />
-                    <span>Send Invitation</span>
-                  </div>
+                  <div className="flex items-center gap-2">Send Invitation</div>
                 )}
               </Button>
             </div>

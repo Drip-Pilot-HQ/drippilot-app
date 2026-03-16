@@ -108,7 +108,7 @@ export function LeadsClient() {
           <Button
             variant="outline"
             onClick={() => setIsImportOpen(true)}
-            className="rounded-xl h-10 px-4 hidden sm:flex text-sm flex-1 md:flex-none"
+            className="rounded-xl h-10 px-5 text-sm flex-1 md:flex-none"
           >
             <Upload className="w-4 h-4 mr-2" />
             Import

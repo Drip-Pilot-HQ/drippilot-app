@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useConfirm } from "@/components/branding/ConfirmProvider";
 import { toast } from "sonner";
+import { Button } from "@/components/branding/Button";
 
 interface WorkspaceCardProps {
   workspace: Workspace;
@@ -103,15 +104,18 @@ export function WorkspaceCard({ workspace }: WorkspaceCardProps) {
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         {isOwner && (
-          <button
+          <Button
+            variant="outline"
+            size="sm"
             onClick={handleDelete}
-            disabled={deleteMutation.isPending}
-            className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all disabled:opacity-50"
+            isLoading={deleteMutation.isPending}
+            className="w-10 h-10 p-0 rounded-xl border-red-100 text-red-500 hover:bg-red-50 hover:text-red-600 hover:border-red-200 shrink-0"
+            title="Delete Workspace"
           >
             <Trash2 className="w-4 h-4" />
-          </button>
+          </Button>
         )}
         <ArrowRight
           className={cn(

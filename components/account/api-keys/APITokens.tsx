@@ -21,7 +21,7 @@ export function APITokens() {
 
       <ApiKeyList />
 
-      <div className="bg-orange-50/50 border border-orange-200 rounded-3xl p-6 lg:p-8 flex items-start gap-5">
+      <div className="bg-orange-50/50 border border-orange-200 rounded-3xl p-6 lg:p-8 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-5">
         <div className="w-12 h-12 rounded-2xl bg-white border border-orange-200 flex items-center justify-center text-primary shrink-0 shadow-sm">
           <Shield className="w-6 h-6" />
         </div>

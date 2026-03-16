@@ -465,9 +465,10 @@ function RuleRow({
               <button
                 type="button"
                 onClick={addTag}
-                className="h-10 px-4 text-xs font-black text-primary bg-primary/5 border-2 border-primary/20 rounded-xl hover:bg-primary/10 hover:border-primary/30 transition-all uppercase tracking-wide shrink-0"
+                className="h-10 px-2 text-xs font-black text-primary bg-primary/5 border-2 border-primary/20 rounded-xl hover:bg-primary/10 hover:border-primary/30 transition-all uppercase tracking-wide shrink-0 flex items-center justify-center gap-2"
               >
-                Add Tag
+                <Plus className="w-4 h-4 sm:hidden" />
+                <span className="hidden sm:inline">Add Tag</span>
               </button>
             </div>
           </div>

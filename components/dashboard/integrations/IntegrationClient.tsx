@@ -124,7 +124,7 @@ export function IntegrationClient() {
         {isLoadingSources ? (
           <WebhookListSkeleton />
         ) : sources.length === 0 && !isCreating ? (
-          <div className="flex flex-col items-center justify-center py-24 px-6 text-center bg-white border border-slate-100 rounded-[40px] shadow-sm">
+          <div className="flex flex-col items-center justify-center py-16 sm:py-24 px-6 text-center bg-white border border-slate-100 rounded-[40px] shadow-sm">
             <div className="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center mb-6 text-slate-300">
               <Webhook className="w-10 h-10" />
             </div>

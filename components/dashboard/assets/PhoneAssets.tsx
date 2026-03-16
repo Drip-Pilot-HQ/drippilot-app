@@ -50,25 +50,32 @@ export function PhoneAssets() {
 
   if (!numbers || numbers.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 px-6 text-center bg-white border border-slate-100 rounded-[40px] shadow-sm animate-in fade-in duration-500">
-        <div className="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center mb-6 text-slate-300">
-          <Phone className="w-10 h-10" />
+      <>
+        <div className="flex flex-col items-center justify-center py-24 px-6 text-center bg-white border border-slate-100 rounded-[40px] shadow-sm animate-in fade-in duration-500">
+          <div className="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center mb-6 text-slate-300">
+            <Phone className="w-10 h-10" />
+          </div>
+          <h2 className="text-2xl font-black text-slate-900 mb-2">
+            No phone numbers
+          </h2>
+          <p className="text-slate-500 max-w-sm mb-8 font-medium">
+            Create your first dedicated phone number to start reaching leads via
+            SMS.
+          </p>
+          <Button
+            onClick={() => setIsDialogOpen(true)}
+            className="rounded-xl px-8 h-12 shadow-lg shadow-secondary/20 bg-secondary hover:bg-secondary/90 border-none"
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            Phone Number
+          </Button>
         </div>
-        <h2 className="text-2xl font-black text-slate-900 mb-2">
-          No phone lines
-        </h2>
-        <p className="text-slate-500 max-w-sm mb-8 font-medium">
-          Create your first dedicated phone number to start reaching leads via
-          SMS and calls.
-        </p>
-        <Button
-          onClick={() => setIsDialogOpen(true)}
-          className="rounded-xl px-8 h-12 shadow-lg shadow-secondary/20 bg-secondary hover:bg-secondary/90 border-none"
-        >
-          <Plus className="w-5 h-5 mr-2" />
-          Provision Line
-        </Button>
-      </div>
+
+        <BuyNumberDialog
+          isOpen={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+        />
+      </>
     );
   }
 

@@ -5,7 +5,6 @@ import {
   X,
   Mail,
   MessageSquare,
-  Sparkles,
   Loader2,
   AlertCircle,
   CheckCircle2,
@@ -115,43 +114,53 @@ export function CreateTemplateDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4">
       <div
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300"
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-2xl bg-white rounded-[40px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
-        <div className="p-8">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                {formData.templateChannel === TemplateChannel.EMAIL ? (
-                  <Mail className="w-6 h-6" />
-                ) : (
-                  <MessageSquare className="w-6 h-6" />
-                )}
-              </div>
-              <div>
-                <h2 className="text-2xl font-black text-slate-900">
-                  {editTemplate ? "Edit Template" : "New Template"}
-                </h2>
-                <p className="text-slate-500 text-sm font-medium">
-                  {editTemplate
-                    ? "Update your communication block"
-                    : "Design a reusable messaging template"}
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-slate-50 rounded-full transition-colors"
-            >
-              <X className="w-6 h-6 text-slate-400" />
-            </button>
-          </div>
+      <div className="relative w-full sm:max-w-2xl bg-white rounded-t-[28px] sm:rounded-[40px] shadow-2xl animate-in slide-in-from-bottom-4 duration-300 max-h-[92dvh] sm:max-h-[95vh] flex flex-col">
+        {/* Drag handle — mobile only */}
+        <div className="sm:hidden flex justify-center pt-3 pb-2 shrink-0">
+          <div className="w-10 h-1 rounded-full bg-slate-200" />
+        </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 sm:px-8 pt-3 sm:pt-8 pb-4 shrink-0 border-b border-slate-100">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+              {formData.templateChannel === TemplateChannel.EMAIL ? (
+                <Mail className="w-5 h-5 sm:w-6 sm:h-6" />
+              ) : (
+                <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6" />
+              )}
+            </div>
+            <div>
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900">
+                {editTemplate ? "Edit Template" : "New Template"}
+              </h2>
+              <p className="text-slate-500 text-xs sm:text-sm font-medium">
+                {editTemplate
+                  ? "Update your communication block"
+                  : "Design a reusable messaging template"}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-slate-100 rounded-full transition-colors shrink-0"
+          >
+            <X className="w-5 h-5 text-slate-400" />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto custom-scrollbar px-5 sm:px-8 py-4 sm:py-5">
+          <form
+            id="template-form"
+            onSubmit={handleSubmit}
+            className="space-y-6 pb-4"
+          >
             <div className="grid grid-cols-2 gap-4 p-1 bg-slate-100/50 rounded-xl border border-slate-200/50">
               <button
                 type="button"
@@ -366,34 +375,34 @@ export function CreateTemplateDialog({
                 )}
               </div>
             </div>
-
-            <div className="pt-4 flex items-center gap-3">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onClose}
-                className="flex-1 rounded-xl h-12"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={isLoading || !formData.name || !validation.isValid}
-                className="flex-2 rounded-xl h-12"
-              >
-                {isLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4" />
-                    <span>
-                      {editTemplate ? "Update Template" : "Save Template"}
-                    </span>
-                  </div>
-                )}
-              </Button>
-            </div>
           </form>
+        </div>
+
+        <div className="px-5 sm:px-8 pt-4 pb-5 sm:pb-8 border-t border-slate-100 shrink-0">
+          <div className="flex items-center gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              className="flex-1 rounded-xl h-12"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              form="template-form"
+              disabled={isLoading || !formData.name || !validation.isValid}
+              className="flex-2 rounded-xl h-12"
+            >
+              {isLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <div className="flex items-center gap-2">
+                  {editTemplate ? "Update Template" : "Save Template"}
+                </div>
+              )}
+            </Button>
+          </div>
         </div>
       </div>
     </div>

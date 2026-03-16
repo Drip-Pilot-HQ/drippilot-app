@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Mail, Sparkles, Loader2 } from "lucide-react";
+import { X, Mail, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { EmailAlias } from "@/types/assets";
 import {
@@ -139,10 +139,7 @@ export function EmailAliasDialog({
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4" />
-                    <span>
-                      {editAlias ? "Update alias" : "Initialize alias"}
-                    </span>
+                    {editAlias ? "Update alias" : "Create alias"}
                   </div>
                 )}
               </Button>

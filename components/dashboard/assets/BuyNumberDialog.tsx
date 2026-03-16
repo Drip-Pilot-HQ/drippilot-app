@@ -1,15 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  X,
-  Search,
-  Phone,
-  Sparkles,
-  Loader2,
-  ChevronRight,
-  Check,
-} from "lucide-react";
+import { X, Search, Phone, Loader2, ChevronRight, Check } from "lucide-react";
 import { AvailablePhoneNumber } from "@/types/assets";
 import {
   useSearchPhoneNumbersQuery,
@@ -204,10 +196,7 @@ export function BuyNumberDialog({ isOpen, onClose }: BuyNumberDialogProps) {
                 {buyMutation.isPending ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4" />
-                    <span>Add Number</span>
-                  </div>
+                  "Add Number"
                 )}
               </Button>
             </div>

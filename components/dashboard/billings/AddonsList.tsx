@@ -10,14 +10,12 @@ import {
   Minus,
   Loader2,
   Check,
-  X,
 } from "lucide-react";
 import { ConfirmDialog } from "@/components/branding/ConfirmDialog";
 import {
   ADDON_CONFIGS,
   ADDON_TYPES,
   getAddonTieredCost,
-  getAddonTierBreakdown,
   type AddonType,
   type BillingInterval,
 } from "@/config/billing.config";
@@ -75,6 +73,7 @@ function AddonRow({
     onQtyChange(type, qty);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qty]);
+
   const [confirming, setConfirming] = useState(false);
 
   const addMutation = useAddAddonMutation();
@@ -85,12 +84,14 @@ function AddonRow({
   const Icon = ADDON_ICONS[type];
   const hasChanged = qty !== currentQty;
   const delta = qty - currentQty;
+  const isActive = currentQty > 0 || hasChanged;
 
   const cost = getAddonTieredCost(type, interval, qty);
-  const breakdown = getAddonTierBreakdown(type, interval, qty);
-  const hasTiers = !!config.tiers && config.tiers.length > 1;
   const basePrice =
     interval === "yearly" ? config.yearlyPrice : config.monthlyPrice;
+  const hasTiers = !!config.tiers && config.tiers.length > 1;
+
+  const isDisabled = anyRowSaving && !isSaving;
 
   const handleSave = () => setConfirming(true);
   const handleReset = () => setQty(currentQty);
@@ -101,7 +102,7 @@ function AddonRow({
     const oldTotal = getAddonTieredCost(type, interval, currentQty);
     const diff = Math.abs(newTotal - oldTotal).toFixed(2);
     if (delta > 0) {
-      return `You're adding ${delta} × ${config.displayName}. Drip Pilot will charge your active payment method on file an additional $${diff}/mo billed ${intervalLabel}. The charge is prorated for the current billing period.`;
+      return `You're adding ${delta} × ${config.displayName}. Drip Pilot will charge your active payment method an additional $${diff}/mo billed ${intervalLabel}. The charge is prorated for the current billing period.`;
     }
     return `You're removing ${Math.abs(delta)} × ${config.displayName}. This will reduce your bill by $${diff}/mo starting next cycle.`;
   };
@@ -132,106 +133,88 @@ function AddonRow({
     }
   };
 
-  const isDisabled = anyRowSaving && !isSaving;
-
   return (
     <>
       <div
-        className={`flex flex-col sm:flex-row sm:items-start justify-between p-5 rounded-2xl border-2 transition-all gap-4 ${
-          currentQty > 0 || hasChanged
-            ? "border-orange-100 bg-orange-50/30"
-            : "border-slate-100 hover:border-slate-200 hover:bg-slate-50/30"
+        className={`rounded-2xl border-2 overflow-hidden transition-all ${
+          isActive
+            ? "border-orange-100"
+            : "border-slate-100 hover:border-slate-200"
         } ${isDisabled ? "opacity-50 pointer-events-none" : ""}`}
       >
-        {/* Left — icon + info */}
-        <div className="flex items-start gap-4 flex-1 min-w-0">
+        {/* Main row — always horizontal */}
+        <div
+          className={`flex items-center gap-3 p-4 ${
+            isActive ? "bg-orange-50/40" : "hover:bg-slate-50/40"
+          }`}
+        >
+          {/* Icon */}
           <div
-            className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${
-              currentQty > 0 || hasChanged
+            className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+              isActive
                 ? "bg-orange-100 text-orange-500"
                 : "bg-slate-100 text-slate-400"
             }`}
           >
             <Icon className="w-5 h-5" />
           </div>
-          <div className="min-w-0">
-            <p className="text-sm font-bold text-slate-900">
+
+          {/* Info */}
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-bold text-slate-900 leading-tight">
               {config.displayName}
             </p>
-            <p className="text-xs text-slate-400 font-medium">
-              {hasTiers ? `from $${basePrice}/mo` : `$${basePrice}/mo`} ·{" "}
+            <p className="text-xs text-slate-400 font-medium truncate">
+              {hasTiers ? `from $${basePrice}` : `$${basePrice}`}/mo ·{" "}
               {config.description}
             </p>
-            {hasTiers && (
-              <p className="text-[10px] text-slate-400 font-medium mt-0.5">
-                {config
-                  .tiers!.map((t, i) => {
-                    const p =
-                      interval === "yearly" ? t.yearlyPrice : t.monthlyPrice;
-                    if (i === 0 && t.upTo !== null)
-                      return `1–${t.upTo} @ $${p}/ea`;
-                    if (t.upTo === null)
-                      return `${config.tiers![i - 1].upTo! + 1}+ @ $${p}/ea`;
-                    return null;
-                  })
-                  .filter(Boolean)
-                  .join("  ·  ")}
+          </div>
+
+          {/* Controls */}
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Stepper */}
+            <div className="flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+              <button
+                onClick={() => setQty((q) => Math.max(0, q - 1))}
+                disabled={qty === 0 || isSaving}
+                className="p-2 hover:bg-slate-50 text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <Minus className="w-3.5 h-3.5" />
+              </button>
+              <span className="w-8 text-center font-black text-slate-900 text-sm tabular-nums">
+                {qty}
+              </span>
+              <button
+                onClick={() => setQty((q) => q + 1)}
+                disabled={isSaving}
+                className="p-2 hover:bg-slate-50 text-slate-400 hover:text-slate-600 transition-colors disabled:cursor-not-allowed"
+              >
+                <Plus className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            {/* Cost */}
+            <div className="w-16 sm:w-20 text-right shrink-0">
+              <p className="text-sm font-black text-slate-900 tabular-nums whitespace-nowrap">
+                {qty > 0 ? `$${cost.toFixed(2)}/mo` : "—"}
               </p>
-            )}
-            {breakdown.length > 1 && (
-              <div className="mt-1.5 space-y-0.5">
-                {breakdown.map((line, i) => (
-                  <p key={i} className="text-[10px] font-medium text-slate-500">
-                    {line}
-                  </p>
-                ))}
-              </div>
-            )}
+            </div>
           </div>
         </div>
 
-        {/* Right — stepper + cost + save/reset */}
-        <div className="flex items-center gap-3 self-end sm:self-start sm:mt-0.5">
-          <div className="flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-            <button
-              onClick={() => setQty((q) => Math.max(0, q - 1))}
-              disabled={qty === 0 || isSaving}
-              className="p-2.5 hover:bg-slate-50 text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-            >
-              <Minus className="w-3.5 h-3.5" />
-            </button>
-            <span className="w-10 text-center font-black text-slate-900 text-sm">
-              {qty}
-            </span>
-            <button
-              onClick={() => setQty((q) => q + 1)}
-              disabled={isSaving}
-              className="p-2.5 hover:bg-slate-50 text-slate-400 hover:text-slate-600 transition-colors disabled:cursor-not-allowed"
-            >
-              <Plus className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          <div className="w-20 text-right shrink-0">
-            <p className="text-sm font-black text-slate-900">
-              {qty > 0 ? `$${cost.toFixed(2)}/mo` : "—"}
+        {/* Action bar — only visible when quantity has changed */}
+        {hasChanged && (
+          <div className="flex items-center justify-between px-4 py-3 bg-orange-50 border-t border-orange-100">
+            <p className="text-xs font-bold text-orange-700 tabular-nums">
+              {delta > 0 ? `+${delta}` : `${delta}`} ·{" "}
+              <span className="font-black">${cost.toFixed(2)}/mo</span> new
+              total
             </p>
-            {hasChanged && (
-              <p
-                className={`text-[10px] font-bold ${delta > 0 ? "text-orange-500" : "text-emerald-600"}`}
-              >
-                {delta > 0 ? `+${delta}` : `−${Math.abs(delta)}`}{" "}
-                {delta > 0 ? "added" : "removed"}
-              </p>
-            )}
-          </div>
-
-          {hasChanged && (
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex items-center gap-2">
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="h-8 px-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-black flex items-center gap-1.5 transition-colors disabled:opacity-50 shadow-sm shadow-orange-200"
+                className="h-8 px-4 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-black flex items-center gap-1.5 transition-colors disabled:opacity-50 shadow-sm shadow-orange-200"
               >
                 {isSaving ? (
                   <Loader2 className="w-3 h-3 animate-spin" />
@@ -243,13 +226,13 @@ function AddonRow({
               <button
                 onClick={handleReset}
                 disabled={isSaving}
-                className="h-8 w-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors disabled:opacity-50"
+                className="h-8 px-3 rounded-xl bg-white border border-slate-200 text-slate-500 text-xs font-bold hover:bg-slate-50 transition-colors disabled:opacity-50"
               >
-                <X className="w-3.5 h-3.5" />
+                Undo
               </button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {confirming && (
@@ -313,7 +296,7 @@ export function AddonsList({ subscription, addons }: AddonsListProps) {
 
   return (
     <div className="bg-white border border-slate-100 rounded-[32px] p-5 sm:p-8 shadow-sm">
-      <div className="mb-6">
+      <div className="mb-5">
         <h2 className="text-xl font-bold text-slate-900 font-heading mb-1">
           Add-ons
         </h2>
@@ -326,7 +309,7 @@ export function AddonsList({ subscription, addons }: AddonsListProps) {
         </p>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         {ADDON_ORDER.map((type) => (
           <AddonRow
             key={type}
@@ -342,14 +325,16 @@ export function AddonsList({ subscription, addons }: AddonsListProps) {
         ))}
       </div>
 
-      <div className="mt-7 pt-6 border-t border-slate-100">
-        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
-          Add-on Total ({interval})
-        </p>
-        <p className="text-3xl font-black text-slate-900">
-          ${totalMonthly.toFixed(2)}
-          <span className="text-base font-bold text-slate-400">/mo</span>
-        </p>
+      <div className="mt-6 pt-5 border-t border-slate-100 flex items-end justify-between">
+        <div>
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
+            Add-on Total ({interval})
+          </p>
+          <p className="text-3xl font-black text-slate-900 tabular-nums">
+            ${totalMonthly.toFixed(2)}
+            <span className="text-base font-bold text-slate-400">/mo</span>
+          </p>
+        </div>
       </div>
     </div>
   );
