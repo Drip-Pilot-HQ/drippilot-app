@@ -125,6 +125,7 @@ export function DripBotChat() {
   if (!isOpen) {
     return (
       <button
+        data-onboarding="dripbot-chat-btn"
         onClick={() => setIsOpen(true)}
         className="fixed bottom-6 right-6 w-14 h-14 rounded-2xl bg-zinc-950 text-white shadow-xl hover:scale-105 hover:bg-zinc-900 transition-all z-50 flex items-center justify-center group border border-white/10"
       >

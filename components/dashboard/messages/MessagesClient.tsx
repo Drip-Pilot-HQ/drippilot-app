@@ -79,7 +79,10 @@ export function MessagesClient() {
         </div>
       </div>
 
-      <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden h-[calc(100svh-10rem)] lg:h-[calc(100svh-9.5rem)] flex">
+      <div
+        data-onboarding="messages-panel"
+        className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden h-[calc(100svh-10rem)] lg:h-[calc(100svh-9.5rem)] flex"
+      >
         <div
           className={cn(
             "w-full lg:w-80 xl:w-96 shrink-0 border-r border-slate-100 flex flex-col",

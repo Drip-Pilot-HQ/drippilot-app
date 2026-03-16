@@ -63,6 +63,7 @@ export function CampaignsClient() {
 
         <Button
           onClick={() => setIsCreateOpen(true)}
+          data-onboarding="new-campaign-btn"
           className="rounded-xl h-10 px-5 shadow-md shadow-primary/10 text-sm w-full md:w-auto flex-none"
         >
           <div className="flex items-center gap-2 justify-center">

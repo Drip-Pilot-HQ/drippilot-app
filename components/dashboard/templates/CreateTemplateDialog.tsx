@@ -363,13 +363,13 @@ export function CreateTemplateDialog({
                 {!validation.isValid && (
                   <div className="space-y-1 mt-3 px-1">
                     {validation.errorMessages.map((msg, i) => (
-                      <p
+                      <div
                         key={i}
                         className="text-[10px] text-rose-500 font-bold uppercase tracking-tight italic flex items-center gap-1.5"
                       >
                         <div className="w-1 h-1 rounded-full bg-rose-500" />
                         {msg}
-                      </p>
+                      </div>
                     ))}
                   </div>
                 )}

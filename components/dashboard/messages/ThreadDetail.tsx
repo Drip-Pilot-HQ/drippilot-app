@@ -47,7 +47,18 @@ export function ThreadDetail({ thread, onBack, onDeleted }: ThreadDetailProps) {
 
   const { hasEmail, hasPhone, isEmailThread, defaultChannel } =
     getThreadChannels(thread);
-  const identifier = thread.leadEmail || thread.leadPhone || "Unknown";
+  const getDisplayName = () => {
+    if (thread.lead) {
+      const { name, firstName, lastName } = thread.lead;
+      if (name?.trim()) return name;
+      if (firstName?.trim() && lastName?.trim())
+        return `${firstName} ${lastName}`;
+      if (firstName?.trim()) return firstName;
+    }
+    return thread.leadEmail || thread.leadPhone || "Unknown";
+  };
+
+  const displayName = getDisplayName();
 
   useEffect(() => {
     if (messages && messages.length > 0) {
@@ -69,7 +80,7 @@ export function ThreadDetail({ thread, onBack, onDeleted }: ThreadDetailProps) {
   const handleDelete = async () => {
     const confirmed = await confirm({
       title: "Delete Thread",
-      description: `Are you sure you want to delete this message thread with ${identifier}? This cannot be undone.`,
+      description: `Are you sure you want to delete this message thread with ${displayName}? This cannot be undone.`,
       confirmLabel: "Delete Thread",
       variant: "danger",
     });
@@ -90,16 +101,21 @@ export function ThreadDetail({ thread, onBack, onDeleted }: ThreadDetailProps) {
         </button>
 
         <div className="w-9 h-9 rounded-lg bg-primary/5 flex items-center justify-center shrink-0 text-xs font-semibold text-primary uppercase">
-          {identifier !== "Unknown" ? identifier.slice(0, 2) : "?"}
+          {displayName !== "Unknown" ? displayName.slice(0, 2) : "?"}
         </div>
 
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap min-w-0">
             <span className="text-sm font-semibold text-slate-900 truncate">
-              {identifier !== "Unknown"
-                ? identifier
+              {displayName !== "Unknown"
+                ? displayName
                 : `Thread ${thread.id.slice(0, 8)}`}
             </span>
+            {thread.lead?.leadStatus && (
+              <span className="px-1.5 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-tight bg-slate-100 text-slate-500 border border-slate-200">
+                {thread.lead.leadStatus}
+              </span>
+            )}
             <span
               className={cn(
                 "inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-semibold uppercase",

@@ -34,20 +34,6 @@ const ALL_STATUSES: {
     desc: "Engaged & interested",
     activeClass: "bg-amber-50 border-amber-300 text-amber-700",
   },
-  {
-    value: "cold",
-    label: "Cold",
-    emoji: "❄️",
-    desc: "Needs re-engagement",
-    activeClass: "bg-sky-50 border-sky-300 text-sky-700",
-  },
-  {
-    value: "converted",
-    label: "Converted",
-    emoji: "✅",
-    desc: "Deal closed",
-    activeClass: "bg-emerald-50 border-emerald-300 text-emerald-700",
-  },
 ];
 
 // Outer component — handles loading state, gates inner form on data

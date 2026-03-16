@@ -17,6 +17,7 @@ import { AppLayout } from "./AppLayout";
 import { useAuthStore } from "@/store/client/useAuthStore";
 import { WorkspaceContextSwitcher } from "./workspace-switcher";
 import type { NavGroup, UserProfile } from "@/types/layout";
+import { OnboardingController } from "@/components/onboarding";
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const base = `/dashboard`;
@@ -62,6 +63,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       mainMaxWidth="max-w-[1600px]"
     >
       {children}
+      <OnboardingController />
     </AppLayout>
   );
 }

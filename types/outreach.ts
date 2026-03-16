@@ -1,3 +1,4 @@
+import { Lead } from './lead'
 export type OutreachChannel = 'email' | 'sms'
 export type OutreachSenderType = 'lead' | 'ai' | 'system' | 'user'
 export type OutreachDirection = 'inbound' | 'outbound'
@@ -15,6 +16,7 @@ export interface OutreachThread {
   isUnmatched: boolean
   createdAt: string
   updatedAt: string
+  lead: Lead | null
 }
 
 export interface OutreachMessage {
@@ -79,5 +81,6 @@ export function lostThreadToOutreach(lost: LostThread): OutreachThread {
     isUnmatched: true,
     createdAt: lost.createdAt,
     updatedAt: lost.updatedAt,
+    lead: null,
   }
 }

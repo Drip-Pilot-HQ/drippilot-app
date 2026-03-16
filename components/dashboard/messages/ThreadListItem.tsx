@@ -17,7 +17,18 @@ export function ThreadListItem({
   onClick,
 }: ThreadListItemProps) {
   const { hasEmail, hasPhone } = getThreadChannels(thread);
-  const identifier = thread.leadEmail || thread.leadPhone || "Unknown";
+  const getDisplayName = () => {
+    if (thread.lead) {
+      const { name, firstName, lastName } = thread.lead;
+      if (name?.trim()) return name;
+      if (firstName?.trim() && lastName?.trim())
+        return `${firstName} ${lastName}`;
+      if (firstName?.trim()) return firstName;
+    }
+    return thread.leadEmail || thread.leadPhone || "Unknown";
+  };
+
+  const displayName = getDisplayName();
   const shortId = thread.id.slice(0, 8);
 
   return (
@@ -38,19 +49,28 @@ export function ThreadListItem({
             : "bg-slate-100 text-slate-400",
         )}
       >
-        {identifier !== "Unknown" ? identifier.slice(0, 2).toUpperCase() : "?"}
+        {displayName !== "Unknown"
+          ? displayName.slice(0, 2).toUpperCase()
+          : "?"}
       </div>
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-1 mb-0.5">
-          <span
-            className={cn(
-              "text-sm font-semibold truncate",
-              isSelected ? "text-primary" : "text-slate-700",
+          <div className="flex items-center gap-2 min-w-0">
+            <span
+              className={cn(
+                "text-sm font-semibold truncate",
+                isSelected ? "text-primary" : "text-slate-700",
+              )}
+            >
+              {displayName !== "Unknown" ? displayName : `Thread ${shortId}`}
+            </span>
+            {thread.lead?.leadStatus && (
+              <span className="shrink-0 px-1.5 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-tight bg-slate-100 text-slate-500 border border-slate-200">
+                {thread.lead.leadStatus}
+              </span>
             )}
-          >
-            {identifier !== "Unknown" ? identifier : `Thread ${shortId}`}
-          </span>
+          </div>
           <span className="text-[10px] text-slate-400 font-medium shrink-0">
             {formatDistanceToNow(new Date(thread.updatedAt), {
               addSuffix: false,
