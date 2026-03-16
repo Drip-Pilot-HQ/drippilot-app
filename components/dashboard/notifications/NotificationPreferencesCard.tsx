@@ -79,7 +79,7 @@ function PreferencesForm({ prefs }: { prefs: NotificationPreference | null }) {
     () => prefs?.pushEnabled ?? false,
   );
   const [statuses, setStatuses] = useState<LeadStatusValue[]>(
-    () => prefs?.notifyOnStatuses ?? ["hot", "warm"],
+    () => prefs?.notifyOnStatuses ?? [],
   );
   const [saved, setSaved] = useState(false);
 

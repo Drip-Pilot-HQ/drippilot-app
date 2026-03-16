@@ -3,6 +3,7 @@ import { Button } from "@/components/branding/Button";
 import { ApiKey } from "@/types/account";
 import { useRevokeApiKeyMutation } from "@/store/server/account.queries";
 import { cn } from "@/lib/utils";
+import { useConfirm } from "@/components/branding/ConfirmProvider";
 
 interface ApiKeyCardProps {
   apiKey: ApiKey;
@@ -19,9 +20,17 @@ const formatDate = (dateString: string | null) => {
 
 export function ApiKeyCard({ apiKey }: ApiKeyCardProps) {
   const revokeMutation = useRevokeApiKeyMutation();
+  const confirm = useConfirm();
 
   const handleRevoke = async () => {
-    if (confirm("Are you sure you want to revoke this API key?")) {
+    const isConfirmed = await confirm({
+      title: "Revoke API Key",
+      description: `Are you sure you want to revoke "${apiKey.name}"? Any applications using this key will lose access immediately.`,
+      confirmLabel: "Revoke Key",
+      variant: "danger",
+    });
+
+    if (isConfirmed) {
       await revokeMutation.mutateAsync(apiKey.id);
     }
   };
@@ -33,7 +42,7 @@ export function ApiKeyCard({ apiKey }: ApiKeyCardProps) {
           <Key className="w-6 h-6" />
         </div>
         <div>
-          <h3 className="font-heading text-base font-bold text-slate-900 flex items-center gap-2">
+          <h3 className="font-heading text-base font-bold text-slate-900 flex flex-wrap items-center gap-2">
             {apiKey.name}
             <span className="px-2 py-0.5 rounded text-[10px] bg-slate-100 text-slate-500 font-mono font-medium">
               {apiKey.keyPrefix}...

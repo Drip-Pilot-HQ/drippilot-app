@@ -4,7 +4,6 @@ import { useState } from "react";
 import {
   X,
   FileText,
-  Sparkles,
   Loader2,
   AlertCircle,
   Tag as TagIcon,
@@ -68,39 +67,46 @@ export function CreateKbEntryDialog({
   const isTooLong = wordCount > 500;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4">
       <div
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300"
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-xl bg-white rounded-[40px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
-        <div className="p-8">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                <FileText className="w-6 h-6" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-black text-slate-900">
-                  {editEntry ? "Update Insight" : "Add Knowledge"}
-                </h2>
-                <p className="text-slate-500 text-sm font-medium">
-                  {editEntry
-                    ? "Refine existing information"
-                    : "Feed Drip Bot new facts"}
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-slate-50 rounded-full transition-colors"
-            >
-              <X className="w-6 h-6 text-slate-400" />
-            </button>
-          </div>
+      <div className="relative w-full sm:max-w-xl bg-white rounded-t-[28px] sm:rounded-[40px] shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[95vh] animate-in slide-in-from-bottom-4 duration-300">
+        {/* Drag handle — mobile only */}
+        <div className="sm:hidden flex justify-center pt-3 pb-2 shrink-0">
+          <div className="w-10 h-1 rounded-full bg-slate-200" />
+        </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 sm:px-8 pt-3 sm:pt-8 pb-4 shrink-0 border-b border-slate-100">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+              <FileText className="w-5 h-5 sm:w-6 sm:h-6" />
+            </div>
+            <div>
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900">
+                {editEntry ? "Update Insight" : "Add Knowledge"}
+              </h2>
+              <p className="text-slate-500 text-xs sm:text-sm font-medium">
+                {editEntry
+                  ? "Refine existing information"
+                  : "Feed Drip Bot new facts"}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-slate-100 rounded-full transition-colors shrink-0"
+          >
+            <X className="w-5 h-5 text-slate-400" />
+          </button>
+        </div>
+
+        {/* Scrollable body */}
+        <div className="overflow-y-auto flex-1 px-5 sm:px-8 py-5 sm:py-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-4">
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
@@ -181,8 +187,7 @@ export function CreateKbEntryDialog({
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4" />
-                    <span>{editEntry ? "Update Insight" : "Save Insight"}</span>
+                    {editEntry ? "Update Insight" : "Save Insight"}
                   </div>
                 )}
               </Button>

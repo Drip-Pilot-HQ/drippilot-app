@@ -31,11 +31,15 @@ export function SecretRevealModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4">
       <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300" />
 
-      <div className="relative w-full max-w-lg bg-white rounded-[40px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
-        <div className="p-8">
+      <div className="relative w-full sm:max-w-lg bg-white rounded-t-[28px] sm:rounded-[40px] shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[95vh] animate-in slide-in-from-bottom-4 duration-300">
+        {/* Drag handle — mobile only */}
+        <div className="sm:hidden flex justify-center pt-3 pb-2 shrink-0">
+          <div className="w-10 h-1 rounded-full bg-slate-200" />
+        </div>
+        <div className="overflow-y-auto flex-1 p-5 sm:p-8">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
