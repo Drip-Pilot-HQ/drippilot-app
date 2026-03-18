@@ -1,3 +1,5 @@
+import { OverviewClient } from "@/components/dashboard/overview/OverviewClient";
+
 export default function Dashboard() {
-  return <div className="flex items-center justify-center">Coming Soon...</div>;
+  return <OverviewClient />;
 }
