@@ -2,6 +2,7 @@
 
 import type { FinancialMetrics } from "@/types/analytics";
 import { DollarSign, TrendingUp } from "lucide-react";
+import { InfoTooltip } from "@/components/common/InfoTooltip";
 
 interface FinancialPanelProps {
   data: FinancialMetrics;
@@ -42,9 +43,12 @@ export function FinancialPanel({ data }: FinancialPanelProps) {
           <DollarSign className="w-5 h-5 text-emerald-500" />
         </div>
         <div>
-          <h3 className="text-lg font-black text-slate-900">
-            Financial Metrics
-          </h3>
+          <div className="flex items-center gap-1.5">
+            <h3 className="text-lg font-black text-slate-900">
+              Financial Metrics
+            </h3>
+            <InfoTooltip text="Calculated from your campaign costs, lead volume, and close rate. Pipeline value assumes average deal size from your conversion data." />
+          </div>
           <p className="text-sm text-slate-400 font-medium">
             Pipeline value &amp; ROI analysis
           </p>
@@ -82,7 +86,7 @@ export function FinancialPanel({ data }: FinancialPanelProps) {
         />
         <MetricItem
           label="Cost / Closing"
-          value={`$${data.costPerClosing.toLocaleString()}`}
+          value={`$${Math.round(data.costPerClosing).toLocaleString()}`}
         />
       </div>
 

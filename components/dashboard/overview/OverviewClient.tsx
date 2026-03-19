@@ -65,6 +65,7 @@ export function OverviewClient() {
               icon={Users}
               iconColor="text-blue-500"
               iconBg="bg-blue-50"
+              tooltip="All leads in your workspace, including active, converted, and unsubscribed contacts."
             />
             <StatCard
               label="Active Campaigns"
@@ -73,6 +74,7 @@ export function OverviewClient() {
               icon={Workflow}
               iconColor="text-primary"
               iconBg="bg-primary/10"
+              tooltip="Campaigns currently running and actively sending messages to leads."
             />
             <StatCard
               label="Messages Today"
@@ -81,6 +83,7 @@ export function OverviewClient() {
               icon={MessageSquare}
               iconColor="text-secondary"
               iconBg="bg-cyan-50"
+              tooltip="Total outbound messages sent today across all active campaigns."
             />
             <StatCard
               label="Response Rate"
@@ -91,6 +94,7 @@ export function OverviewClient() {
               iconBg="bg-violet-50"
               trend={stats.responseRate >= 2.5 ? "up" : "down"}
               trendLabel={stats.responseRate >= 2.5 ? "above avg" : "below avg"}
+              tooltip="Percentage of outbound messages that received a reply. Industry average is ~2.5%."
             />
             <StatCard
               label="Engagement Rate"
@@ -99,6 +103,7 @@ export function OverviewClient() {
               icon={Percent}
               iconColor="text-accent"
               iconBg="bg-pink-50"
+              tooltip="Percentage of responding leads showing meaningful engagement beyond a first reply."
             />
             <StatCard
               label="Conversion Rate"
@@ -107,6 +112,7 @@ export function OverviewClient() {
               icon={TrendingUp}
               iconColor="text-emerald-500"
               iconBg="bg-emerald-50"
+              tooltip="Percentage of total leads that have been marked as converted across your workspace."
             />
           </div>
 
@@ -118,7 +124,10 @@ export function OverviewClient() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <ConversionFunnel funnel={stats.conversionFunnel} />
+            <ConversionFunnel
+              funnel={stats.conversionFunnel}
+              converted={stats.leads.converted}
+            />
             {benchmarks && <BenchmarksPanel data={benchmarks} />}
           </div>
 

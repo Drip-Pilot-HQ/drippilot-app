@@ -4,7 +4,13 @@ import { useState } from "react";
 import { ArrowUpDown, Check, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type LeadSortField = "createdAt" | "updatedAt" | "name";
+export type LeadSortField =
+  | "createdAt"
+  | "updatedAt"
+  | "name"
+  | "email"
+  | "status"
+  | "tags";
 export type LeadSortOrder = "asc" | "desc";
 
 interface LeadsSortProps {

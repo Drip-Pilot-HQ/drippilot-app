@@ -103,7 +103,7 @@ export function KnowledgeBaseClient() {
               A Knowledgeable Mind Awaits
             </h2>
             <p className="text-slate-500 max-w-sm mb-8 font-medium">
-              Knowledge is the fuel for AI. Add documentation to help Drip Bot
+              Knowledge is the fuel for AI. Add documentation to help Drip Pilot
               represent your brand accurately.
             </p>
             <Button

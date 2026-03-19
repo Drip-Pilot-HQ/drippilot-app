@@ -10,7 +10,7 @@ export function InviteList() {
         {[1, 2].map((i) => (
           <div
             key={i}
-            className="flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-2xl bg-white border border-slate-100 animate-pulse gap-6 shadow-sm"
+            className="flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-2xl bg-white border border-slate-100 animate-pulse gap-6"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl bg-slate-100 shrink-0" />

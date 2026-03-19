@@ -92,7 +92,7 @@ export function CreateKbEntryDialog({
               <p className="text-slate-500 text-xs sm:text-sm font-medium">
                 {editEntry
                   ? "Refine existing information"
-                  : "Feed Drip Bot new facts"}
+                  : "Feed Drip Pilot new facts"}
               </p>
             </div>
           </div>

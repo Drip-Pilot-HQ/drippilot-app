@@ -3,6 +3,7 @@ import { createClient } from '../../lib/supabase/client'
 import { SignInWithPasswordCredentials, SignUpWithPasswordCredentials } from '@supabase/supabase-js'
 import { useAuthStore } from '../client/useAuthStore'
 import { useAccountStore } from '../client/useAccountStore'
+import { toast } from 'sonner'
 
 
 export const useLoginMutation = () => {
@@ -84,6 +85,37 @@ export const useResetPasswordMutation = () => {
       if (error) {
         throw new Error(error.message)
       }
+    },
+  })
+}
+
+export const useChangePasswordMutation = () => {
+  return useMutation({
+    mutationFn: async ({
+      currentPassword,
+      newPassword,
+    }: {
+      currentPassword: string
+      newPassword: string
+    }) => {
+      const supabase = createClient()
+      const currentUser = useAuthStore.getState().user
+      if (!currentUser?.email) throw new Error('No authenticated user found.')
+
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email: currentUser.email,
+        password: currentPassword,
+      })
+      if (authError) throw new Error('Current password is incorrect.')
+
+      const { error } = await supabase.auth.updateUser({ password: newPassword })
+      if (error) throw new Error(error.message)
+    },
+    onSuccess: () => {
+      toast.success('Password changed successfully.')
+    },
+    onError: (error: Error) => {
+      toast.error(error.message)
     },
   })
 }

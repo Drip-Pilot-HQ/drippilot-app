@@ -38,11 +38,14 @@ export function LeadListSkeleton() {
         <table className="w-full text-left">
           <thead>
             <tr className="bg-slate-50/50">
-              {[1, 2, 3, 4, 5].map((i) => (
+              {[1, 2, 3, 4].map((i) => (
                 <th key={i} className="px-8 py-5 h-10">
                   <div className="h-3 w-20 bg-slate-100 rounded" />
                 </th>
               ))}
+              <th className="px-8 py-5 h-10 text-right">
+                <div className="h-3 w-16 bg-slate-100 rounded ml-auto" />
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50">

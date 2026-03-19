@@ -23,8 +23,12 @@ export function LeadsClient() {
   const [limit, setLimit] = useState(20);
   const [selectedStatuses, setSelectedStatuses] = useState<LeadStatus[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  // Server-side sort (sent to API via LeadsSort dropdown)
   const [sortBy, setSortBy] = useState<LeadSortField>("createdAt");
   const [sortOrder, setSortOrder] = useState<LeadSortOrder>("desc");
+  // Client-side sort (table header clicks, applied in-memory on fetched page)
+  const [tableSortBy, setTableSortBy] = useState<LeadSortField | null>(null);
+  const [tableSortOrder, setTableSortOrder] = useState<LeadSortOrder>("asc");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
@@ -35,40 +39,50 @@ export function LeadsClient() {
     tags: selectedTags.length > 0 ? selectedTags : undefined,
     page,
     limit,
-    sortBy,
+    sortBy: sortBy as "name" | "createdAt" | "updatedAt",
     sortOrder,
   });
 
   const sortedLeads = useMemo(() => {
     if (!data?.data) return [];
+    if (!tableSortBy) return data.data;
 
     const items = [...data.data];
 
     return items.sort((a, b) => {
-      let valA: string | number = "";
-      let valB: string | number = "";
-
-      if (sortBy === "name") {
-        // Standardize name comparison
+      if (tableSortBy === "name") {
         const nameA = (a.name || `${a.firstName} ${a.lastName}` || "")
           .trim()
           .toLowerCase();
         const nameB = (b.name || `${b.firstName} ${b.lastName}` || "")
           .trim()
           .toLowerCase();
-        return sortOrder === "asc"
+        return tableSortOrder === "asc"
           ? nameA.localeCompare(nameB)
           : nameB.localeCompare(nameA);
-      } else if (sortBy === "createdAt" || sortBy === "updatedAt") {
-        valA = new Date(a[sortBy] || 0).getTime();
-        valB = new Date(b[sortBy] || 0).getTime();
       }
-
-      if (valA < valB) return sortOrder === "asc" ? -1 : 1;
-      if (valA > valB) return sortOrder === "asc" ? 1 : -1;
+      if (tableSortBy === "email") {
+        const emailA = (a.email || "").toLowerCase();
+        const emailB = (b.email || "").toLowerCase();
+        return tableSortOrder === "asc"
+          ? emailA.localeCompare(emailB)
+          : emailB.localeCompare(emailA);
+      }
+      if (tableSortBy === "status") {
+        const sA = (a.leadStatus || "").toLowerCase();
+        const sB = (b.leadStatus || "").toLowerCase();
+        return tableSortOrder === "asc"
+          ? sA.localeCompare(sB)
+          : sB.localeCompare(sA);
+      }
+      if (tableSortBy === "tags") {
+        const lenA = a.tags?.length ?? 0;
+        const lenB = b.tags?.length ?? 0;
+        return tableSortOrder === "asc" ? lenA - lenB : lenB - lenA;
+      }
       return 0;
     });
-  }, [data, sortBy, sortOrder]);
+  }, [data, tableSortBy, tableSortOrder]);
 
   const toggleStatusFilter = (status: LeadStatus) => {
     setSelectedStatuses((prev) =>
@@ -169,7 +183,16 @@ export function LeadsClient() {
           <LeadListSkeleton />
         ) : data?.data && data.data.length > 0 ? (
           <>
-            <LeadsTable leads={sortedLeads} onEdit={handleEdit} />
+            <LeadsTable
+              leads={sortedLeads}
+              onEdit={handleEdit}
+              sortBy={tableSortBy}
+              sortOrder={tableSortOrder}
+              onSortChange={(field, order) => {
+                setTableSortBy(field);
+                setTableSortOrder(order);
+              }}
+            />
 
             <LeadsPagination
               currentPage={data.pagination.page}

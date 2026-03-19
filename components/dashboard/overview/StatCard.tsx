@@ -2,6 +2,7 @@
 
 import type { LucideIcon } from "lucide-react";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { InfoTooltip } from "@/components/common/InfoTooltip";
 
 interface StatCardProps {
   label: string;
@@ -12,6 +13,7 @@ interface StatCardProps {
   iconBg?: string;
   trend?: "up" | "down" | "neutral";
   trendLabel?: string;
+  tooltip?: string;
 }
 
 export function StatCard({
@@ -23,9 +25,10 @@ export function StatCard({
   iconBg = "bg-primary/10",
   trend,
   trendLabel,
+  tooltip,
 }: StatCardProps) {
   return (
-    <div className="bg-white border border-slate-100 rounded-[28px] p-6 shadow-sm flex flex-col gap-4">
+    <div className="bg-white border border-slate-100 rounded-[28px] p-4 sm:p-6 shadow-sm flex flex-col gap-3 sm:gap-4">
       <div className="flex items-start justify-between">
         <div
           className={`w-11 h-11 rounded-2xl ${iconBg} flex items-center justify-center flex-shrink-0`}
@@ -54,7 +57,7 @@ export function StatCard({
         )}
       </div>
       <div>
-        <p className="text-2xl font-black text-slate-900 tracking-tight">
+        <p className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
           {value}
         </p>
         {subValue && (
@@ -62,9 +65,12 @@ export function StatCard({
             {subValue}
           </p>
         )}
-        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2">
-          {label}
-        </p>
+        <div className="flex items-center gap-1 mt-2">
+          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+            {label}
+          </p>
+          {tooltip && <InfoTooltip text={tooltip} />}
+        </div>
       </div>
     </div>
   );

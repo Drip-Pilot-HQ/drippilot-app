@@ -1,6 +1,7 @@
 "use client";
 
 import type { ConversionFunnel as ConversionFunnelType } from "@/types/analytics";
+import { InfoTooltip } from "@/components/common/InfoTooltip";
 
 interface FunnelStep {
   label: string;
@@ -11,9 +12,10 @@ interface FunnelStep {
 
 interface ConversionFunnelProps {
   funnel: ConversionFunnelType;
+  converted?: number;
 }
 
-export function ConversionFunnel({ funnel }: ConversionFunnelProps) {
+export function ConversionFunnel({ funnel, converted }: ConversionFunnelProps) {
   const steps: FunnelStep[] = [
     {
       label: "Total Leads",
@@ -34,17 +36,21 @@ export function ConversionFunnel({ funnel }: ConversionFunnelProps) {
       bg: "bg-cyan-50",
     },
     {
-      label: "Qualified",
+      label: "Warm / Hot",
       value: funnel.qualifiedLeads,
-      color: "bg-accent",
-      bg: "bg-pink-50",
-    },
-    {
-      label: "Hot Leads",
-      value: funnel.hotLeads,
       color: "bg-primary",
       bg: "bg-orange-50",
     },
+    ...(converted !== undefined
+      ? [
+          {
+            label: "Converted",
+            value: converted,
+            color: "bg-emerald-500",
+            bg: "bg-emerald-50",
+          },
+        ]
+      : []),
   ];
 
   const max = funnel.totalLeads || 1;
@@ -52,7 +58,12 @@ export function ConversionFunnel({ funnel }: ConversionFunnelProps) {
   return (
     <div className="bg-white border border-slate-100 rounded-[28px] p-6 shadow-sm">
       <div className="mb-6">
-        <h3 className="text-lg font-black text-slate-900">Conversion Funnel</h3>
+        <div className="flex items-center gap-1.5">
+          <h3 className="text-lg font-black text-slate-900">
+            Conversion Funnel
+          </h3>
+          <InfoTooltip text="Shows how many leads progress through each pipeline stage. Drop-off % is relative to the previous stage." />
+        </div>
         <p className="text-sm text-slate-400 font-medium mt-0.5">
           Lead progression through pipeline stages
         </p>
@@ -81,7 +92,7 @@ export function ConversionFunnel({ funnel }: ConversionFunnelProps) {
                   </span>
                   {dropOff !== null && dropOff > 0 && (
                     <span className="text-xs font-bold text-red-400 bg-red-50 px-1.5 py-0.5 rounded-full">
-                      -{dropOff}%
+                      {dropOff}% drop
                     </span>
                   )}
                 </div>

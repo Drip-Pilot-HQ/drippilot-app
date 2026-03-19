@@ -1,9 +1,48 @@
 "use client";
 
-import { User, Shield, Save } from "lucide-react";
+import { useState } from "react";
+import { User, Shield } from "lucide-react";
 import { Button } from "@/components/branding/Button";
+import { useAuthStore } from "@/store/client/useAuthStore";
+import { useChangePasswordMutation } from "@/store/server/auth.queries";
 
 export function ProfileSettings() {
+  const user = useAuthStore((s) => s.user);
+  const name = user?.user_metadata?.name ?? user?.email ?? "—";
+  const email = user?.email ?? "—";
+
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [validationError, setValidationError] = useState<string | null>(null);
+
+  const changePassword = useChangePasswordMutation();
+
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setValidationError(null);
+
+    if (newPassword.length < 8) {
+      setValidationError("New password must be at least 8 characters.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setValidationError("Passwords do not match.");
+      return;
+    }
+
+    changePassword.mutate(
+      { currentPassword, newPassword },
+      {
+        onSuccess: () => {
+          setCurrentPassword("");
+          setNewPassword("");
+          setConfirmPassword("");
+        },
+      },
+    );
+  };
+
   return (
     <div className="w-full space-y-8 lg:space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="text-center md:text-left">
@@ -26,35 +65,27 @@ export function ProfileSettings() {
             </h2>
           </div>
 
-          <form className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-1.5">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  defaultValue="Alex Rivera"
-                  className="w-full px-5 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-primary focus:ring-4 focus:ring-primary/5 outline-none transition-all font-semibold text-slate-900 text-sm"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  defaultValue="alex@drippilot.com"
-                  className="w-full px-5 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-primary focus:ring-4 focus:ring-primary/5 outline-none transition-all font-semibold text-slate-900 text-sm"
-                />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                Full Name
+              </label>
+              <div className="w-full px-5 py-3 rounded-2xl bg-slate-50 border border-slate-200 font-semibold text-slate-900 text-sm select-all">
+                {name}
               </div>
             </div>
-
-            <Button variant="dark" size="md" className="gap-2">
-              <Save className="w-4 h-4" />
-              <span>Update Profile</span>
-            </Button>
-          </form>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                Email Address
+              </label>
+              <div className="w-full px-5 py-3 rounded-2xl bg-slate-50 border border-slate-200 font-semibold text-slate-900 text-sm select-all">
+                {email}
+              </div>
+            </div>
+          </div>
+          <p className="text-xs text-slate-400 mt-4 ml-1">
+            To update your name or email, please contact support.
+          </p>
         </section>
 
         <section className="bg-white rounded-3xl border border-slate-200 p-6 lg:p-8 shadow-sm">
@@ -67,7 +98,7 @@ export function ProfileSettings() {
             </h2>
           </div>
 
-          <form className="space-y-6">
+          <form onSubmit={handlePasswordSubmit} className="space-y-6">
             <div className="space-y-1.5">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Current Password
@@ -75,6 +106,9 @@ export function ProfileSettings() {
               <input
                 type="password"
                 placeholder="••••••••"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                required
                 className="w-full px-5 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-primary focus:ring-4 focus:ring-primary/5 outline-none transition-all font-semibold text-slate-900 text-sm"
               />
             </div>
@@ -87,6 +121,9 @@ export function ProfileSettings() {
                 <input
                   type="password"
                   placeholder="New password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
                   className="w-full px-5 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-primary focus:ring-4 focus:ring-primary/5 outline-none transition-all font-semibold text-slate-900 text-sm"
                 />
               </div>
@@ -97,13 +134,28 @@ export function ProfileSettings() {
                 <input
                   type="password"
                   placeholder="Confirm new password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
                   className="w-full px-5 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-primary focus:ring-4 focus:ring-primary/5 outline-none transition-all font-semibold text-slate-900 text-sm"
                 />
               </div>
             </div>
 
-            <Button variant="primary" size="md">
-              Change Password
+            {validationError && (
+              <p className="text-sm text-red-500 font-semibold ml-1">
+                {validationError}
+              </p>
+            )}
+
+            <Button
+              variant="primary"
+              size="md"
+              type="submit"
+              disabled={changePassword.isPending}
+              className="rounded-xl"
+            >
+              {changePassword.isPending ? "Updating..." : "Change Password"}
             </Button>
           </form>
         </section>

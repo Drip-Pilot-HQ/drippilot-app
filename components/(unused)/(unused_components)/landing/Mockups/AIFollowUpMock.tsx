@@ -38,7 +38,7 @@ export const AIFollowUpMock = ({ active }: { active: boolean }) => {
         <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-[10px] font-black text-slate-400 flex-shrink-0 border border-white/10 shadow-lg">
           JR
         </div>
-        <div className="flex-1 bg-white/[0.03] rounded-2xl p-4 border border-white/10 backdrop-blur-sm relative overflow-hidden">
+        <div className="flex-1 bg-white/3 rounded-2xl p-4 border border-white/10 backdrop-blur-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 w-16 h-16 bg-primary/5 blur-xl"></div>
           <div className="flex justify-between items-start mb-2 relative z-10">
             <div className="text-xs font-bold text-white">James Rodriguez</div>
@@ -58,10 +58,10 @@ export const AIFollowUpMock = ({ active }: { active: boolean }) => {
         <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 border border-primary/30 shadow-lg shadow-primary/20">
           <BotIcon className="w-4 h-4 text-primary" />
         </div>
-        <div className="flex-1 bg-primary/[0.03] rounded-2xl p-4 border border-primary/20 backdrop-blur-md relative overflow-hidden">
+        <div className="flex-1 bg-primary/3 rounded-2xl p-4 border border-primary/20 backdrop-blur-md relative overflow-hidden">
           <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-transparent opacity-50"></div>
           <div className="flex flex-row-reverse justify-between items-start mb-2 relative z-10">
-            <div className="text-xs font-bold text-primary">Drip Bot</div>
+            <div className="text-xs font-bold text-primary">Drip Pilot</div>
             <div className="px-1.5 py-0.5 bg-accent/20 text-accent border border-accent/20 rounded text-[9px] font-black uppercase ">
               Personalize Response
             </div>

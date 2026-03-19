@@ -13,6 +13,7 @@ import {
 import { format, parseISO } from "date-fns";
 import type { ActivityInsights } from "@/types/analytics";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { InfoTooltip } from "@/components/common/InfoTooltip";
 
 interface ActivityChartProps {
   data: ActivityInsights;
@@ -46,16 +47,21 @@ export function ActivityChart({ data }: ActivityChartProps) {
 
   return (
     <div className="bg-white border border-slate-100 rounded-[28px] p-6 shadow-sm">
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
-        <div>
-          <h3 className="text-lg font-black text-slate-900">
-            Message Activity
-          </h3>
-          <p className="text-sm text-slate-400 font-medium mt-0.5">
-            Daily inbound &amp; outbound volume
-          </p>
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-6">
+        <div className="flex items-start justify-between sm:block gap-2 min-w-0">
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5">
+              <h3 className="text-lg font-black text-slate-900">
+                Message Activity
+              </h3>
+              <InfoTooltip text="Daily volume of outbound messages sent and inbound replies received across all campaigns in the selected period." />
+            </div>
+            <p className="text-sm text-slate-400 font-medium mt-0.5">
+              Daily inbound &amp; outbound volume
+            </p>
+          </div>
         </div>
-        <div className="flex items-center gap-4 flex-shrink-0">
+        <div className="flex items-center gap-3 sm:gap-4 shrink-0 flex-wrap justify-end">
           <div className="text-right">
             <div
               className={`flex items-center gap-1 justify-end text-sm font-bold ${growthPositive ? "text-emerald-600" : "text-red-500"}`}

@@ -75,7 +75,7 @@ export function DripBotChat() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to connect to Drip Bot");
+        throw new Error("Failed to connect to Drip Pilot");
       }
 
       const reader = response.body?.getReader();
@@ -118,7 +118,7 @@ export function DripBotChat() {
     } catch (error) {
       console.error("Chat error", error);
       setIsTyping(false);
-      toast.error("Drip Bot is busy - try again shortly");
+      toast.error("Drip Pilot is busy - try again shortly");
     }
   };
 
@@ -149,7 +149,7 @@ export function DripBotChat() {
           </div>
           <div>
             <h3 className="text-xs font-black text-white leading-none mb-1">
-              Drip Bot
+              Drip Pilot
             </h3>
             <div className="flex items-center gap-1 text-[8px] font-black text-emerald-500 uppercase tracking-widest leading-none">
               <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
@@ -233,7 +233,7 @@ export function DripBotChat() {
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Message Drip Bot..."
+                placeholder="Message Drip Pilot..."
                 className="w-full pl-4 pr-12 py-2.5 rounded-xl bg-slate-100 border-transparent focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all text-sm font-medium"
               />
               <button

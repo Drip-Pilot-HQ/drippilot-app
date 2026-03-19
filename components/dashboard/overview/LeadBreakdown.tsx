@@ -9,6 +9,7 @@ import {
   Legend,
 } from "recharts";
 import type { LeadStatusCounts } from "@/types/analytics";
+import { InfoTooltip } from "@/components/common/InfoTooltip";
 
 interface LeadBreakdownProps {
   leads: LeadStatusCounts;
@@ -32,7 +33,10 @@ export function LeadBreakdown({ leads }: LeadBreakdownProps) {
   return (
     <div className="bg-white border border-slate-100 rounded-[28px] p-6 shadow-sm">
       <div className="mb-4">
-        <h3 className="text-lg font-black text-slate-900">Lead Breakdown</h3>
+        <div className="flex items-center gap-1.5">
+          <h3 className="text-lg font-black text-slate-900">Lead Breakdown</h3>
+          <InfoTooltip text="Distribution of all your leads by current status: Cold, Warm, Hot, Converted, or Unsubscribed." />
+        </div>
         <p className="text-sm text-slate-400 font-medium mt-0.5">
           {leads.total.toLocaleString()} total leads by status
         </p>

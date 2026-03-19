@@ -2,6 +2,7 @@
 
 import type { BenchmarksResult } from "@/types/analytics";
 import { Award, TrendingUp, TrendingDown } from "lucide-react";
+import { InfoTooltip } from "@/components/common/InfoTooltip";
 
 interface BenchmarksPanelProps {
   data: BenchmarksResult;
@@ -28,20 +29,20 @@ function BenchmarkRow({
   const pct = Math.round(Math.abs(multiplier - 1) * 100);
 
   return (
-    <div className="flex items-center justify-between py-4 border-b border-slate-100 last:border-0">
+    <div className="flex items-center justify-between gap-2 py-4 border-b border-slate-100 last:border-0">
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-bold text-slate-700">{label}</p>
+        <p className="text-sm font-bold text-slate-700 truncate">{label}</p>
         <p className="text-xs text-slate-400 font-medium mt-0.5">
           Industry avg: {format(industry)}
         </p>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4 shrink-0">
         <div className="text-right">
           <p className="text-base font-black text-slate-900">{format(yours)}</p>
           <p className="text-xs text-slate-400 font-medium">yours</p>
         </div>
         <div
-          className={`flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-full min-w-[64px] justify-center ${
+          className={`flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-full min-w-[56px] justify-center whitespace-nowrap ${
             isGood ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-500"
           }`}
         >
@@ -67,9 +68,12 @@ export function BenchmarksPanel({ data }: BenchmarksPanelProps) {
           <Award className="w-5 h-5 text-amber-500" />
         </div>
         <div>
-          <h3 className="text-lg font-black text-slate-900">
-            Industry Benchmarks
-          </h3>
+          <div className="flex items-center gap-1.5">
+            <h3 className="text-lg font-black text-slate-900">
+              Industry Benchmarks
+            </h3>
+            <InfoTooltip text="Compares your Response Rate, Close Rate, and Cost metrics against outreach industry averages." />
+          </div>
           <p className="text-sm text-slate-400 font-medium">
             How you compare to the industry
           </p>
@@ -95,8 +99,12 @@ export function BenchmarksPanel({ data }: BenchmarksPanelProps) {
           label="Cost Per Lead"
           yours={current.costPerLead}
           industry={industry.costPerLead}
-          multiplier={comparison.costEfficiency}
-          format={(v) => `$${v.toFixed(0)}`}
+          multiplier={
+            industry.costPerLead > 0
+              ? current.costPerLead / industry.costPerLead
+              : 1
+          }
+          format={(v) => `$${Math.round(v).toLocaleString()}`}
           lowerIsBetter
         />
         <BenchmarkRow
@@ -108,7 +116,7 @@ export function BenchmarksPanel({ data }: BenchmarksPanelProps) {
               ? current.costPerClosing / industry.costPerClosing
               : 1
           }
-          format={(v) => `$${v.toLocaleString()}`}
+          format={(v) => `$${Math.round(v).toLocaleString()}`}
           lowerIsBetter
         />
       </div>

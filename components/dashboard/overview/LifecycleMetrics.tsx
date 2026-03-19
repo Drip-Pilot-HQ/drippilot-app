@@ -2,6 +2,7 @@
 
 import type { LifecycleMetricsResult } from "@/types/analytics";
 import { Clock, MessageCircle, Flame, Trophy } from "lucide-react";
+import { InfoTooltip } from "@/components/common/InfoTooltip";
 
 interface LifecycleMetricsProps {
   data: LifecycleMetricsResult;
@@ -54,9 +55,12 @@ export function LifecycleMetrics({ data }: LifecycleMetricsProps) {
           <Clock className="w-5 h-5 text-violet-500" />
         </div>
         <div>
-          <h3 className="text-lg font-black text-slate-900">
-            Lead Lifecycle Timing
-          </h3>
+          <div className="flex items-center gap-1.5">
+            <h3 className="text-lg font-black text-slate-900">
+              Lead Lifecycle Timing
+            </h3>
+            <InfoTooltip text="Averages calculated only from leads that completed each stage. Leads with no activity are excluded from timing calculations." />
+          </div>
           <p className="text-sm text-slate-400 font-medium">
             Average time through each stage
           </p>
