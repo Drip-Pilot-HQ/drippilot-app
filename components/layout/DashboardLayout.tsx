@@ -12,6 +12,7 @@ import {
   Bell,
   MessageSquare,
   Box,
+  BookOpenText,
 } from "lucide-react";
 import { AppLayout } from "./AppLayout";
 import { useAuthStore } from "@/store/client/useAuthStore";
@@ -40,7 +41,11 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         { name: "Notifications", href: `${base}/notifications`, icon: Bell },
         { name: "Members", href: `${base}/members`, icon: UserPlus },
         { name: "Billings", href: `${base}/billings`, icon: Wallet },
-        // { name: "Settings", href: `${base}/settings`, icon: Settings },
+        {
+          name: "Setup Guide",
+          href: `${base}/setup-guide`,
+          icon: BookOpenText,
+        },
       ],
     },
   ];

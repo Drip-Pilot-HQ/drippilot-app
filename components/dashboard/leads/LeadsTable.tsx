@@ -31,11 +31,13 @@ function SortIcon({
   sortOrder: LeadSortOrder;
 }) {
   if (sortBy !== field)
-    return <ChevronsUpDown className="w-3 h-3 opacity-40" />;
+    return (
+      <ChevronsUpDown className="w-4 h-4 text-slate-600 group-hover:text-slate-900 transition-colors" />
+    );
   return sortOrder === "asc" ? (
-    <ChevronUp className="w-3 h-3 text-primary" />
+    <ChevronUp className="w-4 h-4" />
   ) : (
-    <ChevronDown className="w-3 h-3 text-primary" />
+    <ChevronDown className="w-4 h-4" />
   );
 }
 
@@ -58,17 +60,17 @@ export function LeadsTable({
     <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
       <div className="overflow-x-auto custom-scrollbar">
         <table className="w-full text-left border-collapse min-w-[1000px]">
-          <thead className="bg-slate-50/90 shadow-sm">
+          <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
               {SORTABLE_COLUMNS.map(({ label, field }) => (
-                <th key={field} className="px-6 py-4 border-b border-slate-200">
+                <th key={field} className="px-6 py-4">
                   <button
                     onClick={() => handleHeaderClick(field)}
                     className={cn(
-                      "flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest transition-colors select-none",
+                      "group flex items-center gap-1.5 text-xs font-black uppercase tracking-wider transition-all select-none rounded-lg px-2.5 py-1.5",
                       sortBy === field
-                        ? "text-primary"
-                        : "text-slate-400 hover:text-slate-600",
+                        ? "bg-primary/10 text-primary"
+                        : "text-slate-500 hover:text-slate-800 hover:bg-slate-100",
                     )}
                   >
                     {label}
@@ -80,12 +82,12 @@ export function LeadsTable({
                   </button>
                 </th>
               ))}
-              <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right border-b border-slate-200">
+              <th className="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-wider text-right">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-50">
+          <tbody className="divide-y divide-slate-100">
             {leads.map((lead) => (
               <LeadRow key={lead.id} lead={lead} onEdit={onEdit} />
             ))}

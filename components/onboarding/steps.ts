@@ -102,7 +102,7 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
     id: "knowledge-base-chat",
     route: "/dashboard/knowledge-base",
     target: "dripbot-chat-btn",
-    title: "Test Your AI with DripBot",
+    title: "Test Your AI with Drip Pilot",
     description:
       "Once your knowledge base is set up, click this button to chat with your AI and verify it's responding the way you want.",
     Icon: BrainCircuit,
