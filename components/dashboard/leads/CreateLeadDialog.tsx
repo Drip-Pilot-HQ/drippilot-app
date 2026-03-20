@@ -101,6 +101,7 @@ export function CreateLeadDialog({
             name: formData.name,
             firstName: formData.firstName,
             lastName: formData.lastName,
+            tags: formData.tags,
           },
         });
       } else {

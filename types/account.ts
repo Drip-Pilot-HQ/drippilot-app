@@ -77,3 +77,36 @@ export interface CreateApiKeyDto {
   name: string;
   expiresAt?: string;
 }
+
+// Referral Types
+export interface ReferralCode {
+  code: string;
+  createdAt: string;
+}
+
+export interface ReferralSignup {
+  referredUserId: string;
+  referredEmail: string;
+  referredName: string;
+  createdAt: string;
+}
+
+export type CommissionStatus = 'pending' | 'paid';
+
+export interface ReferralCommission {
+  id: string;
+  referralSignupId: string;
+  workspaceId: string;
+  stripeInvoiceId: string;
+  invoiceAmountCents: number;
+  commissionAmountCents: number;
+  commissionRate: number;
+  status: CommissionStatus;
+  paidAt: string | null;
+  createdAt: string;
+}
+
+export interface CommissionSummary {
+  pendingCents: number;
+  paidCents: number;
+}

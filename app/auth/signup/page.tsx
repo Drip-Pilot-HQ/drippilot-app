@@ -1,16 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import Link from "next/link";
-import { User, Mail, Lock, ArrowRight } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { User, Mail, Lock, ArrowRight, Gift, X } from "lucide-react";
 import { Button } from "@/components/branding/Button";
 import { AuthInput } from "@/components/auth/AuthInput";
 import { useRegisterMutation } from "@/store/server/auth.queries";
 
-export default function SignupPage() {
+function SignupForm() {
+  const searchParams = useSearchParams();
+  const refCode = searchParams.get("ref") || searchParams.get("referral") || "";
+
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [referralCode, setReferralCode] = useState(refCode);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const registerMutation = useRegisterMutation();
@@ -20,8 +25,17 @@ export default function SignupPage() {
     setErrorMsg("");
     setSuccessMsg("");
 
+    const metadata: Record<string, string> = { full_name: fullName };
+    if (referralCode.trim()) {
+      metadata.referral_code = referralCode.trim().toUpperCase();
+    }
+
     registerMutation.mutate(
-      { email, password, options: { data: { full_name: fullName } } },
+      {
+        email,
+        password,
+        options: { data: metadata },
+      },
       {
         onSuccess: (data) => {
           if (data.user?.identities?.length === 0) {
@@ -61,32 +75,22 @@ export default function SignupPage() {
         </div>
       )}
 
-      {/* Social Register Separator */}
-      {/* <div className="flex justify-center">
-        <button
-          type="button"
-          className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all font-bold text-slate-600 text-sm cursor-pointer"
-        >
-          <Image
-            src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png"
-            alt="Google"
-            width={12}
-            height={12}
-            className="w-3 h-3"
-            unoptimized
-          />
-          <span>Sign up with Google</span>
-        </button>
-      </div>
-
-      <div className="relative py-2">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-slate-100" />
+      {/* Referral Code Banner (when auto-filled from URL) */}
+      {refCode && (
+        <div className="flex items-center gap-3 bg-orange-50 border border-orange-200 rounded-2xl px-4 py-3">
+          <div className="w-8 h-8 rounded-xl bg-white border border-orange-200 flex items-center justify-center shrink-0">
+            <Gift className="w-4 h-4 text-primary" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-black text-primary uppercase tracking-wider">
+              Referral code applied
+            </p>
+            <p className="text-sm font-bold text-slate-700 truncate">
+              {refCode.toUpperCase()}
+            </p>
+          </div>
         </div>
-        <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
-          <span className="bg-white px-4 text-slate-400">Or use email</span>
-        </div>
-      </div> */}
+      )}
 
       {/* Form Section */}
       <form className="space-y-6" onSubmit={handleSubmit}>
@@ -119,6 +123,37 @@ export default function SignupPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+
+        {/* Referral Code Field */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-black uppercase tracking-widest text-slate-400">
+            Referral Code{" "}
+            <span className="normal-case font-semibold tracking-normal text-slate-300">
+              (optional)
+            </span>
+          </label>
+          <div className="relative">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+              <Gift className="w-4 h-4" />
+            </div>
+            <input
+              type="text"
+              placeholder="JOHN-A3X9"
+              value={referralCode}
+              onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+              className="w-full pl-11 pr-11 py-3.5 rounded-3xl border border-slate-200 bg-white text-slate-900 font-mono font-bold tracking-widest text-sm placeholder:font-sans placeholder:tracking-normal placeholder:font-semibold placeholder:text-slate-300 focus:outline-none focus:border-primary/40 focus:ring-8 focus:ring-primary/5 transition-all"
+            />
+            {referralCode && (
+              <button
+                type="button"
+                onClick={() => setReferralCode("")}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        </div>
 
         {/* Term & Conditions */}
         <div className="flex items-center gap-3 px-1">
@@ -168,5 +203,20 @@ export default function SignupPage() {
         </Link>
       </p>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="space-y-8 animate-pulse">
+          <div className="h-16 bg-slate-100 rounded-2xl" />
+          <div className="h-80 bg-slate-100 rounded-2xl" />
+        </div>
+      }
+    >
+      <SignupForm />
+    </Suspense>
   );
 }

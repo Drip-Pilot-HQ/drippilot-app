@@ -2,7 +2,7 @@
 
 import { AppLayout } from "./AppLayout";
 import { useAuthStore } from "@/store/client/useAuthStore";
-import { Settings, Key, Layers } from "lucide-react";
+import { Settings, Key, Layers, Gift } from "lucide-react";
 import type { NavGroup, UserProfile } from "@/types/layout";
 
 const navGroups: NavGroup[] = [
@@ -11,6 +11,7 @@ const navGroups: NavGroup[] = [
       { name: "Workspaces", href: "/account/workspaces", icon: Layers },
       { name: "Profile", href: "/account/profile", icon: Settings },
       { name: "API Tokens", href: "/account/tokens", icon: Key },
+      { name: "Referral", href: "/account/referral", icon: Gift },
     ],
   },
 ];

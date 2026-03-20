@@ -36,6 +36,7 @@ export interface UpdateLeadDto {
   name?: string;
   firstName?: string;
   lastName?: string;
+  tags?: string[];
 }
 
 export interface UpdateLeadStatusDto {
