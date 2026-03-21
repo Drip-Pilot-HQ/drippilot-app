@@ -3,9 +3,18 @@ export enum TemplateChannel {
   EMAIL = "email",
 }
 
+export interface TemplateFolder {
+  id: string;
+  workspaceId: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Template {
   id: string;
   workspaceId: string;
+  folderId: string | null;
   name: string;
   subject?: string;
   content: string;
@@ -19,6 +28,7 @@ export interface CreateTemplateDto {
   subject?: string;
   content: string;
   templateChannel: TemplateChannel;
+  folderId?: string;
 }
 
 export interface UpdateTemplateDto {
@@ -26,11 +36,13 @@ export interface UpdateTemplateDto {
   subject?: string;
   content?: string;
   templateChannel?: TemplateChannel;
+  folderId?: string | null;
 }
 
 export interface SearchTemplatesDto {
   search?: string;
   channel?: TemplateChannel;
+  folderId?: string;
   sortBy?: "createdAt" | "updatedAt" | "name";
   sortOrder?: "asc" | "desc";
   page?: number;

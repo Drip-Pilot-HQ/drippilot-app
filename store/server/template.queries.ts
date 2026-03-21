@@ -2,12 +2,95 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/axios";
 import {
   Template,
+  TemplateFolder,
   CreateTemplateDto,
   UpdateTemplateDto,
   SearchTemplatesDto,
   PaginatedTemplatesResponse,
 } from "@/types/template";
 import { toast } from "sonner";
+
+export const folderKeys = {
+  all: ["template-folders"] as const,
+  list: ["template-folders", "list"] as const,
+};
+
+export function useFoldersQuery() {
+  return useQuery({
+    queryKey: folderKeys.list,
+    queryFn: async () => {
+      const { data } = await apiClient.get<TemplateFolder[]>(
+        "/templates/folders",
+      );
+      return data;
+    },
+  });
+}
+
+export function useCreateFolderMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (name: string) => {
+      const { data } = await apiClient.post<TemplateFolder>(
+        "/templates/folders",
+        { name },
+      );
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: folderKeys.all });
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to create folder");
+    },
+  });
+}
+
+export function useRenameFolderMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      folderId,
+      name,
+    }: {
+      folderId: string;
+      name: string;
+    }) => {
+      const { data } = await apiClient.patch<TemplateFolder>(
+        `/templates/folders/${folderId}`,
+        { name },
+      );
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: folderKeys.all });
+      toast.success("Folder renamed");
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to rename folder");
+    },
+  });
+}
+
+export function useDeleteFolderMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (folderId: string) => {
+      await apiClient.delete(`/templates/folders/${folderId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: folderKeys.all });
+      queryClient.invalidateQueries({ queryKey: templateKeys.all });
+      toast.success("Folder deleted");
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to delete folder");
+    },
+  });
+}
 
 export const templateKeys = {
   all: ["templates"] as const,

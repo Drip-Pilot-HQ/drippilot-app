@@ -12,11 +12,13 @@ import {
   ShieldAlert,
   Info,
 } from "lucide-react";
+import { CustomSelect } from "@/components/common/CustomSelect";
 import { toast } from "sonner";
 import { CreateTemplateDto, Template, TemplateChannel } from "@/types/template";
 import {
   useCreateTemplateMutation,
   useUpdateTemplateMutation,
+  useFoldersQuery,
 } from "@/store/server/template.queries";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/branding/Button";
@@ -29,13 +31,17 @@ interface CreateTemplateDialogProps {
   isOpen: boolean;
   onClose: () => void;
   editTemplate?: Template | null;
+  defaultFolderId?: string | null;
 }
 
 export function CreateTemplateDialog({
   isOpen,
   onClose,
   editTemplate,
+  defaultFolderId,
 }: CreateTemplateDialogProps) {
+  const { data: folders = [] } = useFoldersQuery();
+
   const [formData, setFormData] = useState<CreateTemplateDto>(() => {
     if (editTemplate) {
       return {
@@ -43,6 +49,7 @@ export function CreateTemplateDialog({
         subject: editTemplate.subject || "",
         content: editTemplate.content,
         templateChannel: editTemplate.templateChannel,
+        folderId: editTemplate.folderId ?? undefined,
       };
     }
     return {
@@ -50,6 +57,7 @@ export function CreateTemplateDialog({
       subject: "",
       content: "",
       templateChannel: TemplateChannel.EMAIL,
+      folderId: defaultFolderId ?? undefined,
     };
   });
 
@@ -88,19 +96,28 @@ export function CreateTemplateDialog({
     }
 
     try {
-      const dto = {
-        name: formData.name,
-        content: formData.content,
-        templateChannel: formData.templateChannel,
-        ...(formData.templateChannel === TemplateChannel.EMAIL
-          ? { subject: formData.subject }
-          : {}),
-      };
-
       if (editTemplate) {
-        await updateMutation.mutateAsync({ id: editTemplate.id, dto });
+        await updateMutation.mutateAsync({
+          id: editTemplate.id,
+          dto: {
+            name: formData.name,
+            content: formData.content,
+            folderId: formData.folderId ?? null,
+            ...(formData.templateChannel === TemplateChannel.EMAIL
+              ? { subject: formData.subject }
+              : {}),
+          },
+        });
       } else {
-        await createMutation.mutateAsync(dto);
+        await createMutation.mutateAsync({
+          name: formData.name,
+          content: formData.content,
+          templateChannel: formData.templateChannel,
+          ...(formData.folderId ? { folderId: formData.folderId } : {}),
+          ...(formData.templateChannel === TemplateChannel.EMAIL
+            ? { subject: formData.subject }
+            : {}),
+        });
       }
       onClose();
     } catch (error) {
@@ -219,6 +236,28 @@ export function CreateTemplateDialog({
                   className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-bold text-slate-900 text-sm"
                 />
               </div>
+
+              {folders.length > 0 && (
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
+                    Folder
+                  </label>
+                  <CustomSelect
+                    value={formData.folderId ?? ""}
+                    onChange={(val) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        folderId: val || undefined,
+                      }))
+                    }
+                    options={[
+                      { value: "", label: "No folder" },
+                      ...folders.map((f) => ({ value: f.id, label: f.name })),
+                    ]}
+                    placeholder="No folder"
+                  />
+                </div>
+              )}
 
               {formData.templateChannel === TemplateChannel.EMAIL && (
                 <div className="space-y-2 animate-in slide-in-from-top-2 duration-300">

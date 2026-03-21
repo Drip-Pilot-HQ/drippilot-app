@@ -16,6 +16,7 @@ import { useDebounce } from "@/lib/hooks/use-debounce";
 import { naturalSort } from "@/lib/utils/string";
 import { LayoutGrid, List } from "lucide-react";
 import { TemplateRow } from "./TemplateRow";
+import { FolderSelector } from "./FolderSelector";
 
 export function TemplatesClient() {
   const [searchInput, setSearchInput] = useState("");
@@ -25,8 +26,14 @@ export function TemplatesClient() {
   const [selectedChannel, setSelectedChannel] = useState<
     TemplateChannel | "all"
   >("all");
+  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState<Template | null>(null);
+
+  const handleSelectFolder = (folderId: string | null) => {
+    setSelectedFolderId(folderId);
+    setPage(1);
+  };
   const [sortBy, setSortBy] = useState<
     "createdAt" | "updatedAt" | "name" | "natural"
   >("natural");
@@ -36,6 +43,7 @@ export function TemplatesClient() {
   const { data, isLoading } = useTemplatesQuery({
     search: debouncedSearch,
     channel: selectedChannel === "all" ? undefined : selectedChannel,
+    folderId: selectedFolderId ?? undefined,
     page,
     limit,
     sortBy: sortBy === "natural" ? "name" : sortBy,
@@ -97,6 +105,10 @@ export function TemplatesClient() {
           }}
         />
         <div className="flex flex-wrap items-center gap-3">
+          <FolderSelector
+            selectedFolderId={selectedFolderId}
+            onSelectFolder={handleSelectFolder}
+          />
           <TemplatesFilters
             selectedChannel={selectedChannel}
             onChannelChange={(channel) => {
@@ -185,7 +197,7 @@ export function TemplatesClient() {
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* Template list */}
       <div className="space-y-8">
         {isLoading ? (
           <TemplateListSkeleton viewMode={viewMode} />
@@ -200,7 +212,7 @@ export function TemplatesClient() {
             </div>
 
             {viewMode === "grid" ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-in fade-in duration-500">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-500">
                 {templates.map((template) => (
                   <TemplateCard
                     key={template.id}
@@ -242,11 +254,14 @@ export function TemplatesClient() {
               <Code className="w-10 h-10" />
             </div>
             <h2 className="text-2xl font-black text-slate-900 mb-2 font-heading">
-              No templates designed
+              {selectedFolderId
+                ? "No templates in this folder"
+                : "No templates designed"}
             </h2>
             <p className="text-slate-500 max-w-sm mb-8 font-medium italic">
-              Create reusable message templates to maintain consistent brand
-              messaging across all automated campaigns.
+              {selectedFolderId
+                ? "Create a template and assign it to this folder, or move an existing template here."
+                : "Create reusable message templates to maintain consistent brand messaging across all automated campaigns."}
             </p>
             <Button
               onClick={() => setIsCreateOpen(true)}
@@ -254,7 +269,11 @@ export function TemplatesClient() {
             >
               <div className="flex items-center gap-2">
                 <Plus className="w-5 h-5" />
-                <span className="font-bold">Design First Template</span>
+                <span className="font-bold">
+                  {selectedFolderId
+                    ? "Create Template Here"
+                    : "Design First Template"}
+                </span>
               </div>
             </Button>
           </div>
@@ -266,6 +285,7 @@ export function TemplatesClient() {
         isOpen={isCreateOpen}
         onClose={closeDialog}
         editTemplate={editingTemplate}
+        defaultFolderId={selectedFolderId}
       />
     </div>
   );
