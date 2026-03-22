@@ -12,6 +12,9 @@ interface LeadsTableProps {
   sortBy: LeadSortField | null;
   sortOrder: LeadSortOrder;
   onSortChange: (field: LeadSortField, order: LeadSortOrder) => void;
+  selectedLeadIds: Set<string>;
+  onToggleSelect: (id: string) => void;
+  onToggleAll: (ids: string[]) => void;
 }
 
 const SORTABLE_COLUMNS: { label: string; field: LeadSortField }[] = [
@@ -47,6 +50,9 @@ export function LeadsTable({
   sortBy,
   sortOrder,
   onSortChange,
+  selectedLeadIds,
+  onToggleSelect,
+  onToggleAll,
 }: LeadsTableProps) {
   const handleHeaderClick = (field: LeadSortField) => {
     if (sortBy === field) {
@@ -56,12 +62,29 @@ export function LeadsTable({
     }
   };
 
+  const allIds = leads.map((l) => l.id);
+  const allSelected =
+    allIds.length > 0 && allIds.every((id) => selectedLeadIds.has(id));
+  const someSelected =
+    allIds.some((id) => selectedLeadIds.has(id)) && !allSelected;
+
   return (
     <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
       <div className="overflow-x-auto custom-scrollbar">
         <table className="w-full text-left border-collapse min-w-[1000px]">
           <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
+              <th className="pl-4 pr-2 py-4 w-10">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  ref={(el) => {
+                    if (el) el.indeterminate = someSelected;
+                  }}
+                  onChange={() => onToggleAll(allIds)}
+                  className="w-4 h-4 rounded border-slate-300 text-primary accent-primary cursor-pointer"
+                />
+              </th>
               {SORTABLE_COLUMNS.map(({ label, field }) => (
                 <th key={field} className="px-6 py-4">
                   <button
@@ -89,7 +112,13 @@ export function LeadsTable({
           </thead>
           <tbody className="divide-y divide-slate-100">
             {leads.map((lead) => (
-              <LeadRow key={lead.id} lead={lead} onEdit={onEdit} />
+              <LeadRow
+                key={lead.id}
+                lead={lead}
+                onEdit={onEdit}
+                isSelected={selectedLeadIds.has(lead.id)}
+                onToggleSelect={onToggleSelect}
+              />
             ))}
           </tbody>
         </table>

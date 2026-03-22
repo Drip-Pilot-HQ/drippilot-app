@@ -76,9 +76,25 @@ export function CreateTemplateDialog({
   const isLoading = createMutation.isPending || updateMutation.isPending;
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+     
     setValidation(validateTemplatePlaceholders(formData.content));
   }, [formData.content]);
+
+  useEffect(() => {
+    if (
+      formData.templateChannel === TemplateChannel.SMS &&
+      !formData.content.includes("Reply STOP to unsubscribe")
+    ) {
+       
+      setFormData((prev) => ({
+        ...prev,
+        content: prev.content
+          ? `${prev.content}\n\nReply STOP to unsubscribe`
+          : "Reply STOP to unsubscribe",
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData.templateChannel]);
 
   if (!isOpen) return null;
 
@@ -430,7 +446,13 @@ export function CreateTemplateDialog({
             <Button
               type="submit"
               form="template-form"
-              disabled={isLoading || !formData.name || !validation.isValid}
+              disabled={
+                isLoading ||
+                !formData.name ||
+                !validation.isValid ||
+                (formData.templateChannel === TemplateChannel.SMS &&
+                  !formData.content.includes("Reply STOP to unsubscribe"))
+              }
               className="flex-2 rounded-xl h-12"
             >
               {isLoading ? (

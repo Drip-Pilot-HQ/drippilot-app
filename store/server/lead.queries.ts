@@ -85,6 +85,18 @@ export const useDeleteLeadMutation = () => {
   })
 }
 
+export const useDeleteLeadsMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (leadIds: string[]) => {
+      await apiClient.delete('/leads', { data: { leadIds } })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['leads'] })
+    },
+  })
+}
+
 export const useImportLeadsMutation = () => {
   const queryClient = useQueryClient()
   return useMutation({

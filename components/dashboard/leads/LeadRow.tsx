@@ -30,6 +30,8 @@ import { EnrollLeadSubmenu } from "./EnrollLeadSubmenu";
 interface LeadRowProps {
   lead: Lead;
   onEdit: (lead: Lead) => void;
+  isSelected: boolean;
+  onToggleSelect: (id: string) => void;
 }
 
 const STATUS_STYLES: Record<LeadStatus, string> = {
@@ -40,7 +42,12 @@ const STATUS_STYLES: Record<LeadStatus, string> = {
   [LeadStatus.UNSUBSCRIBED]: "bg-slate-100 text-slate-600 hover:bg-slate-200",
 };
 
-export function LeadRow({ lead, onEdit }: LeadRowProps) {
+export function LeadRow({
+  lead,
+  onEdit,
+  isSelected,
+  onToggleSelect,
+}: LeadRowProps) {
   const deleteMutation = useDeleteLeadMutation();
   const statusMutation = useUpdateLeadStatusMutation();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -77,7 +84,21 @@ export function LeadRow({ lead, onEdit }: LeadRowProps) {
     "bg-slate-100 text-slate-600 hover:bg-slate-200";
 
   return (
-    <tr className="group hover:bg-slate-50 transition-colors">
+    <tr
+      className={cn(
+        "group hover:bg-slate-50 transition-colors",
+        isSelected && "bg-primary/5",
+      )}
+    >
+      <td className="pl-4 pr-2 py-4 w-10">
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={() => onToggleSelect(lead.id)}
+          onClick={(e) => e.stopPropagation()}
+          className="w-4 h-4 rounded border-slate-300 text-primary accent-primary cursor-pointer"
+        />
+      </td>
       <td className="px-6 py-4">
         <div className="flex items-center gap-3">
           <div
@@ -168,10 +189,15 @@ export function LeadRow({ lead, onEdit }: LeadRowProps) {
           {lead.tags?.map((tag) => (
             <span
               key={tag}
-              className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-slate-50 border border-slate-100 text-[9px] font-bold text-slate-500"
+              className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-slate-50 border border-slate-100 text-[10px] font-bold text-slate-600"
             >
               <Tag className="w-2 h-2" />
-              {tag}
+              {tag
+                .split(" ")
+                .map(
+                  (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase(),
+                )
+                .join(" ")}
             </span>
           ))}
           {(!lead.tags || lead.tags.length === 0) && (

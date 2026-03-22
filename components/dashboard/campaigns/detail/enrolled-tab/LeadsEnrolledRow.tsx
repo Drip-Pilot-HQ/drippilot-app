@@ -8,12 +8,12 @@ const STATUS_CONFIG: Record<
   { label: string; className: string }
 > = {
   [EnrollmentStatus.PENDING]: {
-    label: "Scheduled",
-    className: "bg-amber-50 text-amber-600 border-amber-100",
+    label: "Enrolled",
+    className: "bg-emerald-50 text-emerald-600 border-emerald-100",
   },
   [EnrollmentStatus.PROCESSING]: {
-    label: "Sending...",
-    className: "bg-blue-50 text-blue-600 border-blue-100",
+    label: "Enrolled",
+    className: "bg-emerald-50 text-emerald-600 border-emerald-100",
   },
   [EnrollmentStatus.FAILED]: {
     label: "Failed",
@@ -74,12 +74,6 @@ export function LeadsEnrolledRow({
             statusConfig.className,
           )}
         >
-          {lead.status === EnrollmentStatus.PROCESSING && (
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
-            </span>
-          )}
           {statusConfig.label}
         </span>
       </td>

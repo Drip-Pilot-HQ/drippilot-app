@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { Search, MessageSquare, AlertCircle } from "lucide-react";
 import {
   OutreachThread,
   LostThread,
   lostThreadToOutreach,
 } from "@/types/outreach";
+import { LeadStatus } from "@/types/lead";
 import { ThreadListItem } from "./ThreadListItem";
 import { ThreadListSkeleton } from "./MessagesSkeleton";
 import { cn } from "@/lib/utils";
@@ -37,6 +39,33 @@ function matchesSearch(
   );
 }
 
+const STATUS_FILTERS = [
+  {
+    value: LeadStatus.HOT,
+    label: "Hot",
+    active: "bg-rose-500 text-white",
+    inactive: "bg-rose-50 text-rose-500 hover:bg-rose-100",
+  },
+  {
+    value: LeadStatus.WARM,
+    label: "Warm",
+    active: "bg-orange-500 text-white",
+    inactive: "bg-orange-50 text-orange-500 hover:bg-orange-100",
+  },
+  {
+    value: LeadStatus.COLD,
+    label: "Cold",
+    active: "bg-blue-500 text-white",
+    inactive: "bg-blue-50 text-blue-500 hover:bg-blue-100",
+  },
+  {
+    value: LeadStatus.CONVERTED,
+    label: "Converted",
+    active: "bg-emerald-500 text-white",
+    inactive: "bg-emerald-50 text-emerald-500 hover:bg-emerald-100",
+  },
+] as const;
+
 export function ThreadList({
   threads,
   lostThreads,
@@ -48,7 +77,13 @@ export function ThreadList({
   onTabChange,
   onSearchChange,
 }: ThreadListProps) {
-  const filteredThreads = threads.filter((t) => matchesSearch(searchQuery, t));
+  const [statusFilter, setStatusFilter] = useState<LeadStatus | "all">("all");
+
+  const filteredThreads = threads
+    .filter((t) => matchesSearch(searchQuery, t))
+    .filter(
+      (t) => statusFilter === "all" || t.lead?.leadStatus === statusFilter,
+    );
   const filteredLost = lostThreads
     .filter((t) => matchesSearch(searchQuery, t))
     .map(lostThreadToOutreach);
@@ -118,6 +153,36 @@ export function ThreadList({
           )}
         </button>
       </div>
+
+      {activeTab === "all" && (
+        <div className="flex items-center gap-1.5 px-4 pb-3 overflow-x-auto">
+          <button
+            onClick={() => setStatusFilter("all")}
+            className={cn(
+              "px-2.5 py-1 rounded-full text-[10px] font-bold whitespace-nowrap transition-all",
+              statusFilter === "all"
+                ? "bg-slate-700 text-white"
+                : "bg-slate-100 text-slate-500 hover:bg-slate-200",
+            )}
+          >
+            All
+          </button>
+          {STATUS_FILTERS.map(({ value, label, active, inactive }) => (
+            <button
+              key={value}
+              onClick={() =>
+                setStatusFilter(statusFilter === value ? "all" : value)
+              }
+              className={cn(
+                "px-2.5 py-1 rounded-full text-[10px] font-bold whitespace-nowrap transition-all",
+                statusFilter === value ? active : inactive,
+              )}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="flex-1 overflow-y-auto custom-scrollbar px-2 pb-2">
         {isLoading ? (

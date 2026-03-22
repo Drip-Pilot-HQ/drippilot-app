@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { UserPlus, Users, Upload } from "lucide-react";
-import { useLeadsQuery } from "@/store/server/lead.queries";
+import { useState, useMemo, useCallback } from "react";
+import { UserPlus, Users, Upload, Trash2, X } from "lucide-react";
+import {
+  useLeadsQuery,
+  useDeleteLeadsMutation,
+} from "@/store/server/lead.queries";
 import { LeadListSkeleton } from "./LeadSkeleton";
 import { LeadsTable } from "./LeadsTable";
 import { LeadsFilters } from "./LeadsFilters";
@@ -13,8 +16,8 @@ import { LeadsSort, LeadSortField, LeadSortOrder } from "./LeadsSort";
 import { Lead, LeadStatus } from "@/types/lead";
 import { Button } from "@/components/branding/Button";
 import { useDebounce } from "@/lib/hooks/use-debounce";
-import { useMemo } from "react";
 import { ImportLeadsDialog } from "./ImportLeadsDialog";
+import { useConfirm } from "@/components/branding/ConfirmProvider";
 
 export function LeadsClient() {
   const [searchInput, setSearchInput] = useState("");
@@ -32,6 +35,12 @@ export function LeadsClient() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
+  const [selectedLeadIds, setSelectedLeadIds] = useState<Set<string>>(
+    new Set(),
+  );
+
+  const deleteLeadsMutation = useDeleteLeadsMutation();
+  const confirm = useConfirm();
 
   const { data, isLoading } = useLeadsQuery({
     search: debouncedSearch || undefined,
@@ -83,6 +92,41 @@ export function LeadsClient() {
       return 0;
     });
   }, [data, tableSortBy, tableSortOrder]);
+
+  const handleToggleSelect = useCallback((id: string) => {
+    setSelectedLeadIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const handleToggleAll = useCallback((ids: string[]) => {
+    setSelectedLeadIds((prev) => {
+      const allSelected = ids.every((id) => prev.has(id));
+      const next = new Set(prev);
+      if (allSelected) {
+        ids.forEach((id) => next.delete(id));
+      } else {
+        ids.forEach((id) => next.add(id));
+      }
+      return next;
+    });
+  }, []);
+
+  const handleBulkDelete = async () => {
+    const count = selectedLeadIds.size;
+    const confirmed = await confirm({
+      title: "Delete Leads",
+      description: `Are you sure you want to delete ${count} lead${count !== 1 ? "s" : ""}? This action cannot be undone.`,
+      confirmLabel: `Delete ${count} Lead${count !== 1 ? "s" : ""}`,
+      variant: "danger",
+    });
+    if (!confirmed) return;
+    await deleteLeadsMutation.mutateAsync(Array.from(selectedLeadIds));
+    setSelectedLeadIds(new Set());
+  };
 
   const toggleStatusFilter = (status: LeadStatus) => {
     setSelectedStatuses((prev) =>
@@ -183,6 +227,34 @@ export function LeadsClient() {
           <LeadListSkeleton />
         ) : data?.data && data.data.length > 0 ? (
           <>
+            {selectedLeadIds.size > 0 && (
+              <div className="flex items-center justify-between px-4 py-3 bg-primary/5 border border-primary/20 rounded-2xl">
+                <span className="text-sm font-bold text-primary">
+                  {selectedLeadIds.size} lead
+                  {selectedLeadIds.size !== 1 ? "s" : ""} selected
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setSelectedLeadIds(new Set())}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-all"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                    Cancel
+                  </button>
+                  <Button
+                    variant="outline"
+                    onClick={handleBulkDelete}
+                    disabled={deleteLeadsMutation.isPending}
+                    className="flex items-center gap-1.5 h-8 px-3 text-xs rounded-lg border-rose-200 text-rose-600 hover:bg-rose-50 hover:border-rose-300"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Delete {selectedLeadIds.size} Lead
+                    {selectedLeadIds.size !== 1 ? "s" : ""}
+                  </Button>
+                </div>
+              </div>
+            )}
+
             <LeadsTable
               leads={sortedLeads}
               onEdit={handleEdit}
@@ -192,6 +264,9 @@ export function LeadsClient() {
                 setTableSortBy(field);
                 setTableSortOrder(order);
               }}
+              selectedLeadIds={selectedLeadIds}
+              onToggleSelect={handleToggleSelect}
+              onToggleAll={handleToggleAll}
             />
 
             <LeadsPagination

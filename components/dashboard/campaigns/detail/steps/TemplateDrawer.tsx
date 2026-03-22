@@ -1,10 +1,18 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { X, Search, Mail, MessageSquare, Check, Loader2 } from "lucide-react";
+import { X, Search, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTemplatesQuery } from "@/store/server/template.queries";
 import { Template, TemplateChannel } from "@/types/template";
+import { naturalSort } from "@/lib/utils/string";
+import { TemplateDrawerItem } from "./template-drawer/TemplateDrawerItem";
+import { TemplateDrawerFolderFilter } from "./template-drawer/TemplateDrawerFolderFilter";
+import {
+  TemplateDrawerSortMenu,
+  DrawerSortBy,
+  DrawerSortOrder,
+} from "./template-drawer/TemplateDrawerSortMenu";
 
 interface TemplateDrawerProps {
   isOpen: boolean;
@@ -22,24 +30,38 @@ export function TemplateDrawer({
   allowedChannels,
 }: TemplateDrawerProps) {
   const [search, setSearch] = useState("");
+  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<DrawerSortBy>("natural");
+  const [sortOrder, setSortOrder] = useState<DrawerSortOrder>("asc");
 
-  const channelFilter =
+  // When only one channel is allowed, pass it to the server so it fetches
+  // only that channel. When multiple channels are allowed, omit it to fetch all.
+  const channelParam =
     allowedChannels.length === 1 ? allowedChannels[0] : undefined;
 
   const { data, isLoading } = useTemplatesQuery({
     search: search || undefined,
-    channel: channelFilter,
-    limit: 50,
-    sortBy: "name",
-    sortOrder: "asc",
+    channel: channelParam,
+    folderId: selectedFolderId ?? undefined,
+    limit: 100,
+    sortBy: sortBy === "natural" ? "name" : sortBy,
+    sortOrder,
   });
 
-  const templates = data?.data ?? [];
+  // Always filter client-side too — ensures correct results even if the server
+  // returns unexpected channel data (e.g. stale cache or API inconsistency).
+  const channelFiltered = (data?.data ?? []).filter((t) =>
+    allowedChannels.includes(t.templateChannel),
+  );
 
   const displayed =
-    allowedChannels.length > 1
-      ? templates.filter((t) => allowedChannels.includes(t.templateChannel))
-      : templates;
+    sortBy === "natural"
+      ? [...channelFiltered].sort((a, b) =>
+          sortOrder === "asc"
+            ? naturalSort(a.name, b.name)
+            : naturalSort(b.name, a.name),
+        )
+      : channelFiltered;
 
   const handleClose = useCallback(() => {
     setSearch("");
@@ -96,7 +118,7 @@ export function TemplateDrawer({
           </button>
         </div>
 
-        <div className="px-4 py-3 border-b border-slate-100">
+        <div className="px-4 py-3 border-b border-slate-100 space-y-2">
           <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 transition-all">
             <Search className="w-4 h-4 text-slate-400 shrink-0" />
             <input
@@ -107,9 +129,26 @@ export function TemplateDrawer({
               className="w-full text-sm bg-transparent outline-none text-slate-700 placeholder:text-slate-400"
             />
           </div>
+
+          <div className="flex items-center gap-2">
+            <TemplateDrawerFolderFilter
+              selectedFolderId={selectedFolderId}
+              onSelect={setSelectedFolderId}
+            />
+            <div className="ml-auto">
+              <TemplateDrawerSortMenu
+                sortBy={sortBy}
+                sortOrder={sortOrder}
+                onSortByChange={setSortBy}
+                onSortOrderToggle={() =>
+                  setSortOrder((o) => (o === "asc" ? "desc" : "asc"))
+                }
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 space-y-2">
+        <div className="flex-1 overflow-y-auto p-4">
           {isLoading ? (
             <div className="flex items-center justify-center py-16">
               <Loader2 className="w-6 h-6 text-primary animate-spin" />
@@ -124,86 +163,22 @@ export function TemplateDrawer({
               </p>
             </div>
           ) : (
-            displayed.map((template) => (
-              <TemplateCard
-                key={template.id}
-                template={template}
-                isSelected={selectedTemplateId === template.id}
-                onSelect={() => {
-                  onSelect(template);
-                  handleClose();
-                }}
-              />
-            ))
+            <div className="flex flex-col gap-2">
+              {displayed.map((template) => (
+                <TemplateDrawerItem
+                  key={template.id}
+                  template={template}
+                  isSelected={selectedTemplateId === template.id}
+                  onSelect={() => {
+                    onSelect(template);
+                    handleClose();
+                  }}
+                />
+              ))}
+            </div>
           )}
         </div>
       </div>
     </div>
-  );
-}
-
-interface TemplateCardProps {
-  template: Template;
-  isSelected: boolean;
-  onSelect: () => void;
-}
-
-function TemplateCard({ template, isSelected, onSelect }: TemplateCardProps) {
-  const isEmail = template.templateChannel === TemplateChannel.EMAIL;
-
-  return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className={cn(
-        "w-full text-left p-4 rounded-xl border transition-all",
-        isSelected
-          ? isEmail
-            ? "border-blue-400 bg-blue-50/50 ring-2 ring-blue-500/10"
-            : "border-purple-400 bg-purple-50/50 ring-2 ring-purple-500/10"
-          : isEmail
-            ? "border-slate-200 hover:border-blue-400 hover:bg-blue-50/10"
-            : "border-slate-200 hover:border-purple-400 hover:bg-purple-50/10",
-      )}
-    >
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex items-center gap-2 min-w-0">
-          <span
-            className={cn(
-              "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider shrink-0",
-              isEmail
-                ? "bg-blue-50 text-blue-600"
-                : "bg-purple-50 text-purple-600",
-            )}
-          >
-            {isEmail ? (
-              <Mail className="w-2.5 h-2.5" />
-            ) : (
-              <MessageSquare className="w-2.5 h-2.5" />
-            )}
-            {template.templateChannel}
-          </span>
-          <span className="text-sm font-bold text-slate-900 truncate">
-            {template.name}
-          </span>
-        </div>
-        {isSelected && (
-          <Check
-            className={cn(
-              "w-4 h-4 shrink-0 mt-0.5",
-              isEmail ? "text-blue-500" : "text-purple-500",
-            )}
-          />
-        )}
-      </div>
-      {template.subject && (
-        <p className="text-xs text-slate-500 mt-2 font-medium">
-          Subject: {template.subject}
-        </p>
-      )}
-      <p className="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">
-        {template.content}
-      </p>
-    </button>
   );
 }
