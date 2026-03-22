@@ -1,5 +1,4 @@
 export const ALLOWED_PLACEHOLDERS = [
-  "lead.name",
   "lead.email",
   "lead.phone",
   "lead.firstName",
