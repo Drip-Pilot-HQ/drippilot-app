@@ -76,7 +76,6 @@ export function CreateTemplateDialog({
   const isLoading = createMutation.isPending || updateMutation.isPending;
 
   useEffect(() => {
-     
     setValidation(validateTemplatePlaceholders(formData.content));
   }, [formData.content]);
 
@@ -85,7 +84,6 @@ export function CreateTemplateDialog({
       formData.templateChannel === TemplateChannel.SMS &&
       !formData.content.includes("Reply STOP to unsubscribe")
     ) {
-       
       setFormData((prev) => ({
         ...prev,
         content: prev.content

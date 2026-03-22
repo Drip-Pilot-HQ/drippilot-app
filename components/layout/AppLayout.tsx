@@ -118,7 +118,7 @@ export function AppLayout({
       {/* Main content */}
       <div className="flex-1 flex flex-col h-full min-w-0">
         <MobileHeader onMenuClick={() => setIsMobileOpen(true)} />
-        <main className="flex-1 overflow-y-auto scroll-smooth custom-scrollbar">
+        <main className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden scroll-smooth custom-scrollbar">
           <div
             className={cn(
               "mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 lg:py-8",
