@@ -233,32 +233,32 @@ export function CreateLeadDialog({
               </div>
             </div>
 
-            {/* Initial Status */}
-            <div className="col-span-1 sm:col-span-2 space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
-                Initial Status
-              </label>
-              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                {Object.values(LeadStatus).map((status) => (
-                  <button
-                    key={status}
-                    type="button"
-                    disabled={!!editLead}
-                    onClick={() =>
-                      setFormData({ ...formData, leadStatus: status })
-                    }
-                    className={cn(
-                      "px-2 py-2 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all truncate",
-                      formData.leadStatus === status
-                        ? "bg-primary text-white border-primary shadow-md shadow-primary/10"
-                        : "bg-slate-50 border-slate-100 text-slate-400 hover:bg-white hover:border-slate-200",
-                    )}
-                  >
-                    {status}
-                  </button>
-                ))}
+            {!editLead && (
+              <div className="col-span-1 sm:col-span-2 space-y-2">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
+                  Initial Status
+                </label>
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                  {Object.values(LeadStatus).map((status) => (
+                    <button
+                      key={status}
+                      type="button"
+                      onClick={() =>
+                        setFormData({ ...formData, leadStatus: status })
+                      }
+                      className={cn(
+                        "px-2 py-2 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all truncate",
+                        formData.leadStatus === status
+                          ? "bg-primary text-white border-primary shadow-md shadow-primary/10"
+                          : "bg-slate-50 border-slate-100 text-slate-400 hover:bg-white hover:border-slate-200",
+                      )}
+                    >
+                      {status}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Tags */}
             <div className="col-span-1 sm:col-span-2 space-y-3">

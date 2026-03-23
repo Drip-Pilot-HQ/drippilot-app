@@ -45,21 +45,6 @@ export interface CreditBalance {
   unlimited: boolean;
 }
 
-export interface CreditLedgerEntry {
-  id: string;
-  workspaceId: string;
-  delta: number;
-  balanceAfter: number;
-  reason: string;
-  idempotencyKey: string;
-  referenceId: string | null;
-  createdAt: string;
-}
-
-export interface CreditHistory {
-  entries: CreditLedgerEntry[];
-  total: number;
-}
 
 export interface OverageStatus {
   enabled: boolean;

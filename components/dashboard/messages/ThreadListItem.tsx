@@ -2,8 +2,48 @@
 
 import { Mail, Phone, Bot, AlertCircle } from "lucide-react";
 import { OutreachThread, getThreadChannels } from "@/types/outreach";
+import { LeadStatus } from "@/types/lead";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
+
+const STATUS_BADGE: Record<string, string> = {
+  [LeadStatus.HOT]: "bg-red-100 text-red-600 border-red-200",
+  [LeadStatus.WARM]: "bg-yellow-100 text-yellow-700 border-yellow-200",
+  [LeadStatus.COLD]: "bg-blue-100 text-blue-600 border-blue-200",
+  [LeadStatus.CONVERTED]: "bg-green-100 text-green-700 border-green-200",
+};
+
+const STATUS_ACTIVE: Record<
+  string,
+  { wrapper: string; avatar: string; text: string }
+> = {
+  [LeadStatus.HOT]: {
+    wrapper: "bg-red-50/70 ring-1 ring-red-200",
+    avatar: "bg-red-100 text-red-600",
+    text: "text-red-600",
+  },
+  [LeadStatus.WARM]: {
+    wrapper: "bg-yellow-50/70 ring-1 ring-yellow-200",
+    avatar: "bg-yellow-100 text-yellow-700",
+    text: "text-yellow-700",
+  },
+  [LeadStatus.COLD]: {
+    wrapper: "bg-blue-50/70 ring-1 ring-blue-200",
+    avatar: "bg-blue-100 text-blue-600",
+    text: "text-blue-600",
+  },
+  [LeadStatus.CONVERTED]: {
+    wrapper: "bg-green-50/70 ring-1 ring-green-200",
+    avatar: "bg-green-100 text-green-700",
+    text: "text-green-700",
+  },
+};
+
+const DEFAULT_ACTIVE = {
+  wrapper: "bg-primary/5 ring-1 ring-primary/10",
+  avatar: "bg-primary/10 text-primary",
+  text: "text-primary",
+};
 
 interface ThreadListItemProps {
   thread: OutreachThread;
@@ -30,23 +70,22 @@ export function ThreadListItem({
 
   const displayName = getDisplayName();
   const shortId = thread.id.slice(0, 8);
+  const activeStyle =
+    (thread.lead?.leadStatus && STATUS_ACTIVE[thread.lead.leadStatus]) ||
+    DEFAULT_ACTIVE;
 
   return (
     <button
       onClick={onClick}
       className={cn(
         "w-full flex items-start gap-3 p-3 rounded-xl text-left transition-all duration-200",
-        isSelected
-          ? "bg-primary/5 ring-1 ring-primary/10"
-          : "hover:bg-slate-50/50",
+        isSelected ? activeStyle.wrapper : "hover:bg-slate-50/50",
       )}
     >
       <div
         className={cn(
           "w-9 h-9 rounded-lg flex items-center justify-center shrink-0 text-xs font-semibold uppercase",
-          isSelected
-            ? "bg-primary/10 text-primary"
-            : "bg-slate-100 text-slate-400",
+          isSelected ? activeStyle.avatar : "bg-slate-100 text-slate-400",
         )}
       >
         {displayName !== "Unknown"
@@ -60,13 +99,19 @@ export function ThreadListItem({
             <span
               className={cn(
                 "text-sm font-semibold truncate",
-                isSelected ? "text-primary" : "text-slate-700",
+                isSelected ? activeStyle.text : "text-slate-700",
               )}
             >
               {displayName !== "Unknown" ? displayName : `Thread ${shortId}`}
             </span>
             {thread.lead?.leadStatus && (
-              <span className="shrink-0 px-1.5 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-tight bg-slate-100 text-slate-500 border border-slate-200">
+              <span
+                className={cn(
+                  "shrink-0 px-1.5 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-tight border",
+                  STATUS_BADGE[thread.lead.leadStatus] ??
+                    "bg-slate-100 text-slate-500 border-slate-200",
+                )}
+              >
                 {thread.lead.leadStatus}
               </span>
             )}

@@ -17,6 +17,16 @@ export const useNotificationsQuery = (page = 1) =>
     },
   });
 
+export const useNotificationsBellQuery = () =>
+  useQuery({
+    queryKey: ['notifications', 1],
+    queryFn: async () => {
+      const { data } = await apiClient.get<NotificationListResult>('/notifications', { params: { page: 1 } });
+      return data;
+    },
+    refetchInterval: 30_000,
+  });
+
 export const useMarkReadMutation = () => {
   const qc = useQueryClient();
   return useMutation({

@@ -9,7 +9,6 @@ import {
   BrainCircuit,
   Workflow,
   Webhook,
-  Bell,
   MessageSquare,
   Box,
   BookOpenText,
@@ -38,7 +37,6 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           icon: BrainCircuit,
         },
         { name: "Integrations", href: `${base}/integrations`, icon: Webhook },
-        { name: "Notifications", href: `${base}/notifications`, icon: Bell },
         { name: "Members", href: `${base}/members`, icon: UserPlus },
         { name: "Billings", href: `${base}/billings`, icon: Wallet },
         {

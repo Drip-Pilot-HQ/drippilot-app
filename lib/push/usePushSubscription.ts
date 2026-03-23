@@ -8,6 +8,7 @@ import {
   useUnregisterPushMutation,
 } from "@/store/server/notification.queries";
 import { useAccountStore } from "@/store/client/useAccountStore";
+import { apiClient } from "@/lib/api/axios";
 
 export type PushStatus =
   | "checking"
@@ -33,6 +34,10 @@ export function usePushSubscription() {
   const registerMutation = useRegisterPushMutation();
   const unregisterMutation = useUnregisterPushMutation();
 
+  // check() asks the BACKEND whether this workspace has a subscription registered.
+  // We do not rely on reg.pushManager.getSubscription() for workspace state because
+  // the browser holds a single subscription with no concept of workspaces — switching
+  // workspaces would otherwise always show "subscribed" once any workspace subscribed.
   const check = useCallback(async () => {
     if (
       typeof window === "undefined" ||
@@ -48,17 +53,24 @@ export function usePushSubscription() {
       return;
     }
     try {
-      const reg = await navigator.serviceWorker.ready;
-      const sub = await reg.pushManager.getSubscription();
-      setStatus(sub ? "subscribed" : "not-subscribed");
+      const { data } = await apiClient.get<{ subscribed: boolean }>(
+        "/notifications/push/status",
+      );
+      setStatus(data.subscribed ? "subscribed" : "not-subscribed");
     } catch {
-      setStatus("not-subscribed");
+      // API unavailable — fall back to browser-level check
+      try {
+        const reg = await navigator.serviceWorker.ready;
+        const sub = await reg.pushManager.getSubscription();
+        setStatus(sub ? "subscribed" : "not-subscribed");
+      } catch {
+        setStatus("not-subscribed");
+      }
     }
   }, []);
 
-  // Re-check when workspace changes.
-  // Promise.resolve().then() ensures check() runs in a microtask callback,
-  // satisfying the rule that setState must be called in a callback, not synchronously.
+  // Re-check whenever the active workspace changes so the status correctly
+  // reflects the current workspace's subscription state.
   useEffect(() => {
     let cancelled = false;
     Promise.resolve()
@@ -71,10 +83,10 @@ export function usePushSubscription() {
     };
   }, [check, activeWorkspaceId]);
 
-  const subscribe = useCallback(async () => {
+  const subscribe = useCallback(async (): Promise<boolean> => {
     if (!vapidKey) {
       toast.error("Push configuration unavailable");
-      return;
+      return false;
     }
     setStatus("subscribing");
     try {
@@ -84,7 +96,7 @@ export function usePushSubscription() {
         toast.error(
           "Permission denied. Enable notifications in browser settings.",
         );
-        return;
+        return false;
       }
       const reg = await navigator.serviceWorker.ready;
       // Reuse existing subscription or create new one
@@ -105,14 +117,16 @@ export function usePushSubscription() {
       });
       setStatus("subscribed");
       toast.success("Push notifications enabled for this workspace");
+      return true;
     } catch (err) {
       console.error("Push subscribe error:", err);
       setStatus("not-subscribed");
       toast.error("Failed to enable push notifications");
+      return false;
     }
   }, [vapidKey, registerMutation]);
 
-  const unsubscribe = useCallback(async () => {
+  const unsubscribe = useCallback(async (): Promise<boolean> => {
     setStatus("unsubscribing");
     try {
       const reg = await navigator.serviceWorker.ready;
@@ -124,9 +138,11 @@ export function usePushSubscription() {
       }
       setStatus("not-subscribed");
       toast.success("Push notifications disabled for this workspace");
+      return true;
     } catch {
       setStatus("subscribed");
       toast.error("Failed to disable push notifications");
+      return false;
     }
   }, [unregisterMutation]);
 

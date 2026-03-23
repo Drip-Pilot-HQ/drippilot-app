@@ -26,7 +26,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
               {message.subject}
             </p>
           )}
-          <div className="bg-white border border-slate-100 rounded-2xl rounded-bl-sm px-4 py-2.5">
+          <div className="bg-slate-50 border border-slate-200 rounded-2xl rounded-bl-sm px-4 py-2.5">
             <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap wrap-break-word font-medium">
               {message.body}
             </p>
@@ -46,32 +46,32 @@ export function MessageBubble({ message }: MessageBubbleProps) {
   }
 
   const bubbleColor = isSystem
-    ? "bg-amber-500 text-white"
+    ? "bg-amber-100 text-amber-900"
     : isAi
-      ? "bg-violet-500 text-white"
-      : "bg-primary text-white";
+      ? "bg-violet-100 text-violet-900"
+      : "bg-orange-100 text-orange-900";
 
   const avatarColor = isSystem
     ? "bg-amber-50"
     : isAi
       ? "bg-violet-50"
-      : "bg-primary/5";
+      : "bg-orange-50";
 
   const avatarIcon = isSystem ? (
     <Zap className="w-3.5 h-3.5 text-amber-500" />
   ) : isAi ? (
     <Bot className="w-3.5 h-3.5 text-violet-500" />
   ) : (
-    <User className="w-3.5 h-3.5 text-primary" />
+    <User className="w-3.5 h-3.5 text-orange-400" />
   );
 
   const label = isSystem ? (
-    <span className="text-[10px] text-amber-400 font-semibold uppercase tracking-wider flex items-center gap-1.5">
+    <span className="text-[10px] text-amber-500 font-semibold uppercase tracking-wider flex items-center gap-1.5">
       <Zap className="w-2.5 h-2.5" />
       Drip · {message.channel}
     </span>
   ) : (
-    <span className="text-[9px] text-slate-300 font-semibold uppercase tracking-wider">
+    <span className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">
       {message.channel}
     </span>
   );
@@ -97,7 +97,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         <div className="flex items-center justify-end gap-1.5 mt-1 mr-1">
           {label}
           <span className="w-0.5 h-0.5 rounded-full bg-slate-200" />
-          <p className="text-[10px] text-slate-300 font-medium">
+          <p className="text-[10px] text-slate-400 font-medium">
             {format(new Date(message.createdAt), "h:mm a")}
           </p>
         </div>

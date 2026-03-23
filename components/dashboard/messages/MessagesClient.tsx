@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { MessageSquare } from "lucide-react";
 import {
   useOutreachThreadsQuery,
@@ -13,11 +14,20 @@ import { lostThreadToOutreach } from "@/types/outreach";
 
 type Tab = "all" | "lost";
 
-export function MessagesClient() {
-  const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
+interface MessagesClientProps {
+  initialOutreachId?: string | null;
+}
+
+export function MessagesClient({
+  initialOutreachId,
+}: MessagesClientProps = {}) {
+  const router = useRouter();
+  const [selectedThreadId, setSelectedThreadId] = useState<string | null>(
+    initialOutreachId ?? null,
+  );
   const [activeTab, setActiveTab] = useState<Tab>("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [showDetail, setShowDetail] = useState(false);
+  const [showDetail, setShowDetail] = useState(!!initialOutreachId);
 
   const { data: threads = [], isLoading: isLoadingThreads } =
     useOutreachThreadsQuery();
@@ -25,6 +35,29 @@ export function MessagesClient() {
     useLostThreadsQuery();
 
   const isLoading = isLoadingThreads || isLoadingLost;
+
+  const [prevInitialOutreachId, setPrevInitialOutreachId] =
+    useState(initialOutreachId);
+  if (initialOutreachId !== prevInitialOutreachId) {
+    setPrevInitialOutreachId(initialOutreachId);
+    setSelectedThreadId(initialOutreachId ?? null);
+    setShowDetail(!!initialOutreachId);
+  }
+
+  const [prevSelectedThreadId, setPrevSelectedThreadId] =
+    useState(selectedThreadId);
+  const [prevLostThreads, setPrevLostThreads] = useState(lostThreads);
+  if (
+    selectedThreadId !== prevSelectedThreadId ||
+    lostThreads !== prevLostThreads
+  ) {
+    setPrevSelectedThreadId(selectedThreadId);
+    setPrevLostThreads(lostThreads);
+    if (selectedThreadId) {
+      const isLost = lostThreads.some((t) => t.id === selectedThreadId);
+      if (isLost && activeTab !== "lost") setActiveTab("lost");
+    }
+  }
 
   const selectedThread = useMemo(() => {
     if (!selectedThreadId) return null;
@@ -37,13 +70,18 @@ export function MessagesClient() {
   const handleSelectThread = (id: string) => {
     setSelectedThreadId(id);
     setShowDetail(true);
+    router.push(`/dashboard/messages/${id}`);
   };
 
-  const handleBack = () => setShowDetail(false);
+  const handleBack = () => {
+    setShowDetail(false);
+    router.push("/dashboard/messages");
+  };
 
   const handleDeleted = () => {
     setSelectedThreadId(null);
     setShowDetail(false);
+    router.push("/dashboard/messages");
   };
 
   return (

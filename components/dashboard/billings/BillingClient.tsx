@@ -12,7 +12,6 @@ import {
   useAddonsQuery,
   useEffectiveLimitsQuery,
   useCreditBalanceQuery,
-  useCreditHistoryQuery,
   useOverageStatusQuery,
 } from "@/store/server/billing.queries";
 
@@ -44,7 +43,6 @@ export function BillingClient() {
   const addonsQuery = useAddonsQuery();
   const limitsQuery = useEffectiveLimitsQuery();
   const creditBalanceQuery = useCreditBalanceQuery();
-  const creditHistoryQuery = useCreditHistoryQuery(10, 0);
   const overageQuery = useOverageStatusQuery();
 
   const isLoading =
@@ -58,26 +56,41 @@ export function BillingClient() {
   const addons = addonsQuery.data ?? [];
   const limits = limitsQuery.data;
   const creditBalance = creditBalanceQuery.data;
-  const creditHistory = creditHistoryQuery.data;
   const overageStatus = overageQuery.data;
+
+  const isTerminated = subscription?.accountStatus === "terminated";
+  const isPastCancelDate =
+    subscription?.cancelAtPeriodEnd === true &&
+    subscription?.currentPeriodEnd !== null &&
+    new Date(subscription.currentPeriodEnd) < new Date();
+  const isLapsed = isTerminated || isPastCancelDate;
 
   const hasActiveSubscription =
     subscription &&
     subscription.stripeSubscriptionId !== null &&
-    subscription.accountStatus !== "pending";
+    subscription.accountStatus !== "pending" &&
+    !isLapsed;
 
   const isNoSubscription = !isLoading && !hasActiveSubscription;
+  // True when the user previously had a plan that has now fully lapsed
+  const isReactivating = !isLoading && isLapsed;
 
   return (
     <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-500 pb-20">
       <div className="flex flex-col gap-1.5">
         <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-heading">
-          {isNoSubscription ? "Choose Your Plan" : "Billing & Subscription"}
+          {isReactivating
+            ? "Reactivate Your Account"
+            : isNoSubscription
+              ? "Choose Your Plan"
+              : "Billing & Subscription"}
         </h1>
         <p className="text-sm sm:text-base text-slate-500 font-medium leading-relaxed">
-          {isNoSubscription
-            ? "Get started with Drip Pilot — upgrade or cancel anytime."
-            : "Manage your plan, credits, add-ons, and payment settings."}
+          {isReactivating
+            ? "Your subscription has ended. Pick a plan to get back up and running."
+            : isNoSubscription
+              ? "Get started with Drip Pilot — upgrade or cancel anytime."
+              : "Manage your plan, credits, add-ons, and payment settings."}
         </p>
       </div>
 
@@ -85,7 +98,12 @@ export function BillingClient() {
       {isLoading ? (
         <BillingSkeleton />
       ) : isNoSubscription ? (
-        <NoSubscriptionState />
+        <NoSubscriptionState
+          reactivating={isReactivating}
+          endedAt={
+            isReactivating ? (subscription?.currentPeriodEnd ?? null) : null
+          }
+        />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
           <div className="lg:col-span-8 space-y-6 sm:space-y-8">
@@ -95,11 +113,7 @@ export function BillingClient() {
           </div>
 
           <div className="lg:col-span-4 space-y-6 sm:space-y-8">
-            <UsageCredits
-              creditBalance={creditBalance}
-              creditHistory={creditHistory}
-              limits={limits}
-            />
+            <UsageCredits creditBalance={creditBalance} limits={limits} />
             <OverageProtection
               subscription={subscription!}
               overageStatus={overageStatus}

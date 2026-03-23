@@ -88,7 +88,10 @@ self.addEventListener('push', (event) => {
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const url = '/dashboard/notifications';
+  const data = event.notification.data || {};
+  const url = data.outreachId
+    ? `/dashboard/messages/${data.outreachId}`
+    : '/dashboard/messages';
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
       for (const client of list) {

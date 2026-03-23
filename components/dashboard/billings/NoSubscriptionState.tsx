@@ -10,7 +10,9 @@ import {
   Users,
   Mail,
   BookOpen,
+  AlertCircle,
 } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/branding/Button";
 import {
   PLAN_ORDER,
@@ -125,7 +127,13 @@ function PlanLimits({
   );
 }
 
-export function NoSubscriptionState() {
+export function NoSubscriptionState({
+  reactivating = false,
+  endedAt = null,
+}: {
+  reactivating?: boolean;
+  endedAt?: string | null;
+}) {
   const [interval, setInterval] = useState<BillingInterval>("monthly");
   const subscribeMutation = useSubscribeMutation();
 
@@ -149,6 +157,25 @@ export function NoSubscriptionState() {
 
   return (
     <div className="animate-in fade-in duration-500">
+      {/* Lapsed subscription notice */}
+      {reactivating && (
+        <div className="flex items-start gap-3 mb-8 px-4 py-3.5 bg-amber-50 border border-amber-200 rounded-2xl">
+          <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-bold text-amber-800">
+              Your subscription has ended
+            </p>
+            <p className="text-xs text-amber-700 font-medium mt-0.5">
+              {endedAt
+                ? `Your plan expired ${formatDistanceToNow(new Date(endedAt), { addSuffix: true })}. `
+                : ""}
+              Choose a plan below to reactivate your account and restore full
+              access.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Billing interval toggle */}
       <div className="flex justify-center mb-10">
         <div className="inline-flex items-center p-1 bg-slate-100 rounded-xl">
@@ -240,6 +267,8 @@ export function NoSubscriptionState() {
               >
                 {isThisPending ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
+                ) : reactivating ? (
+                  `Reactivate ${plan.displayName}`
                 ) : (
                   `Start with ${plan.displayName}`
                 )}

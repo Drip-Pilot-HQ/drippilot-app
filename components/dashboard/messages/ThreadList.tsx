@@ -28,14 +28,26 @@ interface ThreadListProps {
 
 function matchesSearch(
   query: string,
-  thread: { id: string; leadEmail?: string | null; leadPhone?: string | null },
+  thread: {
+    id: string;
+    leadEmail?: string | null;
+    leadPhone?: string | null;
+    lead?: { name?: string; firstName?: string; lastName?: string } | null;
+  },
 ) {
   if (!query) return true;
   const q = query.toLowerCase();
-  return (
+  const { lead } = thread;
+  return !!(
     thread.leadEmail?.toLowerCase().includes(q) ||
     thread.leadPhone?.toLowerCase().includes(q) ||
-    thread.id.toLowerCase().includes(q)
+    thread.id.toLowerCase().includes(q) ||
+    lead?.name?.toLowerCase().includes(q) ||
+    lead?.firstName?.toLowerCase().includes(q) ||
+    lead?.lastName?.toLowerCase().includes(q) ||
+    (lead?.firstName &&
+      lead?.lastName &&
+      `${lead.firstName} ${lead.lastName}`.toLowerCase().includes(q))
   );
 }
 
@@ -43,26 +55,26 @@ const STATUS_FILTERS = [
   {
     value: LeadStatus.HOT,
     label: "Hot",
-    active: "bg-rose-500 text-white",
-    inactive: "bg-rose-50 text-rose-500 hover:bg-rose-100",
+    active: "bg-red-100 text-red-600 ring-1 ring-red-200",
+    inactive: "bg-red-50 text-red-400 hover:bg-red-100",
   },
   {
     value: LeadStatus.WARM,
     label: "Warm",
-    active: "bg-orange-500 text-white",
-    inactive: "bg-orange-50 text-orange-500 hover:bg-orange-100",
+    active: "bg-yellow-100 text-yellow-700 ring-1 ring-yellow-200",
+    inactive: "bg-yellow-50 text-yellow-500 hover:bg-yellow-100",
   },
   {
     value: LeadStatus.COLD,
     label: "Cold",
-    active: "bg-blue-500 text-white",
-    inactive: "bg-blue-50 text-blue-500 hover:bg-blue-100",
+    active: "bg-blue-100 text-blue-600 ring-1 ring-blue-200",
+    inactive: "bg-blue-50 text-blue-400 hover:bg-blue-100",
   },
   {
     value: LeadStatus.CONVERTED,
     label: "Converted",
-    active: "bg-emerald-500 text-white",
-    inactive: "bg-emerald-50 text-emerald-500 hover:bg-emerald-100",
+    active: "bg-green-100 text-green-700 ring-1 ring-green-200",
+    inactive: "bg-green-50 text-green-500 hover:bg-green-100",
   },
 ] as const;
 

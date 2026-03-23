@@ -1,46 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { Infinity, ChevronLeft, ChevronRight } from "lucide-react";
-import { useCreditHistoryQuery } from "@/store/server/billing.queries";
-import type {
-  CreditBalance,
-  CreditHistory,
-  EffectiveLimits,
-} from "@/types/billings";
+import { Infinity } from "lucide-react";
+import type { CreditBalance, EffectiveLimits } from "@/types/billings";
 
 interface UsageCreditsProps {
   creditBalance: CreditBalance | undefined;
-  creditHistory: CreditHistory | undefined;
   limits: EffectiveLimits | undefined;
 }
 
-const PAGE_SIZE = 5;
-
-function formatReason(reason: string): string {
-  return reason.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
-
-export function UsageCredits({
-  creditBalance,
-  creditHistory,
-  limits,
-}: UsageCreditsProps) {
-  const [page, setPage] = useState(0);
-
-  const historyQuery = useCreditHistoryQuery(PAGE_SIZE, page * PAGE_SIZE);
-  const entries = historyQuery.data?.entries ?? creditHistory?.entries ?? [];
-  const total = historyQuery.data?.total ?? creditHistory?.total ?? 0;
-  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-
+export function UsageCredits({ creditBalance, limits }: UsageCreditsProps) {
   const isUnlimited = creditBalance?.unlimited ?? false;
   const balance = creditBalance?.balance ?? 0;
   const maxCredits = limits?.maxMessageCredits ?? null;
@@ -65,7 +33,6 @@ export function UsageCredits({
         Usage & Credits
       </h2>
 
-      {/* Credit balance */}
       <div className="bg-slate-50 rounded-2xl p-5">
         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
           Available Credits
@@ -107,7 +74,6 @@ export function UsageCredits({
         )}
       </div>
 
-      {/* Resource limits */}
       {limits && (
         <div className="grid grid-cols-2 gap-2">
           {[
@@ -127,74 +93,6 @@ export function UsageCredits({
           ))}
         </div>
       )}
-
-      {/* Credit ledger — capped height */}
-      <div>
-        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
-          Credit History
-        </p>
-
-        {/* Fixed height + overflow-y-scroll so scrollbar gutter is always reserved — prevents layout shift */}
-        <div className="max-h-[300px] overflow-y-scroll [scrollbar-gutter:stable]">
-          {entries.length === 0 ? (
-            <p className="text-xs text-slate-400 font-medium py-6 text-center">
-              No transactions yet.
-            </p>
-          ) : (
-            <div
-              className={`space-y-0.5 transition-opacity duration-150 ${historyQuery.isFetching ? "opacity-40" : "opacity-100"}`}
-            >
-              {entries.map((entry) => (
-                <div
-                  key={entry.id}
-                  className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0"
-                >
-                  <div className="min-w-0">
-                    <p className="text-xs font-bold text-slate-700 truncate">
-                      {formatReason(entry.reason)}
-                    </p>
-                    <p className="text-[10px] text-slate-400 font-medium">
-                      {formatDate(entry.createdAt)}
-                    </p>
-                  </div>
-                  <span
-                    className={`text-xs font-black shrink-0 ml-3 ${
-                      entry.delta > 0 ? "text-emerald-500" : "text-rose-500"
-                    }`}
-                  >
-                    {entry.delta > 0 ? "+" : ""}
-                    {entry.delta.toLocaleString()}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-50">
-            <span className="text-[10px] font-bold text-slate-400">
-              {page + 1} / {totalPages}
-            </span>
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => setPage((p) => Math.max(0, p - 1))}
-                disabled={page === 0}
-                className="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center disabled:opacity-30 transition-colors"
-              >
-                <ChevronLeft className="w-3 h-3 text-slate-600" />
-              </button>
-              <button
-                onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-                disabled={page >= totalPages - 1}
-                className="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center disabled:opacity-30 transition-colors"
-              >
-                <ChevronRight className="w-3 h-3 text-slate-600" />
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
     </div>
   );
 }

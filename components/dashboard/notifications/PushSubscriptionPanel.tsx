@@ -126,7 +126,6 @@ interface PushSubscriptionPanelProps {
 }
 
 export function PushSubscriptionPanel({
-  pushEnabled,
   onToggle,
 }: PushSubscriptionPanelProps) {
   const {
@@ -142,12 +141,12 @@ export function PushSubscriptionPanel({
   const workspaceName = useAccountStore((s) => s.activeWorkspace?.name);
 
   const handleToggle = async () => {
-    if (isSubscribed || pushEnabled) {
-      await unsubscribe();
-      onToggle(false);
+    if (isSubscribed) {
+      const ok = await unsubscribe();
+      if (ok) onToggle(false);
     } else {
-      await subscribe();
-      if (status !== "denied") onToggle(true);
+      const ok = await subscribe();
+      if (ok) onToggle(true);
     }
   };
 

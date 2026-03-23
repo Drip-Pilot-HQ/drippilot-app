@@ -9,6 +9,7 @@ import {
   Edit2,
   User,
   Loader2,
+  ChevronDown,
 } from "lucide-react";
 import { Lead, LeadStatus } from "@/types/lead";
 import { cn } from "@/lib/utils";
@@ -130,20 +131,20 @@ export function LeadRow({
       <td className="px-6 py-4">
         <div className="flex flex-col gap-1">
           {lead.email ? (
-            <span className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium">
-              <Mail className="w-3 h-3 shrink-0 text-slate-400" />
+            <span className="flex items-center gap-1.5 text-xs text-slate-600 font-semibold">
+              <Mail className="w-3.5 h-3.5 shrink-0 text-slate-500" />
               {lead.email}
             </span>
           ) : (
-            <span className="text-[11px] text-slate-300 italic">No email</span>
+            <span className="text-xs text-slate-300 italic">No email</span>
           )}
           {lead.phone ? (
-            <span className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium">
-              <Phone className="w-3 h-3 shrink-0 text-slate-400" />
+            <span className="flex items-center gap-1.5 text-xs text-slate-600 font-semibold">
+              <Phone className="w-3.5 h-3.5 shrink-0 text-slate-500" />
               {lead.phone}
             </span>
           ) : (
-            <span className="text-[11px] text-slate-300 italic">No phone</span>
+            <span className="text-xs text-slate-300 italic">No phone</span>
           )}
         </div>
       </td>
@@ -153,16 +154,17 @@ export function LeadRow({
             <button
               disabled={statusMutation.isPending}
               className={cn(
-                "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest transition-all focus:outline-none",
+                "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest transition-all focus:outline-none",
                 statusMutation.isPending
                   ? "opacity-50 cursor-wait bg-slate-100 text-slate-400"
                   : statusStyle,
               )}
             >
-              {statusMutation.isPending && (
-                <Loader2 className="w-2.5 h-2.5 animate-spin" />
-              )}
+              {statusMutation.isPending ? (
+                <Loader2 className="w-3 h-3 animate-spin" />
+              ) : null}
               {lead.leadStatus}
+              <ChevronDown className="w-3 h-3 opacity-60 shrink-0" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-40">

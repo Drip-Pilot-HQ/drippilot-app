@@ -7,7 +7,6 @@ import type {
   Addon,
   EffectiveLimits,
   CreditBalance,
-  CreditHistory,
   OverageStatus,
   CreateSubscriptionDto,
   ChangePlanDto,
@@ -20,8 +19,6 @@ export const billingKeys = {
   addons: ['billing', 'addons'] as const,
   limits: ['billing', 'limits'] as const,
   creditBalance: ['billing', 'credits', 'balance'] as const,
-  creditHistory: (limit: number, offset: number) =>
-    ['billing', 'credits', 'history', limit, offset] as const,
   overageStatus: ['billing', 'overage', 'status'] as const,
 };
 
@@ -175,17 +172,6 @@ export const useCreditBalanceQuery = () => {
   });
 };
 
-export const useCreditHistoryQuery = (limit = 10, offset = 0) => {
-  return useQuery({
-    queryKey: billingKeys.creditHistory(limit, offset),
-    queryFn: async () => {
-      const { data } = await apiClient.get<CreditHistory>('/billing/credits/history', {
-        params: { limit, offset },
-      });
-      return data;
-    },
-  });
-};
 
 export const useOverageStatusQuery = () => {
   return useQuery({
