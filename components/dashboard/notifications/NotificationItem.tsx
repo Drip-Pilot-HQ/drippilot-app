@@ -52,6 +52,9 @@ interface NotificationItemProps {
 export function NotificationItem({ notification: n }: NotificationItemProps) {
   const markRead = useMarkReadMutation();
   const deleteOne = useDeleteNotificationMutation();
+  const threadUrl = n.outreachId
+    ? `/dashboard/messages/${n.outreachId}`
+    : n.messageUrl;
 
   const status = STATUS_CONFIG[n.leadStatus] ?? STATUS_CONFIG.cold;
 
@@ -111,9 +114,9 @@ export function NotificationItem({ notification: n }: NotificationItemProps) {
           <span className="text-[11px] text-slate-400 font-medium">
             {formatDistanceToNow(new Date(n.createdAt), { addSuffix: true })}
           </span>
-          {n.messageUrl && (
+          {threadUrl && (
             <a
-              href={n.messageUrl}
+              href={threadUrl}
               className="inline-flex items-center gap-1 text-[11px] font-bold text-primary hover:underline"
             >
               View message

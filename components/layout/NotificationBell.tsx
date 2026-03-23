@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Bell,
   X,
@@ -30,6 +30,7 @@ import type {
 } from "@/types/notification";
 import { useConfirm } from "@/components/branding/ConfirmProvider";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 // ─── Feed Panel ──────────────────────────────────────────────────────────────
 
@@ -365,6 +366,18 @@ export function NotificationBell() {
   const [tab, setTab] = useState<"feed" | "prefs">("feed");
   const { data } = useNotificationsBellQuery();
   const unreadCount = (data?.data ?? []).filter((n) => !n.isRead).length;
+  const qc = useQueryClient();
+
+  useEffect(() => {
+    if (!("serviceWorker" in navigator)) return;
+    const handler = (event: MessageEvent) => {
+      if (event.data?.type === "NOTIFICATION_RECEIVED") {
+        qc.invalidateQueries({ queryKey: ["notifications"] });
+      }
+    };
+    navigator.serviceWorker.addEventListener("message", handler);
+    return () => navigator.serviceWorker.removeEventListener("message", handler);
+  }, [qc]);
 
   return (
     <div className="relative">

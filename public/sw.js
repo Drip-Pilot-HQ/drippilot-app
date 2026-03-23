@@ -82,7 +82,13 @@ self.addEventListener('push', (event) => {
   };
 
   event.waitUntil(
-    self.registration.showNotification(payload.title || 'DripPilot', options)
+    (async () => {
+      await self.registration.showNotification(payload.title || 'DripPilot', options);
+      const openClients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+      for (const client of openClients) {
+        client.postMessage({ type: 'NOTIFICATION_RECEIVED' });
+      }
+    })()
   );
 });
 
