@@ -38,7 +38,7 @@ export function EnrollLeadsPagination({
           <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest mr-1">
             Limit:
           </span>
-          {[20, 50, 100, 500].map((s) => (
+          {[100, 500].map((s) => (
             <button
               key={s}
               onClick={() => onLimitChange(s)}

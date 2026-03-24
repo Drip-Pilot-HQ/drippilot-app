@@ -39,7 +39,7 @@ export function ExecutionLogPagination({
         <div className="h-4 w-px bg-slate-200 hidden xs:block" />
         <div className="flex items-center gap-1.5">
           <span className="text-xs font-medium text-slate-400 mr-1">Rows:</span>
-          {[20, 50, 100].map((s) => (
+          {[100, 500].map((s) => (
             <button
               key={s}
               onClick={() => onLimitChange(s)}

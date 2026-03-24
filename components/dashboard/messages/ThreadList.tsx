@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Search, MessageSquare, AlertCircle } from "lucide-react";
 import {
   OutreachThread,
@@ -91,14 +91,23 @@ export function ThreadList({
 }: ThreadListProps) {
   const [statusFilter, setStatusFilter] = useState<LeadStatus | "all">("all");
 
-  const filteredThreads = threads
-    .filter((t) => matchesSearch(searchQuery, t))
-    .filter(
-      (t) => statusFilter === "all" || t.lead?.leadStatus === statusFilter,
-    );
-  const filteredLost = lostThreads
-    .filter((t) => matchesSearch(searchQuery, t))
-    .map(lostThreadToOutreach);
+  const filteredThreads = useMemo(
+    () =>
+      threads
+        .filter((t) => matchesSearch(searchQuery, t))
+        .filter(
+          (t) => statusFilter === "all" || t.lead?.leadStatus === statusFilter,
+        ),
+    [threads, searchQuery, statusFilter],
+  );
+
+  const filteredLost = useMemo(
+    () =>
+      lostThreads
+        .filter((t) => matchesSearch(searchQuery, t))
+        .map(lostThreadToOutreach),
+    [lostThreads, searchQuery],
+  );
 
   return (
     <div className="flex flex-col h-full bg-white">
@@ -207,7 +216,7 @@ export function ThreadList({
                   key={thread.id}
                   thread={thread}
                   isSelected={selectedThreadId === thread.id}
-                  onClick={() => onSelectThread(thread.id)}
+                  onSelectThread={onSelectThread}
                 />
               ))}
             </div>
@@ -228,7 +237,7 @@ export function ThreadList({
                 key={thread.id}
                 thread={thread}
                 isSelected={selectedThreadId === thread.id}
-                onClick={() => onSelectThread(thread.id)}
+                onSelectThread={onSelectThread}
               />
             ))}
           </div>

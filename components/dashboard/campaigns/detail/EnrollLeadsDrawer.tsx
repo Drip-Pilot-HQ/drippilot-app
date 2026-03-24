@@ -37,7 +37,7 @@ export function EnrollLeadsDrawer({
   const [searchInput, setSearchInput] = useState("");
   const debouncedSearch = useDebounce(searchInput, 500);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
+  const [limit, setLimit] = useState(100);
   const [selectedStatuses, setSelectedStatuses] =
     useState<LeadStatus[]>(ENROLLABLE_STATUSES);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);

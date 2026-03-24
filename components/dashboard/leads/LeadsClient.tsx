@@ -23,7 +23,7 @@ export function LeadsClient() {
   const [searchInput, setSearchInput] = useState("");
   const debouncedSearch = useDebounce(searchInput, 500);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
+  const [limit, setLimit] = useState(500);
   const [selectedStatuses, setSelectedStatuses] = useState<LeadStatus[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   // Server-side sort (sent to API via LeadsSort dropdown)

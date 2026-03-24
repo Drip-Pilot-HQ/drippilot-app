@@ -26,6 +26,8 @@ interface AppLayoutProps {
   collapseMode?: CollapseMode;
   /** Tailwind max-width class for the page content area */
   mainMaxWidth?: string;
+  /** Show the notification bell — only for workspace-scoped layouts */
+  showNotifications?: boolean;
 }
 
 export function AppLayout({
@@ -35,6 +37,7 @@ export function AppLayout({
   sidebarContextSlot,
   collapseMode = "hide",
   mainMaxWidth = "max-w-6xl",
+  showNotifications = false,
 }: AppLayoutProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -117,7 +120,10 @@ export function AppLayout({
 
       {/* Main content */}
       <div className="flex-1 flex flex-col h-full min-w-0">
-        <MobileHeader onMenuClick={() => setIsMobileOpen(true)} />
+        <MobileHeader
+          onMenuClick={() => setIsMobileOpen(true)}
+          showNotifications={showNotifications}
+        />
         <main className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden scroll-smooth custom-scrollbar">
           <div
             className={cn(

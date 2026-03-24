@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { MessageSquare } from "lucide-react";
 import {
@@ -44,19 +44,21 @@ export function MessagesClient({
     setShowDetail(!!initialOutreachId);
   }
 
-  const [prevSelectedThreadId, setPrevSelectedThreadId] =
-    useState(selectedThreadId);
-  const [prevLostThreads, setPrevLostThreads] = useState(lostThreads);
+  const isCurrentlyLost = selectedThreadId
+    ? lostThreads.some((t) => t.id === selectedThreadId)
+    : false;
+  const [lastAutoSwitchedKey, setLastAutoSwitchedKey] = useState<string | null>(
+    null,
+  );
+  const currentKey = isCurrentlyLost ? selectedThreadId : null;
+
   if (
-    selectedThreadId !== prevSelectedThreadId ||
-    lostThreads !== prevLostThreads
+    isCurrentlyLost &&
+    activeTab !== "lost" &&
+    currentKey !== lastAutoSwitchedKey
   ) {
-    setPrevSelectedThreadId(selectedThreadId);
-    setPrevLostThreads(lostThreads);
-    if (selectedThreadId) {
-      const isLost = lostThreads.some((t) => t.id === selectedThreadId);
-      if (isLost && activeTab !== "lost") setActiveTab("lost");
-    }
+    setActiveTab("lost");
+    setLastAutoSwitchedKey(currentKey);
   }
 
   const selectedThread = useMemo(() => {
@@ -67,22 +69,25 @@ export function MessagesClient({
     return lost ? lostThreadToOutreach(lost) : null;
   }, [selectedThreadId, threads, lostThreads]);
 
-  const handleSelectThread = (id: string) => {
-    setSelectedThreadId(id);
-    setShowDetail(true);
-    router.push(`/dashboard/messages/${id}`);
-  };
+  const handleSelectThread = useCallback(
+    (id: string) => {
+      setSelectedThreadId(id);
+      setShowDetail(true);
+      router.push(`/dashboard/messages/${id}`);
+    },
+    [router],
+  );
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     setShowDetail(false);
     router.push("/dashboard/messages");
-  };
+  }, [router]);
 
-  const handleDeleted = () => {
+  const handleDeleted = useCallback(() => {
     setSelectedThreadId(null);
     setShowDetail(false);
     router.push("/dashboard/messages");
-  };
+  }, [router]);
 
   return (
     <div className="animate-in fade-in duration-500 md:space-y-6">

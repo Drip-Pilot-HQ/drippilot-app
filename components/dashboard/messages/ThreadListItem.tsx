@@ -1,5 +1,6 @@
 "use client";
 
+import { memo, useCallback, useMemo } from "react";
 import { Mail, Phone, Bot, AlertCircle } from "lucide-react";
 import { OutreachThread, getThreadChannels } from "@/types/outreach";
 import { LeadStatus } from "@/types/lead";
@@ -48,16 +49,17 @@ const DEFAULT_ACTIVE = {
 interface ThreadListItemProps {
   thread: OutreachThread;
   isSelected: boolean;
-  onClick: () => void;
+  onSelectThread: (id: string) => void;
 }
 
-export function ThreadListItem({
+export const ThreadListItem = memo(function ThreadListItem({
   thread,
   isSelected,
-  onClick,
+  onSelectThread,
 }: ThreadListItemProps) {
   const { hasEmail, hasPhone } = getThreadChannels(thread);
-  const getDisplayName = () => {
+
+  const displayName = useMemo(() => {
     if (thread.lead) {
       const { name, firstName, lastName } = thread.lead;
       if (name?.trim()) return name;
@@ -66,9 +68,13 @@ export function ThreadListItem({
       if (firstName?.trim()) return firstName;
     }
     return thread.leadEmail || thread.leadPhone || "Unknown";
-  };
+  }, [thread.lead, thread.leadEmail, thread.leadPhone]);
 
-  const displayName = getDisplayName();
+  const handleClick = useCallback(
+    () => onSelectThread(thread.id),
+    [onSelectThread, thread.id],
+  );
+
   const shortId = thread.id.slice(0, 8);
   const activeStyle =
     (thread.lead?.leadStatus && STATUS_ACTIVE[thread.lead.leadStatus]) ||
@@ -76,7 +82,7 @@ export function ThreadListItem({
 
   return (
     <button
-      onClick={onClick}
+      onClick={handleClick}
       className={cn(
         "w-full flex items-start gap-3 p-3 rounded-xl text-left transition-all duration-200",
         isSelected ? activeStyle.wrapper : "hover:bg-slate-50/50",
@@ -152,4 +158,4 @@ export function ThreadListItem({
       </div>
     </button>
   );
-}
+});

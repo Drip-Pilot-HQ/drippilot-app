@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import {
   Mail,
   Phone,
@@ -47,7 +47,8 @@ export function ThreadDetail({ thread, onBack, onDeleted }: ThreadDetailProps) {
 
   const { hasEmail, hasPhone, isEmailThread, defaultChannel } =
     getThreadChannels(thread);
-  const getDisplayName = () => {
+
+  const displayName = useMemo(() => {
     if (thread.lead) {
       const { name, firstName, lastName } = thread.lead;
       if (name?.trim()) return name;
@@ -56,13 +57,16 @@ export function ThreadDetail({ thread, onBack, onDeleted }: ThreadDetailProps) {
       if (firstName?.trim()) return firstName;
     }
     return thread.leadEmail || thread.leadPhone || "Unknown";
-  };
+  }, [thread.lead, thread.leadEmail, thread.leadPhone]);
 
-  const displayName = getDisplayName();
-
+  const isInitialScroll = useRef(true);
   useEffect(() => {
     if (messages && messages.length > 0) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      const behavior = isInitialScroll.current ? "instant" : "smooth";
+      isInitialScroll.current = false;
+      messagesEndRef.current?.scrollIntoView({
+        behavior,
+      } as ScrollIntoViewOptions);
     }
   }, [messages]);
 

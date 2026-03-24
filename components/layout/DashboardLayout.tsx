@@ -64,6 +64,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       )}
       collapseMode="icon-only"
       mainMaxWidth="max-w-[1600px]"
+      showNotifications
     >
       {children}
       <OnboardingController />

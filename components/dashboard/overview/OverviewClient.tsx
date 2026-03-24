@@ -116,6 +116,11 @@ export function OverviewClient() {
             />
           </div>
 
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {lifecycle && <LifecycleMetrics data={lifecycle} />}
+            <FinancialPanel data={stats.financialMetrics} />
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
               {activity && <ActivityChart data={activity} />}
@@ -129,11 +134,6 @@ export function OverviewClient() {
               converted={stats.leads.converted}
             />
             {benchmarks && <BenchmarksPanel data={benchmarks} />}
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {lifecycle && <LifecycleMetrics data={lifecycle} />}
-            <FinancialPanel data={stats.financialMetrics} />
           </div>
         </>
       )}

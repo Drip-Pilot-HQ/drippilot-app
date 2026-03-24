@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { Bot, User, Zap } from "lucide-react";
 import { OutreachMessage } from "@/types/outreach";
 import { cn } from "@/lib/utils";
@@ -9,7 +10,9 @@ interface MessageBubbleProps {
   message: OutreachMessage;
 }
 
-export function MessageBubble({ message }: MessageBubbleProps) {
+export const MessageBubble = memo(function MessageBubble({
+  message,
+}: MessageBubbleProps) {
   const isInbound = message.direction === "inbound";
   const isAi = message.senderType === "ai";
   const isSystem = message.senderType === "system";
@@ -112,7 +115,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
       </div>
     </div>
   );
-}
+});
 
 export function MessageDateDivider({ date }: MessageDateDividerProps) {
   return (

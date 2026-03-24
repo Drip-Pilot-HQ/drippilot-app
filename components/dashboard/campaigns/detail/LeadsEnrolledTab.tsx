@@ -27,7 +27,7 @@ export function LeadsEnrolledTab({ campaign }: LeadsEnrolledTabProps) {
   const [searchInput, setSearchInput] = useState("");
   const debouncedSearch = useDebounce(searchInput, 500);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
+  const [limit, setLimit] = useState(500);
   const [sortBy, setSortBy] = useState<SortField>("enrolledAt");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());

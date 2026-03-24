@@ -7,9 +7,13 @@ import { NotificationBell } from "./NotificationBell";
 
 interface MobileHeaderProps {
   onMenuClick: () => void;
+  showNotifications?: boolean;
 }
 
-export function MobileHeader({ onMenuClick }: MobileHeaderProps) {
+export function MobileHeader({
+  onMenuClick,
+  showNotifications = false,
+}: MobileHeaderProps) {
   return (
     <header className="flex items-center h-14 px-4 bg-white border-b border-slate-100 sticky top-0 z-40">
       <button
@@ -29,7 +33,7 @@ export function MobileHeader({ onMenuClick }: MobileHeaderProps) {
         />
       </Link>
       <div className="hidden lg:block flex-1" />
-      <NotificationBell />
+      {showNotifications && <NotificationBell />}
     </header>
   );
 }
