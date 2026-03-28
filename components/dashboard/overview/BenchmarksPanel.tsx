@@ -90,7 +90,7 @@ export function BenchmarksPanel({ data }: BenchmarksPanelProps) {
         />
         <BenchmarkRow
           label="Close Rate"
-          yours={current.closeRate}
+          yours={current.projectedCloseRate}
           industry={industry.closeRate}
           multiplier={comparison.closeRateMultiplier}
           format={(v) => `${v.toFixed(1)}%`}

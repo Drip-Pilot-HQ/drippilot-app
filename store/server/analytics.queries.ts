@@ -1,6 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/axios";
 import type {
+  AnalyticsConfig,
+  UpsertAnalyticsConfigPayload,
   DashboardStats,
   ActivityInsights,
   LifecycleMetricsResult,
@@ -54,6 +56,44 @@ export const useLifecycleMetricsQuery = (days: DaysFilter = 30) => {
         { params: { days } },
       );
       return data;
+    },
+  });
+};
+
+export const useAnalyticsConfigQuery = () => {
+  return useQuery({
+    queryKey: ["analytics", "config"],
+    queryFn: async () => {
+      const { data } = await apiClient.get<AnalyticsConfig>("/analytics/config");
+      return data;
+    },
+  });
+};
+
+export const useUpsertAnalyticsConfigMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (payload: UpsertAnalyticsConfigPayload) => {
+      const { data } = await apiClient.put<AnalyticsConfig>(
+        "/analytics/config",
+        payload,
+      );
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["analytics"] });
+    },
+  });
+};
+
+export const useResetAnalyticsConfigMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      await apiClient.delete("/analytics/config");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["analytics"] });
     },
   });
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import type { FinancialMetrics } from "@/types/analytics";
-import { DollarSign, TrendingUp } from "lucide-react";
+import { DollarSign, TrendingUp, TrendingDown } from "lucide-react";
 import { InfoTooltip } from "@/components/common/InfoTooltip";
 
 interface FinancialPanelProps {
@@ -47,23 +47,23 @@ export function FinancialPanel({ data }: FinancialPanelProps) {
             <h3 className="text-lg font-black text-slate-900">
               Financial Metrics
             </h3>
-            <InfoTooltip text="Calculated from your campaign costs, lead volume, and close rate. Pipeline value assumes average deal size from your conversion data." />
+            <InfoTooltip text="Calculated from your campaign costs, lead volume, and projected close rates. Configure assumptions via the settings button." />
           </div>
           <p className="text-sm text-slate-400 font-medium">
-            Pipeline value &amp; ROI analysis
+            Revenue projections &amp; ROI analysis
           </p>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3 mb-4">
         <MetricItem
-          label="Pipeline Value"
-          value={`$${(data.pipelineValue / 1000).toFixed(0)}k`}
+          label="Projected Revenue"
+          value={`$${(data.projectedRevenue / 1000).toFixed(0)}k`}
           accent
         />
         <MetricItem
-          label="Projected Revenue"
-          value={`$${(data.projectedRevenue / 1000).toFixed(0)}k`}
+          label="Rev. Per Closing"
+          value={`$${data.avgRevenuePerClosing.toLocaleString()}`}
         />
         <MetricItem
           label="Proj. Closings"
@@ -93,9 +93,11 @@ export function FinancialPanel({ data }: FinancialPanelProps) {
       <div
         className={`flex items-center gap-3 rounded-2xl p-4 ${roiPositive ? "bg-emerald-50" : "bg-red-50"}`}
       >
-        <TrendingUp
-          className={`w-8 h-8 ${roiPositive ? "text-emerald-500" : "text-red-400"} flex-shrink-0`}
-        />
+        {roiPositive ? (
+          <TrendingUp className="w-8 h-8 text-emerald-500 shrink-0" />
+        ) : (
+          <TrendingDown className="w-8 h-8 text-red-400 shrink-0" />
+        )}
         <div className="flex-1 min-w-0">
           <p
             className={`text-2xl font-black ${roiPositive ? "text-emerald-700" : "text-red-600"}`}

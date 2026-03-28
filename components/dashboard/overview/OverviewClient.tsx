@@ -24,10 +24,12 @@ import { BenchmarksPanel } from "./BenchmarksPanel";
 import { LifecycleMetrics } from "./LifecycleMetrics";
 import { FinancialPanel } from "./FinancialPanel";
 import { LeadBreakdown } from "./LeadBreakdown";
+import { AnalyticsConfigPanel } from "./AnalyticsConfigPanel";
 import { OverviewSkeleton } from "./OverviewSkeleton";
 
 export function OverviewClient() {
   const [days, setDays] = useState<DaysFilter>(30);
+  const [configOpen, setConfigOpen] = useState(false);
 
   const { data: stats, isLoading: statsLoading } = useDashboardStatsQuery();
   const { data: activity, isLoading: activityLoading } =
@@ -42,7 +44,16 @@ export function OverviewClient() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      <OverviewHeader days={days} onDaysChange={setDays} />
+      <OverviewHeader
+        days={days}
+        onDaysChange={setDays}
+        onConfigureClick={() => setConfigOpen(true)}
+      />
+
+      <AnalyticsConfigPanel
+        isOpen={configOpen}
+        onClose={() => setConfigOpen(false)}
+      />
 
       {isLoading ? (
         <OverviewSkeleton />

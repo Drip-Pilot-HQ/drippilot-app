@@ -34,22 +34,22 @@ export interface MessageBreakdown {
 }
 
 export interface IndustryComparison {
-  responseRate: number;
+  engagementRate: number;
   industryAverage: number;
   performanceMultiplier: number;
 }
 
 export interface FinancialMetrics {
-  pipelineValue: number;
   projectedClosings: number;
   projectedRevenue: number;
+  avgRevenuePerClosing: number;
   totalCampaignCost: number;
   costPerLead: number;
   costPerQualifiedLead: number;
   costPerClosing: number;
   roi: number;
   roiMultiplier: number;
-  closeRate: number;
+  projectedCloseRate: number;
   engagementRate: number;
   conversionRate: number;
   industryComparison: IndustryComparison;
@@ -114,6 +114,13 @@ export interface LifecycleMetricsResult {
 
 export interface BenchmarkCurrent {
   responseRate: number;
+  projectedCloseRate: number;
+  costPerLead: number;
+  costPerClosing: number;
+}
+
+export interface BenchmarkIndustry {
+  responseRate: number;
   closeRate: number;
   costPerLead: number;
   costPerClosing: number;
@@ -127,8 +134,43 @@ export interface BenchmarkComparison {
 
 export interface BenchmarksResult {
   current: BenchmarkCurrent;
-  industry: BenchmarkCurrent;
+  industry: BenchmarkIndustry;
   comparison: BenchmarkComparison;
 }
 
 export type DaysFilter = 7 | 30 | 60 | 90;
+
+// ─── Analytics Config ──────────────────────────────────────────────────────
+
+export interface ConfigFieldEntry {
+  value: number;
+  isCustom: boolean;
+}
+
+export interface AnalyticsConfig {
+  leadCost: ConfigFieldEntry;
+  avgDealValue: ConfigFieldEntry;
+  commissionPercent: ConfigFieldEntry;
+  hotCloseRate: ConfigFieldEntry;
+  warmCloseRate: ConfigFieldEntry;
+  monthlyPlatformCost: ConfigFieldEntry;
+  campaignDurationMonths: ConfigFieldEntry;
+  industryResponseRate: ConfigFieldEntry;
+  industryCloseRate: ConfigFieldEntry;
+  industryCostPerLead: ConfigFieldEntry;
+  industryCostPerClosing: ConfigFieldEntry;
+}
+
+export interface UpsertAnalyticsConfigPayload {
+  leadCost?: number;
+  avgDealValue?: number;
+  commissionPercent?: number;
+  hotCloseRate?: number;
+  warmCloseRate?: number;
+  monthlyPlatformCost?: number;
+  campaignDurationMonths?: number;
+  industryResponseRate?: number;
+  industryCloseRate?: number;
+  industryCostPerLead?: number;
+  industryCostPerClosing?: number;
+}

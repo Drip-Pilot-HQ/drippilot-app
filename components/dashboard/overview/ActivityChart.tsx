@@ -24,7 +24,6 @@ export function ActivityChart({ data }: ActivityChartProps) {
     date: entry.date,
     Outbound: entry.outboundCount,
     Inbound: entry.inboundCount,
-    Total: entry.messageCount,
   }));
 
   const { trends } = data;
