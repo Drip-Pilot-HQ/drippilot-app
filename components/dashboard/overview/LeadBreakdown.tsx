@@ -31,8 +31,8 @@ export function LeadBreakdown({ leads }: LeadBreakdownProps) {
   })).filter((d) => d.value > 0);
 
   return (
-    <div className="bg-white border border-slate-100 rounded-[28px] p-6 shadow-sm">
-      <div className="mb-4">
+    <div className="flex flex-col h-full bg-white border border-slate-100 rounded-[28px] p-6 shadow-sm">
+      <div className="mb-4 shrink-0">
         <div className="flex items-center gap-1.5">
           <h3 className="text-lg font-black text-slate-900">Lead Breakdown</h3>
           <InfoTooltip text="Distribution of all your leads by current status: Cold, Warm, Hot, Converted, or Unsubscribed." />
@@ -43,52 +43,63 @@ export function LeadBreakdown({ leads }: LeadBreakdownProps) {
       </div>
 
       {data.length === 0 ? (
-        <div className="flex items-center justify-center h-40 text-slate-300">
+        <div className="flex items-center justify-center flex-1 min-h-[200px] text-slate-300">
           <p className="text-sm font-bold uppercase tracking-widest">No data</p>
         </div>
       ) : (
-        <ResponsiveContainer width="100%" height={200}>
-          <PieChart>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="50%"
-              innerRadius={55}
-              outerRadius={80}
-              paddingAngle={3}
-              dataKey="value"
-              strokeWidth={0}
-            >
-              {data.map((entry) => (
-                <Cell key={entry.name} fill={entry.color} />
-              ))}
-            </Pie>
-            <Tooltip
-              contentStyle={{
-                background: "#fff",
-                border: "1px solid #e2e8f0",
-                borderRadius: 12,
-                fontSize: 12,
-                fontWeight: 600,
-                boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.05)",
-              }}
-              formatter={(value, name) => [
-                typeof value === "number" ? value.toLocaleString() : value,
-                name,
-              ]}
-            />
-            <Legend
-              wrapperStyle={{ fontSize: 12, fontWeight: 700 }}
-              formatter={(value, entry) => (
-                <span style={{ color: "#64748b" }}>
-                  {value} (
-                  {(entry.payload as { value: number }).value?.toLocaleString()}
-                  )
-                </span>
-              )}
-            />
-          </PieChart>
-        </ResponsiveContainer>
+        <div className="flex-1 w-full min-h-[250px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                innerRadius={55}
+                outerRadius={80}
+                paddingAngle={3}
+                dataKey="value"
+                strokeWidth={0}
+              >
+                {data.map((entry) => (
+                  <Cell key={entry.name} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip
+                contentStyle={{
+                  background: "#fff",
+                  border: "1px solid #e2e8f0",
+                  borderRadius: 12,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.05)",
+                }}
+                formatter={(value, name) => [
+                  typeof value === "number" ? value.toLocaleString() : value,
+                  name,
+                ]}
+              />
+              <Legend
+                wrapperStyle={{
+                  fontSize: 12,
+                  fontWeight: 700,
+                  paddingTop: "20px",
+                }}
+                layout="horizontal"
+                verticalAlign="bottom"
+                align="center"
+                formatter={(value, entry) => (
+                  <span style={{ color: "#64748b" }}>
+                    {value} (
+                    {(
+                      entry.payload as { value: number }
+                    ).value?.toLocaleString()}
+                    )
+                  </span>
+                )}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
       )}
     </div>
   );

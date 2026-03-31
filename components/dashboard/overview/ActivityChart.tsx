@@ -42,7 +42,23 @@ export function ActivityChart({ data }: ActivityChartProps) {
         ? "text-red-500"
         : "text-slate-500";
 
-  const growthPositive = trends.messageGrowth >= 0;
+  const formattedGrowth = Number(trends.messageGrowth.toFixed(1));
+
+  const GrowthIcon =
+    formattedGrowth > 0
+      ? TrendingUp
+      : formattedGrowth < 0
+        ? TrendingDown
+        : Minus;
+
+  const growthColor =
+    formattedGrowth > 0
+      ? "text-emerald-600"
+      : formattedGrowth < 0
+        ? "text-red-500"
+        : "text-slate-500";
+
+  const growthPrefix = formattedGrowth > 0 ? "+" : "";
 
   return (
     <div className="bg-white border border-slate-100 rounded-[28px] p-6 shadow-sm">
@@ -63,15 +79,11 @@ export function ActivityChart({ data }: ActivityChartProps) {
         <div className="flex items-center gap-3 sm:gap-4 shrink-0 flex-wrap justify-end">
           <div className="text-right">
             <div
-              className={`flex items-center gap-1 justify-end text-sm font-bold ${growthPositive ? "text-emerald-600" : "text-red-500"}`}
+              className={`flex items-center gap-1 justify-end text-sm font-bold ${growthColor}`}
             >
-              {growthPositive ? (
-                <TrendingUp className="w-4 h-4" />
-              ) : (
-                <TrendingDown className="w-4 h-4" />
-              )}
-              {growthPositive ? "+" : ""}
-              {trends.messageGrowth.toFixed(1)}%
+              <GrowthIcon className="w-4 h-4" />
+              {growthPrefix}
+              {formattedGrowth.toFixed(1)}%
             </div>
             <p className="text-xs text-slate-400 font-medium">growth</p>
           </div>
