@@ -12,6 +12,7 @@ import {
   MessageSquare,
   Box,
   BookOpenText,
+  LifeBuoy,
 } from "lucide-react";
 import { AppLayout } from "./AppLayout";
 import { useAuthStore } from "@/store/client/useAuthStore";
@@ -43,6 +44,11 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           name: "Setup Guide",
           href: `${base}/setup-guide`,
           icon: BookOpenText,
+        },
+        {
+          name: "Help & Support",
+          href: `${base}/support`,
+          icon: LifeBuoy,
         },
       ],
     },

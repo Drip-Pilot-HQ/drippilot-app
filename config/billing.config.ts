@@ -91,7 +91,7 @@ export const PLAN_CONFIGS: Record<PlanId, PlanDisplayConfig> = {
     yearlyPrice: 269,
     yearlyTotal: 3228,
     limits: {
-      messageCredits: 4800,
+      messageCredits: 5500,
       phoneNumbers: 4,
       teamMembers: 4,
       emailAliases: 4,
@@ -143,12 +143,12 @@ export const ADDON_CONFIGS: Record<AddonType, AddonDisplayConfig> = {
     displayName: 'Additional Seat',
     description: 'Add more team members to your workspace',
     unitLabel: 'per seat',
-    monthlyPrice: 49,
-    yearlyPrice: 49,
+    monthlyPrice: 20,
+    yearlyPrice: 20,
     unitsPerQuantity: 1,
     tiers: [
-      { upTo: 10,   monthlyPrice: 49, yearlyPrice: 49 },
-      { upTo: null, monthlyPrice: 45, yearlyPrice: 45 },
+      { upTo: 10,   monthlyPrice: 20, yearlyPrice: 20 },
+      { upTo: null, monthlyPrice: 15, yearlyPrice: 15 },
     ],
   },
   phone_alias: {

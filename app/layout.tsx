@@ -6,6 +6,7 @@ import { AuthProvider } from "../components/auth/AuthProvider";
 import { ConfirmProvider } from "../components/branding/ConfirmProvider";
 import { Toaster } from "sonner";
 import { ServiceWorkerRegistrar } from "@/components/layout/ServiceWorkerRegistrar";
+import { CrispProvider } from "@/components/providers/CrispProvider";
 
 const sourceSans = Source_Sans_3({
   variable: "--font-source-sans-pro",
@@ -126,6 +127,7 @@ export default function RootLayout({
         className={`${sourceSans.variable} ${poppins.variable} font-sans antialiased bg-white text-slate-900`}
       >
         <ServiceWorkerRegistrar />
+        <CrispProvider />
         <TanstackQueryProvider>
           <AuthProvider>
             <ConfirmProvider>{children}</ConfirmProvider>
