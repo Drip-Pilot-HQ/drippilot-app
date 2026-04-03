@@ -136,99 +136,123 @@ function AddonRow({
   return (
     <>
       <div
-        className={`rounded-2xl border-2 overflow-hidden transition-all ${
+        className={`rounded-3xl border-2 overflow-hidden transition-all ${
           isActive
-            ? "border-orange-100"
+            ? "border-orange-100 shadow-sm shadow-orange-100/50"
             : "border-slate-100 hover:border-slate-200"
         } ${isDisabled ? "opacity-50 pointer-events-none" : ""}`}
       >
-        {/* Main row — always horizontal */}
+        {/* Main row */}
         <div
-          className={`flex items-center gap-3 p-4 ${
-            isActive ? "bg-orange-50/40" : "hover:bg-slate-50/40"
+          className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-4 sm:p-5 ${
+            isActive ? "bg-orange-50/30" : "hover:bg-slate-50/40"
           }`}
         >
-          {/* Icon */}
-          <div
-            className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-              isActive
-                ? "bg-orange-100 text-orange-500"
-                : "bg-slate-100 text-slate-400"
-            }`}
-          >
-            <Icon className="w-5 h-5" />
-          </div>
+          {/* Header & Icon */}
+          <div className="flex items-center gap-3.5 flex-1 min-w-0">
+            {/* Icon */}
+            <div
+              className={`w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center shrink-0 transition-colors ${
+                isActive
+                  ? "bg-orange-100 text-orange-600"
+                  : "bg-slate-100 text-slate-400"
+              }`}
+            >
+              <Icon className="w-5 h-5" />
+            </div>
 
-          {/* Info */}
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold text-slate-900 leading-tight">
-              {config.displayName}
-            </p>
-            <p className="text-xs text-slate-400 font-medium truncate">
-              {hasTiers ? `from $${basePrice}` : `$${basePrice}`}/mo ·{" "}
-              {config.description}
-            </p>
+            {/* Info */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-0.5 sm:mb-1">
+                <p className="text-sm sm:text-base font-black text-slate-900 leading-tight truncate">
+                  {config.displayName}
+                </p>
+                {hasTiers && (
+                  <span className="inline-flex px-1.5 py-0.5 rounded text-[9px] font-black tracking-[0.2em] uppercase bg-emerald-100 text-emerald-700">
+                    Tiered
+                  </span>
+                )}
+              </div>
+              <p className="text-[11px] sm:text-xs text-slate-500 font-medium line-clamp-2 sm:line-clamp-1 leading-relaxed sm:leading-snug">
+                <span className="font-bold text-slate-700">
+                  {hasTiers ? `Starts at $${basePrice}` : `$${basePrice}`}
+                </span>
+                <span className="opacity-60">/mo</span> · {config.description}
+              </p>
+            </div>
           </div>
 
           {/* Controls */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 pl-[58px] sm:pl-0 mt-0.5 sm:mt-0">
             {/* Stepper */}
-            <div className="flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+            <div className="flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm h-9 sm:h-10">
               <button
                 onClick={() => setQty((q) => Math.max(0, q - 1))}
                 disabled={qty === 0 || isSaving}
-                className="p-2 hover:bg-slate-50 text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="w-10 h-full flex items-center justify-center hover:bg-slate-50 text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                <Minus className="w-3.5 h-3.5" />
+                <Minus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
-              <span className="w-8 text-center font-black text-slate-900 text-sm tabular-nums">
-                {qty}
-              </span>
+              <div className="w-10 h-full flex items-center justify-center border-l border-r border-slate-100 bg-slate-50/50">
+                <span className="font-black text-slate-900 text-sm tabular-nums">
+                  {qty}
+                </span>
+              </div>
               <button
                 onClick={() => setQty((q) => q + 1)}
                 disabled={isSaving}
-                className="p-2 hover:bg-slate-50 text-slate-400 hover:text-slate-600 transition-colors disabled:cursor-not-allowed"
+                className="w-10 h-full flex items-center justify-center hover:bg-slate-50 text-slate-400 hover:text-slate-600 transition-colors disabled:cursor-not-allowed"
               >
-                <Plus className="w-3.5 h-3.5" />
+                <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
             </div>
 
-            {/* Cost */}
-            <div className="w-16 sm:w-20 text-right shrink-0">
-              <p className="text-sm font-black text-slate-900 tabular-nums whitespace-nowrap">
-                {qty > 0 ? `$${cost.toFixed(2)}/mo` : "—"}
+            {/* Cost text */}
+            <div className="w-[84px] text-right shrink-0 flex flex-row sm:flex-col items-center sm:items-end justify-end gap-1 sm:gap-0">
+              <p className="text-sm sm:text-base font-black text-slate-900 tabular-nums">
+                {qty > 0 ? `$${cost.toFixed(2)}` : "—"}
               </p>
+              {qty > 0 && (
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest sm:mt-0.5">
+                  / mo
+                </p>
+              )}
             </div>
           </div>
         </div>
 
         {/* Action bar — only visible when quantity has changed */}
         {hasChanged && (
-          <div className="flex items-center justify-between px-4 py-3 bg-orange-50 border-t border-orange-100">
-            <p className="text-xs font-bold text-orange-700 tabular-nums">
-              {delta > 0 ? `+${delta}` : `${delta}`} ·{" "}
-              <span className="font-black">${cost.toFixed(2)}/mo</span> new
-              total
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-3 px-4 sm:px-6 py-4 sm:py-3.5 bg-orange-50 border-t border-orange-100">
+            <p className="text-xs font-medium text-orange-800 flex items-center gap-2 flex-wrap">
+              <span className="inline-flex items-center justify-center px-1.5 py-0.5 rounded border border-orange-200/60 bg-orange-100 text-orange-700 font-black text-[10px] tracking-wide tabular-nums shadow-sm">
+                {delta > 0 ? `+${delta}` : `${delta}`} {config.displayName}
+              </span>
+              <span className="hidden sm:inline">·</span>
+              <span>
+                <span className="font-black">${cost.toFixed(2)}/mo</span> new
+                total
+              </span>
             </p>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleSave}
-                disabled={isSaving}
-                className="h-8 px-4 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-black flex items-center gap-1.5 transition-colors disabled:opacity-50 shadow-sm shadow-orange-200"
-              >
-                {isSaving ? (
-                  <Loader2 className="w-3 h-3 animate-spin" />
-                ) : (
-                  <Check className="w-3 h-3" />
-                )}
-                Save
-              </button>
+            <div className="flex items-center gap-2 self-end sm:self-auto shrink-0 w-full sm:w-auto">
               <button
                 onClick={handleReset}
                 disabled={isSaving}
-                className="h-8 px-3 rounded-xl bg-white border border-slate-200 text-slate-500 text-xs font-bold hover:bg-slate-50 transition-colors disabled:opacity-50"
+                className="flex-1 sm:flex-none h-9 sm:h-10 px-4 rounded-xl bg-white border border-slate-200 text-slate-600 text-xs sm:text-sm font-bold hover:bg-slate-50 transition-colors disabled:opacity-50 shadow-sm"
               >
                 Undo
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={isSaving}
+                className="flex-1 sm:flex-none h-9 sm:h-10 px-5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm font-black flex items-center justify-center gap-2 transition-colors disabled:opacity-50 shadow-sm shadow-orange-200"
+              >
+                {isSaving ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Check className="w-4 h-4" />
+                )}
+                Save Changes
               </button>
             </div>
           </div>

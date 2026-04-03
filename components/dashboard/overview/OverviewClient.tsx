@@ -110,11 +110,11 @@ export function OverviewClient() {
             <StatCard
               label="Engagement Rate"
               value={`${stats.engagementRate.toFixed(1)}%`}
-              subValue="engaged vs responded"
+              subValue="excl. opt-outs"
               icon={Percent}
               iconColor="text-accent"
               iconBg="bg-pink-50"
-              tooltip="Percentage of responding leads showing meaningful engagement beyond a first reply."
+              tooltip="Percentage of total leads who replied meaningfully, excluding opt-out responses."
             />
             <StatCard
               label="Conversion Rate"

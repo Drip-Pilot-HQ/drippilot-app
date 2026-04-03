@@ -1,7 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUp, ArrowDown, RefreshCw, Info } from "lucide-react";
+import {
+  ArrowUp,
+  ArrowDown,
+  RefreshCw,
+  Info,
+  MessageSquare,
+  Users,
+  Phone,
+} from "lucide-react";
 import { ConfirmDialog } from "@/components/branding/ConfirmDialog";
 import {
   PLAN_ORDER,
@@ -162,37 +170,58 @@ export function PlanActions({ subscription, addons }: PlanActionsProps) {
                   key={`${change.planId}-${change.interval}`}
                   onClick={() => setPendingChange(change)}
                   disabled={isMutating}
-                  className="group flex items-center justify-between p-4 rounded-2xl border-2 border-slate-100 hover:border-orange-200 hover:bg-orange-50/30 transition-all text-left disabled:opacity-50"
+                  className="group flex flex-col p-4 rounded-2xl border-2 border-slate-100 hover:border-orange-200 hover:bg-orange-50/30 transition-all text-left disabled:opacity-50"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-orange-100 text-orange-500 flex items-center justify-center group-hover:bg-orange-200 transition-colors">
-                      {isSameIntervalSwitch ? (
-                        <RefreshCw className="w-4 h-4" />
-                      ) : (
-                        <ArrowUp className="w-4 h-4" />
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-orange-100 text-orange-500 flex items-center justify-center group-hover:bg-orange-200 transition-colors shrink-0">
+                        {isSameIntervalSwitch ? (
+                          <RefreshCw className="w-4 h-4" />
+                        ) : (
+                          <ArrowUp className="w-4 h-4" />
+                        )}
+                      </div>
+                      <div>
+                        <p className="text-sm font-black text-slate-900 line-clamp-1">
+                          {isSameIntervalSwitch
+                            ? `Switch to ${change.interval}`
+                            : `${plan.displayName}`}
+                        </p>
+                        <p className="text-xs text-slate-400 font-medium capitalize">
+                          {change.interval} billing
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right shrink-0 ml-2">
+                      <p className="text-sm font-black text-slate-900">
+                        ${price}/mo
+                      </p>
+                      {diff !== 0 && (
+                        <p className="text-xs font-bold text-orange-500">
+                          +${diff.toFixed(0)}/mo
+                        </p>
                       )}
                     </div>
-                    <div>
-                      <p className="text-sm font-black text-slate-900">
-                        {isSameIntervalSwitch
-                          ? `Switch to ${change.interval}`
-                          : `${plan.displayName}`}
-                      </p>
-                      <p className="text-xs text-slate-400 font-medium capitalize">
-                        {change.interval} billing
-                      </p>
+                  </div>
+
+                  {!isSameIntervalSwitch && (
+                    <div className="flex flex-wrap items-center gap-2 mt-3 pl-[48px]">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10px] font-bold text-slate-500 group-hover:border-orange-200 group-hover:bg-orange-50 group-hover:text-orange-700 transition-colors">
+                        <MessageSquare className="w-3 h-3 text-slate-400 group-hover:text-orange-400 transition-colors" />
+                        {plan.limits.messageCredits?.toLocaleString() ??
+                          "Unlimited"}{" "}
+                        credits
+                      </span>
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10px] font-bold text-slate-500 group-hover:border-orange-200 group-hover:bg-orange-50 group-hover:text-orange-700 transition-colors">
+                        <Users className="w-3 h-3 text-slate-400 group-hover:text-orange-400 transition-colors" />
+                        {plan.limits.teamMembers ?? "∞"} seats
+                      </span>
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10px] font-bold text-slate-500 group-hover:border-orange-200 group-hover:bg-orange-50 group-hover:text-orange-700 transition-colors">
+                        <Phone className="w-3 h-3 text-slate-400 group-hover:text-orange-400 transition-colors" />
+                        {plan.limits.phoneNumbers ?? "∞"} numbers
+                      </span>
                     </div>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <p className="text-sm font-black text-slate-900">
-                      ${price}/mo
-                    </p>
-                    {diff !== 0 && (
-                      <p className="text-xs font-bold text-orange-500">
-                        +${diff.toFixed(0)}/mo
-                      </p>
-                    )}
-                  </div>
+                  )}
                 </button>
               );
             })}
@@ -219,37 +248,58 @@ export function PlanActions({ subscription, addons }: PlanActionsProps) {
                   key={`${change.planId}-${change.interval}`}
                   onClick={() => setPendingChange(change)}
                   disabled={isMutating}
-                  className="group flex items-center justify-between p-4 rounded-2xl border-2 border-slate-100 hover:border-slate-200 hover:bg-slate-50/50 transition-all text-left disabled:opacity-50"
+                  className="group flex flex-col p-4 rounded-2xl border-2 border-slate-100 hover:border-slate-200 hover:bg-slate-50/50 transition-all text-left disabled:opacity-50"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
-                      {isSameIntervalSwitch ? (
-                        <RefreshCw className="w-4 h-4" />
-                      ) : (
-                        <ArrowDown className="w-4 h-4" />
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center gap-3 w-[70%]">
+                      <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center group-hover:bg-slate-200 transition-colors shrink-0">
+                        {isSameIntervalSwitch ? (
+                          <RefreshCw className="w-4 h-4" />
+                        ) : (
+                          <ArrowDown className="w-4 h-4" />
+                        )}
+                      </div>
+                      <div className="overflow-hidden">
+                        <p className="text-sm font-black text-slate-900 line-clamp-1">
+                          {isSameIntervalSwitch
+                            ? `Switch to ${change.interval}`
+                            : `${plan.displayName}`}
+                        </p>
+                        <p className="text-xs text-slate-400 font-medium capitalize truncate">
+                          {change.interval} · effect next cycle
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right shrink-0 ml-2">
+                      <p className="text-sm font-black text-slate-900">
+                        ${price}/mo
+                      </p>
+                      {diff !== 0 && (
+                        <p className="text-xs font-bold text-slate-400">
+                          {diff > 0 ? "+" : ""}${diff.toFixed(0)}/mo
+                        </p>
                       )}
                     </div>
-                    <div>
-                      <p className="text-sm font-black text-slate-900">
-                        {isSameIntervalSwitch
-                          ? `Switch to ${change.interval}`
-                          : `${plan.displayName}`}
-                      </p>
-                      <p className="text-xs text-slate-400 font-medium capitalize">
-                        {change.interval} billing · takes effect next cycle
-                      </p>
+                  </div>
+
+                  {!isSameIntervalSwitch && (
+                    <div className="flex flex-wrap items-center gap-2 mt-3 pl-[48px]">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10px] font-bold text-slate-500 group-hover:bg-white group-hover:border-slate-200 transition-colors">
+                        <MessageSquare className="w-3 h-3 text-slate-400" />
+                        {plan.limits.messageCredits?.toLocaleString() ??
+                          "Unlimited"}{" "}
+                        credits
+                      </span>
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10px] font-bold text-slate-500 group-hover:bg-white group-hover:border-slate-200 transition-colors">
+                        <Users className="w-3 h-3 text-slate-400" />
+                        {plan.limits.teamMembers ?? "∞"} seats
+                      </span>
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10px] font-bold text-slate-500 group-hover:bg-white group-hover:border-slate-200 transition-colors">
+                        <Phone className="w-3 h-3 text-slate-400" />
+                        {plan.limits.phoneNumbers ?? "∞"} numbers
+                      </span>
                     </div>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <p className="text-sm font-black text-slate-900">
-                      ${price}/mo
-                    </p>
-                    {diff !== 0 && (
-                      <p className="text-xs font-bold text-slate-400">
-                        {diff > 0 ? "+" : ""}${diff.toFixed(0)}/mo
-                      </p>
-                    )}
-                  </div>
+                  )}
                 </button>
               );
             })}

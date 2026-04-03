@@ -6,6 +6,8 @@ import { TemplateChannel } from "@/types/template";
 import {
   useCampaignQuery,
   useCampaignStepsQuery,
+  useEnrolledLeadsQuery,
+  useExecutionLogsQuery,
 } from "@/store/server/campaign.queries";
 import { CampaignDetailHeader } from "./CampaignDetailHeader";
 import { StepList } from "./steps/StepList";
@@ -61,6 +63,17 @@ export function CampaignDetailClient({
 
   const { data: steps = [], isLoading: isStepsLoading } =
     useCampaignStepsQuery(campaignId);
+
+  const { data: enrolledLeadsResponse } = useEnrolledLeadsQuery(campaignId, {
+    page: 1,
+    limit: 500,
+    search: undefined,
+  });
+
+  const { data: executionLogsResponse } = useExecutionLogsQuery(campaignId, {
+    page: 1,
+    limit: 100,
+  });
 
   if (isCampaignLoading) {
     return <CampaignDetailSkeleton />;
@@ -118,7 +131,7 @@ export function CampaignDetailClient({
               {tab.id === "workflow" && steps.length > 0 && (
                 <span
                   className={cn(
-                    "inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-black",
+                    "inline-flex items-center justify-center min-w-[20px] px-1 h-5 rounded-full text-[10px] font-black",
                     activeTab === tab.id
                       ? "bg-primary/10 text-primary"
                       : "bg-slate-100 text-slate-500",
@@ -127,6 +140,34 @@ export function CampaignDetailClient({
                   {steps.length}
                 </span>
               )}
+              {tab.id === "leads" &&
+                enrolledLeadsResponse?.pagination?.total !== undefined &&
+                enrolledLeadsResponse.pagination.total > 0 && (
+                  <span
+                    className={cn(
+                      "inline-flex items-center justify-center min-w-[20px] px-1 h-5 rounded-full text-[10px] font-black",
+                      activeTab === tab.id
+                        ? "bg-primary/10 text-primary"
+                        : "bg-slate-100 text-slate-500",
+                    )}
+                  >
+                    {enrolledLeadsResponse.pagination.total}
+                  </span>
+                )}
+              {tab.id === "history" &&
+                executionLogsResponse?.pagination?.total !== undefined &&
+                executionLogsResponse.pagination.total > 0 && (
+                  <span
+                    className={cn(
+                      "inline-flex items-center justify-center min-w-[20px] px-1 h-5 rounded-full text-[10px] font-black",
+                      activeTab === tab.id
+                        ? "bg-primary/10 text-primary"
+                        : "bg-slate-100 text-slate-500",
+                    )}
+                  >
+                    {executionLogsResponse.pagination.total}
+                  </span>
+                )}
             </button>
           ))}
         </nav>
