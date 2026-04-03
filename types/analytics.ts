@@ -34,7 +34,7 @@ export interface MessageBreakdown {
 }
 
 export interface IndustryComparison {
-  engagementRate: number;
+  responseRate: number;
   industryAverage: number;
   performanceMultiplier: number;
 }
