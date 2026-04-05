@@ -67,9 +67,15 @@ export function UsageCredits({ creditBalance, limits }: UsageCreditsProps) {
                 style={{ width: `${usagePercent}%` }}
               />
             </div>
-            <p className="text-[10px] text-slate-400 font-bold mt-1.5">
-              {usedCredits.toLocaleString()} used · {usagePercent.toFixed(0)}%
-            </p>
+            <div className="flex items-center justify-between mt-1.5 flex-wrap gap-1">
+              <p className="text-[10px] text-slate-400 font-bold">
+                {usedCredits.toLocaleString()} used · {usagePercent.toFixed(0)}%
+              </p>
+              <p className="text-[10px] text-slate-500 font-medium bg-white/60 px-1.5 py-0.5 rounded shadow-sm border border-slate-100">
+                Overage: <span className="font-bold text-slate-700">$6</span> /
+                100 credits
+              </p>
+            </div>
           </div>
         )}
       </div>

@@ -145,8 +145,8 @@ export function OverageProtection({
       {/* Description */}
       <p className="text-slate-500 text-sm font-medium leading-relaxed">
         {isEnabled
-          ? "Services continue uninterrupted past your plan limit. Overages are charged automatically when they reach the threshold."
-          : "Enable to keep your outreach running when you hit your credit limit. You'll be charged in $5 increments."}
+          ? "Services continue uninterrupted past your plan limit. Overages are charged at $6 per 100 credits automatically when they reach the threshold."
+          : "Enable to keep your outreach running when you hit your credit limit. You'll be billed at a rate of $6 per 100 overage credits."}
       </p>
 
       {/* Can't disable warning */}
@@ -187,11 +187,12 @@ export function OverageProtection({
               style={{ width: `${progressPercent}%` }}
             />
           </div>
-          {pendingCredits > 0 && (
-            <p className="text-[10px] text-slate-400 font-medium">
-              {pendingCredits.toLocaleString()} overage credits accumulated
+          <div className="flex items-center justify-between text-[10px]">
+            <p className="font-bold text-slate-400">
+              {pendingCredits.toLocaleString()} overage credits used
             </p>
-          )}
+            <p className="font-bold text-slate-500">${pendingUsd} accrued</p>
+          </div>
           {settlementInProgress && (
             <div className="flex items-center gap-1.5 mt-1">
               <Loader2 className="w-3.5 h-3.5 text-orange-400 animate-spin" />
