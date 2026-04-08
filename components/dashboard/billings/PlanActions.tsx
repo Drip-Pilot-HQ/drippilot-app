@@ -204,24 +204,25 @@ export function PlanActions({ subscription, addons }: PlanActionsProps) {
                     </div>
                   </div>
 
-                  {!isSameIntervalSwitch && (
-                    <div className="flex flex-wrap items-center gap-2 mt-3 pl-[48px]">
-                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10px] font-bold text-slate-500 group-hover:border-orange-200 group-hover:bg-orange-50 group-hover:text-orange-700 transition-colors">
-                        <MessageSquare className="w-3 h-3 text-slate-400 group-hover:text-orange-400 transition-colors" />
-                        {plan.limits.messageCredits?.toLocaleString() ??
-                          "Unlimited"}{" "}
-                        credits
-                      </span>
-                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10px] font-bold text-slate-500 group-hover:border-orange-200 group-hover:bg-orange-50 group-hover:text-orange-700 transition-colors">
-                        <Users className="w-3 h-3 text-slate-400 group-hover:text-orange-400 transition-colors" />
-                        {plan.limits.teamMembers ?? "∞"} seats
-                      </span>
-                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10px] font-bold text-slate-500 group-hover:border-orange-200 group-hover:bg-orange-50 group-hover:text-orange-700 transition-colors">
-                        <Phone className="w-3 h-3 text-slate-400 group-hover:text-orange-400 transition-colors" />
-                        {plan.limits.phoneNumbers ?? "∞"} numbers
-                      </span>
-                    </div>
-                  )}
+                  <div className="flex flex-wrap items-center gap-2 mt-3 pl-[48px]">
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10px] font-bold text-slate-500 group-hover:border-orange-200 group-hover:bg-orange-50 group-hover:text-orange-700 transition-colors">
+                      <MessageSquare className="w-3 h-3 text-slate-400 group-hover:text-orange-400 transition-colors" />
+                      {plan.limits.messageCredits === null
+                        ? "Unlimited"
+                        : change.interval === "yearly"
+                          ? (plan.limits.messageCredits * 12).toLocaleString()
+                          : plan.limits.messageCredits.toLocaleString()}{" "}
+                      credits
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10px] font-bold text-slate-500 group-hover:border-orange-200 group-hover:bg-orange-50 group-hover:text-orange-700 transition-colors">
+                      <Users className="w-3 h-3 text-slate-400 group-hover:text-orange-400 transition-colors" />
+                      {plan.limits.teamMembers ?? "∞"} seats
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10px] font-bold text-slate-500 group-hover:border-orange-200 group-hover:bg-orange-50 group-hover:text-orange-700 transition-colors">
+                      <Phone className="w-3 h-3 text-slate-400 group-hover:text-orange-400 transition-colors" />
+                      {plan.limits.phoneNumbers ?? "∞"} numbers
+                    </span>
+                  </div>
                 </button>
               );
             })}
@@ -282,24 +283,25 @@ export function PlanActions({ subscription, addons }: PlanActionsProps) {
                     </div>
                   </div>
 
-                  {!isSameIntervalSwitch && (
-                    <div className="flex flex-wrap items-center gap-2 mt-3 pl-[48px]">
-                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10px] font-bold text-slate-500 group-hover:bg-white group-hover:border-slate-200 transition-colors">
-                        <MessageSquare className="w-3 h-3 text-slate-400" />
-                        {plan.limits.messageCredits?.toLocaleString() ??
-                          "Unlimited"}{" "}
-                        credits
-                      </span>
-                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10px] font-bold text-slate-500 group-hover:bg-white group-hover:border-slate-200 transition-colors">
-                        <Users className="w-3 h-3 text-slate-400" />
-                        {plan.limits.teamMembers ?? "∞"} seats
-                      </span>
-                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10px] font-bold text-slate-500 group-hover:bg-white group-hover:border-slate-200 transition-colors">
-                        <Phone className="w-3 h-3 text-slate-400" />
-                        {plan.limits.phoneNumbers ?? "∞"} numbers
-                      </span>
-                    </div>
-                  )}
+                  <div className="flex flex-wrap items-center gap-2 mt-3 pl-[48px]">
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10px] font-bold text-slate-500 group-hover:bg-white group-hover:border-slate-200 transition-colors">
+                      <MessageSquare className="w-3 h-3 text-slate-400" />
+                      {plan.limits.messageCredits === null
+                        ? "Unlimited"
+                        : change.interval === "yearly"
+                          ? (plan.limits.messageCredits * 12).toLocaleString()
+                          : plan.limits.messageCredits.toLocaleString()}{" "}
+                      credits
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10px] font-bold text-slate-500 group-hover:bg-white group-hover:border-slate-200 transition-colors">
+                      <Users className="w-3 h-3 text-slate-400" />
+                      {plan.limits.teamMembers ?? "∞"} seats
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10px] font-bold text-slate-500 group-hover:bg-white group-hover:border-slate-200 transition-colors">
+                      <Phone className="w-3 h-3 text-slate-400" />
+                      {plan.limits.phoneNumbers ?? "∞"} numbers
+                    </span>
+                  </div>
                 </button>
               );
             })}
