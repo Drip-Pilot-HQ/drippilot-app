@@ -6,7 +6,6 @@ import {
   Workflow,
   MessageSquare,
   ArrowLeftRight,
-  Percent,
   TrendingUp,
 } from "lucide-react";
 import {
@@ -107,7 +106,7 @@ export function OverviewClient() {
               trendLabel={stats.responseRate >= 2.5 ? "above avg" : "below avg"}
               tooltip="Percentage of outbound messages that received any reply, including opt-outs and negative responses. Industry average is ~2.5%."
             />
-            <StatCard
+            {/* <StatCard
               label="Engagement Rate"
               value={`${stats.engagementRate.toFixed(1)}%`}
               subValue="of leads who replied"
@@ -115,7 +114,7 @@ export function OverviewClient() {
               iconColor="text-accent"
               iconBg="bg-pink-50"
               tooltip="Of the leads who replied, how many are genuinely interested — not just a one-word reply or opt-out."
-            />
+            /> */}
             <StatCard
               label="Conversion Rate"
               value={`${stats.conversionRate.toFixed(1)}%`}
