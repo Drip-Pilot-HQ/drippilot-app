@@ -53,7 +53,7 @@ export default function NotFound() {
                   className="flex items-center gap-2"
                 >
                   <Home className="w-4 h-4" />
-                  Back to Drippilot
+                  Back to Drip Pilot
                 </Link>
               </Button>
               <Button

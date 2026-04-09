@@ -326,7 +326,7 @@ export function CreateLeadDialog({
                   <p className="text-[11px] text-slate-500 font-medium leading-normal">
                     I confirm that this lead has{" "}
                     <strong>explicitly consented</strong> to receive messages
-                    related to our services. I understand that Drippilot is not
+                    related to our services. I understand that Drip Pilot is not
                     liable for any compliance issues arising from leads added
                     without proper consent. All communications must comply with
                     applicable laws and regulations.

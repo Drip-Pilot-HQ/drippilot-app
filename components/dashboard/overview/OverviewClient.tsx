@@ -105,16 +105,16 @@ export function OverviewClient() {
               iconBg="bg-violet-50"
               trend={stats.responseRate >= 2.5 ? "up" : "down"}
               trendLabel={stats.responseRate >= 2.5 ? "above avg" : "below avg"}
-              tooltip="Percentage of outbound messages that received a reply. Industry average is ~2.5%."
+              tooltip="Percentage of outbound messages that received any reply, including opt-outs and negative responses. Industry average is ~2.5%."
             />
             <StatCard
               label="Engagement Rate"
               value={`${stats.engagementRate.toFixed(1)}%`}
-              subValue="excl. opt-outs"
+              subValue="of leads who replied"
               icon={Percent}
               iconColor="text-accent"
               iconBg="bg-pink-50"
-              tooltip="Percentage of total leads who replied meaningfully, excluding opt-out responses."
+              tooltip="Of the leads who replied, how many are genuinely interested — not just a one-word reply or opt-out."
             />
             <StatCard
               label="Conversion Rate"

@@ -34,7 +34,8 @@ const FINANCIAL_FIELDS: FieldConfig[] = [
   {
     key: "leadCost",
     label: "Lead Cost",
-    tooltip: "What you pay to acquire one lead (ad spend, referral fees, etc.)",
+    tooltip:
+      "What you pay to acquire one lead (ad spend, referral fees, etc.). This is shown as-is on the dashboard as your Lead Acquisition Cost.",
     prefix: "$",
     step: 1,
     min: 0,

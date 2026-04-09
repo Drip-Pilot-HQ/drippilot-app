@@ -34,7 +34,7 @@ const STEPS = [
     color: "bg-secondary/10 text-secondary",
     step: "03",
     title: "Rules Route Automatically",
-    desc: "Drippilot matches the lead's tags and status against your rules, then enrolls them into the right campaigns.",
+    desc: "Drip Pilot matches the lead's tags and status against your rules, then enrolls them into the right campaigns.",
   },
 ];
 

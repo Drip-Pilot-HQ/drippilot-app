@@ -185,7 +185,7 @@ export function ImportLeadsDialog({ isOpen, onClose }: ImportLeadsDialogProps) {
                   <p className="text-[11px] text-slate-500 font-medium leading-normal">
                     I confirm that the leads have{" "}
                     <strong>explicitly consented</strong> to receive messages
-                    related to our services. I understand that Drippilot is not
+                    related to our services. I understand that Drip Pilot is not
                     liable for any compliance issues arising from leads added
                     without proper consent. All communications must comply with
                     applicable laws and regulations.

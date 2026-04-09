@@ -129,7 +129,6 @@ export interface BenchmarkIndustry {
 export interface BenchmarkComparison {
   responseRateMultiplier: number;
   closeRateMultiplier: number;
-  costEfficiency: number;
 }
 
 export interface BenchmarksResult {

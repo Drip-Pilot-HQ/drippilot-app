@@ -77,7 +77,7 @@ export function FinancialPanel({ data }: FinancialPanelProps) {
 
       <div className="grid grid-cols-3 gap-3 mb-4">
         <MetricItem
-          label="Cost / Lead"
+          label="Lead Acq. Cost"
           value={`$${data.costPerLead.toFixed(0)}`}
         />
         <MetricItem

@@ -34,10 +34,10 @@ export function usePushSubscription() {
   const registerMutation = useRegisterPushMutation();
   const unregisterMutation = useUnregisterPushMutation();
 
-  // check() asks the BACKEND whether this workspace has a subscription registered.
-  // We do not rely on reg.pushManager.getSubscription() for workspace state because
-  // the browser holds a single subscription with no concept of workspaces — switching
-  // workspaces would otherwise always show "subscribed" once any workspace subscribed.
+  // check() verifies whether THIS browser+workspace combination is subscribed.
+  // It first gets the browser's PushSubscription to obtain the endpoint, then
+  // asks the backend if that specific endpoint is registered for this workspace.
+  // This prevents other browsers/devices from showing "subscribed" here.
   const check = useCallback(async () => {
     if (
       typeof window === "undefined" ||
@@ -53,19 +53,19 @@ export function usePushSubscription() {
       return;
     }
     try {
+      const reg = await navigator.serviceWorker.ready;
+      const sub = await reg.pushManager.getSubscription();
+      if (!sub) {
+        setStatus("not-subscribed");
+        return;
+      }
       const { data } = await apiClient.get<{ subscribed: boolean }>(
         "/notifications/push/status",
+        { params: { endpoint: sub.endpoint } },
       );
       setStatus(data.subscribed ? "subscribed" : "not-subscribed");
     } catch {
-      // API unavailable — fall back to browser-level check
-      try {
-        const reg = await navigator.serviceWorker.ready;
-        const sub = await reg.pushManager.getSubscription();
-        setStatus(sub ? "subscribed" : "not-subscribed");
-      } catch {
-        setStatus("not-subscribed");
-      }
+      setStatus("not-subscribed");
     }
   }, []);
 
