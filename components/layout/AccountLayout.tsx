@@ -20,7 +20,7 @@ export function AccountLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuthStore();
 
   const activeUser: UserProfile = {
-    name: user?.user_metadata?.name || user?.email?.split("@")[0] || "User",
+    name: user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split("@")[0] || "User",
     email: user?.email || "",
   };
 

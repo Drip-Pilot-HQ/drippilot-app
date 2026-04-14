@@ -42,6 +42,7 @@ export const useRegisterMutation = () => {
             id: data.user.id,
             email: data.user.email,
             name: meta?.full_name ?? null,
+            referral_code_used: meta?.referral_code ?? null,
           })
         if (insertError) throw new Error(insertError.message)
       }
