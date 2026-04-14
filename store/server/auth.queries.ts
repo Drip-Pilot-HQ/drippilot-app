@@ -31,11 +31,19 @@ export const useRegisterMutation = () => {
   return useMutation({
     mutationFn: async (credentials: SignUpWithPasswordCredentials) => {
       const supabase = createClient()
-      const { data, error } = await supabase.auth.signUp({
-        ...credentials,
-      })
-      if (error) {
-        throw new Error(error.message)
+      const { data, error } = await supabase.auth.signUp({ ...credentials })
+      if (error) throw new Error(error.message)
+
+      if (data.user) {
+        const meta = credentials.options?.data as Record<string, string> | undefined
+        const { error: insertError } = await supabase
+          .from('users')
+          .insert({
+            id: data.user.id,
+            email: data.user.email,
+            name: meta?.full_name ?? null,
+          })
+        if (insertError) throw new Error(insertError.message)
       }
       return data
     },
