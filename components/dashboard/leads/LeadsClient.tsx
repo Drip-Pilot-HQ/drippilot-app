@@ -1,7 +1,15 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { UserPlus, Users, Upload, Trash2, X } from "lucide-react";
+import {
+  UserPlus,
+  Users,
+  Upload,
+  Trash2,
+  X,
+  Workflow,
+  UserMinus,
+} from "lucide-react";
 import {
   useLeadsQuery,
   useDeleteLeadsMutation,
@@ -17,6 +25,7 @@ import { Lead, LeadStatus } from "@/types/lead";
 import { Button } from "@/components/branding/Button";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 import { ImportLeadsDialog } from "./ImportLeadsDialog";
+import { CampaignPickerModal } from "./CampaignPickerModal";
 import { useConfirm } from "@/components/branding/ConfirmProvider";
 
 export function LeadsClient() {
@@ -34,6 +43,8 @@ export function LeadsClient() {
   const [tableSortOrder, setTableSortOrder] = useState<LeadSortOrder>("asc");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isImportOpen, setIsImportOpen] = useState(false);
+  const [pickerMode, setPickerMode] = useState<"enroll" | "remove">("enroll");
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
   const [selectedLeadIds, setSelectedLeadIds] = useState<Set<string>>(
     new Set(),
@@ -228,12 +239,12 @@ export function LeadsClient() {
         ) : data?.data && data.data.length > 0 ? (
           <>
             {selectedLeadIds.size > 0 && (
-              <div className="flex items-center justify-between px-4 py-3 bg-primary/5 border border-primary/20 rounded-2xl">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 py-3 bg-primary/5 border border-primary/20 rounded-2xl">
                 <span className="text-sm font-bold text-primary">
                   {selectedLeadIds.size} lead
                   {selectedLeadIds.size !== 1 ? "s" : ""} selected
                 </span>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <button
                     onClick={() => setSelectedLeadIds(new Set())}
                     className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-all"
@@ -243,13 +254,34 @@ export function LeadsClient() {
                   </button>
                   <Button
                     variant="outline"
+                    onClick={() => {
+                      setPickerMode("enroll");
+                      setIsPickerOpen(true);
+                    }}
+                    className="flex items-center gap-1.5 h-8 px-3 text-xs rounded-lg"
+                  >
+                    <Workflow className="w-3.5 h-3.5" />
+                    Enroll
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setPickerMode("remove");
+                      setIsPickerOpen(true);
+                    }}
+                    className="flex items-center gap-1.5 h-8 px-3 text-xs rounded-lg border-orange-200 text-orange-600 hover:bg-orange-50 hover:border-orange-300"
+                  >
+                    <UserMinus className="w-3.5 h-3.5" />
+                    Remove
+                  </Button>
+                  <Button
+                    variant="outline"
                     onClick={handleBulkDelete}
                     disabled={deleteLeadsMutation.isPending}
                     className="flex items-center gap-1.5 h-8 px-3 text-xs rounded-lg border-rose-200 text-rose-600 hover:bg-rose-50 hover:border-rose-300"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
-                    Delete {selectedLeadIds.size} Lead
-                    {selectedLeadIds.size !== 1 ? "s" : ""}
+                    Delete {selectedLeadIds.size}
                   </Button>
                 </div>
               </div>
@@ -327,6 +359,14 @@ export function LeadsClient() {
       <ImportLeadsDialog
         isOpen={isImportOpen}
         onClose={() => setIsImportOpen(false)}
+      />
+
+      <CampaignPickerModal
+        open={isPickerOpen}
+        onClose={() => setIsPickerOpen(false)}
+        mode={pickerMode}
+        leadIds={Array.from(selectedLeadIds)}
+        onSuccess={() => setSelectedLeadIds(new Set())}
       />
     </div>
   );

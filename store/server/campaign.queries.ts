@@ -173,6 +173,7 @@ export const useEnrollLeadsMutation = () => {
     onSuccess: (_, { campaignId }) => {
       queryClient.invalidateQueries({ queryKey: ['enrolled-leads', campaignId] })
       queryClient.invalidateQueries({ queryKey: ['campaign', campaignId] })
+      queryClient.invalidateQueries({ queryKey: ['leads'] })
     },
   })
 }
@@ -184,6 +185,19 @@ export const useRemoveEnrolledLeadsMutation = (campaignId: string) => {
       await apiClient.delete(`/campaigns/${campaignId}/enrolled-leads`, { data: dto })
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['enrolled-leads', campaignId] })
+    },
+  })
+}
+
+export const useRemoveLeadsFromCampaignMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ campaignId, leadIds }: { campaignId: string; leadIds: string[] }) => {
+      await apiClient.delete(`/campaigns/${campaignId}/enrolled-leads`, { data: { leadIds } })
+    },
+    onSuccess: (_, { campaignId }) => {
+      queryClient.invalidateQueries({ queryKey: ['leads'] })
       queryClient.invalidateQueries({ queryKey: ['enrolled-leads', campaignId] })
     },
   })

@@ -8,6 +8,7 @@ import { IndeterminateCheckbox } from "../common/IndeterminateCheckbox";
 interface EnrollLeadsListProps {
   isLoading: boolean;
   leads: Lead[];
+  enrolledLeadIds: Set<string>;
   selectedIds: Set<string>;
   allOnPageSelected: boolean;
   someSelected: boolean;
@@ -18,6 +19,7 @@ interface EnrollLeadsListProps {
 export function EnrollLeadsList({
   isLoading,
   leads,
+  enrolledLeadIds,
   selectedIds,
   allOnPageSelected,
   someSelected,
@@ -88,6 +90,7 @@ export function EnrollLeadsList({
               key={lead.id}
               lead={lead}
               isSelected={selectedIds.has(lead.id)}
+              isEnrolled={enrolledLeadIds.has(lead.id)}
               onToggle={() => onToggleSelect(lead.id)}
             />
           ))}

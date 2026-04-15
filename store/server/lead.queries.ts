@@ -10,11 +10,12 @@ import {
 } from "@/types/lead";
 
 export const useLeadsQuery = (query: SearchLeadsDto = {}) => {
+  const params = { ...query, includeCampaigns: true };
   return useQuery({
-    queryKey: ["leads", query],
+    queryKey: ["leads", params],
     queryFn: async () => {
       const { data } = await apiClient.get<PaginatedLeadsResponse>("/leads", {
-        params: query,
+        params,
       });
       return data;
     },

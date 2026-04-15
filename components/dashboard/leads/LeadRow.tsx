@@ -27,6 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/common/DropdownMenu";
 import { EnrollLeadSubmenu } from "./EnrollLeadSubmenu";
+import { CampaignPills } from "./CampaignPills";
 
 interface LeadRowProps {
   lead: Lead;
@@ -91,7 +92,7 @@ export function LeadRow({
         isSelected && "bg-primary/5",
       )}
     >
-      <td className="pl-4 pr-2 py-4 w-10">
+      <td className="pl-3 pr-2 py-3 w-9">
         <input
           type="checkbox"
           checked={isSelected}
@@ -100,11 +101,11 @@ export function LeadRow({
           className="w-4 h-4 rounded border-slate-300 text-primary accent-primary cursor-pointer"
         />
       </td>
-      <td className="px-6 py-4">
-        <div className="flex items-center gap-3">
+      <td className="px-3 py-3">
+        <div className="flex items-center gap-2">
           <div
             className={cn(
-              "w-9 h-9 rounded-lg flex items-center justify-center text-base font-bold shrink-0 uppercase",
+              "w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold shrink-0 uppercase",
               lead.leadStatus === LeadStatus.HOT
                 ? "bg-rose-50 text-rose-500"
                 : lead.leadStatus === LeadStatus.WARM
@@ -117,10 +118,10 @@ export function LeadRow({
             ) : lead.firstName ? (
               lead.firstName[0]
             ) : (
-              <User className="w-4 h-4" />
+              <User className="w-3.5 h-3.5" />
             )}
           </div>
-          <p className="font-semibold text-slate-900 text-sm leading-tight">
+          <p className="font-semibold text-slate-900 text-sm leading-tight truncate max-w-[140px]">
             {lead.name ||
               (lead.firstName || lead.lastName
                 ? `${lead.firstName || ""} ${lead.lastName || ""}`.trim()
@@ -128,19 +129,19 @@ export function LeadRow({
           </p>
         </div>
       </td>
-      <td className="px-6 py-4">
-        <div className="flex flex-col gap-1">
+      <td className="px-3 py-3">
+        <div className="flex flex-col gap-0.5">
           {lead.email ? (
-            <span className="flex items-center gap-1.5 text-xs text-slate-600 font-semibold">
-              <Mail className="w-3.5 h-3.5 shrink-0 text-slate-500" />
+            <span className="flex items-center gap-1 text-xs text-slate-600 font-semibold truncate max-w-[160px]">
+              <Mail className="w-3 h-3 shrink-0 text-slate-400" />
               {lead.email}
             </span>
           ) : (
             <span className="text-xs text-slate-300 italic">No email</span>
           )}
           {lead.phone ? (
-            <span className="flex items-center gap-1.5 text-xs text-slate-600 font-semibold">
-              <Phone className="w-3.5 h-3.5 shrink-0 text-slate-500" />
+            <span className="flex items-center gap-1 text-xs text-slate-600 font-semibold">
+              <Phone className="w-3 h-3 shrink-0 text-slate-400" />
               {lead.phone}
             </span>
           ) : (
@@ -148,23 +149,23 @@ export function LeadRow({
           )}
         </div>
       </td>
-      <td className="px-6 py-4">
+      <td className="px-3 py-3">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
               disabled={statusMutation.isPending}
               className={cn(
-                "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest transition-all focus:outline-none",
+                "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all focus:outline-none whitespace-nowrap",
                 statusMutation.isPending
                   ? "opacity-50 cursor-wait bg-slate-100 text-slate-400"
                   : statusStyle,
               )}
             >
               {statusMutation.isPending ? (
-                <Loader2 className="w-3 h-3 animate-spin" />
+                <Loader2 className="w-2.5 h-2.5 animate-spin" />
               ) : null}
               {lead.leadStatus}
-              <ChevronDown className="w-3 h-3 opacity-60 shrink-0" />
+              <ChevronDown className="w-2.5 h-2.5 opacity-60 shrink-0" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-40">
@@ -186,14 +187,14 @@ export function LeadRow({
           </DropdownMenuContent>
         </DropdownMenu>
       </td>
-      <td className="px-6 py-4">
+      <td className="px-3 py-3">
         <div className="flex flex-wrap gap-1">
           {lead.tags?.map((tag) => (
             <span
               key={tag}
-              className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-slate-50 border border-slate-100 text-[10px] font-bold text-slate-600"
+              className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-slate-50 border border-slate-100 text-[10px] font-bold text-slate-600 whitespace-nowrap"
             >
-              <Tag className="w-2 h-2" />
+              <Tag className="w-2 h-2 shrink-0" />
               {tag
                 .split(" ")
                 .map(
@@ -203,11 +204,17 @@ export function LeadRow({
             </span>
           ))}
           {(!lead.tags || lead.tags.length === 0) && (
-            <span className="text-[10px] text-slate-300 italic">No tags</span>
+            <span className="text-[10px] text-slate-300 italic">—</span>
           )}
         </div>
       </td>
-      <td className="px-6 py-4 text-right">
+      <td className="px-3 py-3">
+        <CampaignPills
+          campaigns={lead.enrolledCampaigns ?? []}
+          leadId={lead.id}
+        />
+      </td>
+      <td className="px-3 py-3 text-right">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none outline-none">

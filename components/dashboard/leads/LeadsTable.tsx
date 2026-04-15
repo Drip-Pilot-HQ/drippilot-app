@@ -35,12 +35,12 @@ function SortIcon({
 }) {
   if (sortBy !== field)
     return (
-      <ChevronsUpDown className="w-4 h-4 text-slate-600 group-hover:text-slate-900 transition-colors" />
+      <ChevronsUpDown className="w-3.5 h-3.5 text-slate-600 group-hover:text-slate-900 transition-colors" />
     );
   return sortOrder === "asc" ? (
-    <ChevronUp className="w-4 h-4" />
+    <ChevronUp className="w-3.5 h-3.5" />
   ) : (
-    <ChevronDown className="w-4 h-4" />
+    <ChevronDown className="w-3.5 h-3.5" />
   );
 }
 
@@ -55,11 +55,14 @@ export function LeadsTable({
   onToggleAll,
 }: LeadsTableProps) {
   const handleHeaderClick = (field: LeadSortField) => {
-    if (sortBy === field) {
-      onSortChange(field, sortOrder === "asc" ? "desc" : "asc");
-    } else {
-      onSortChange(field, "asc");
-    }
+    onSortChange(
+      field,
+      sortBy === field && sortOrder === "asc"
+        ? "desc"
+        : sortBy === field
+          ? "asc"
+          : "asc",
+    );
   };
 
   const allIds = leads.map((l) => l.id);
@@ -71,10 +74,10 @@ export function LeadsTable({
   return (
     <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
       <div className="overflow-x-auto custom-scrollbar">
-        <table className="w-full text-left border-collapse min-w-[1000px]">
+        <table className="w-full text-left border-collapse min-w-[860px]">
           <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
-              <th className="pl-4 pr-2 py-4 w-10">
+              <th className="pl-3 pr-2 py-3 w-9">
                 <input
                   type="checkbox"
                   checked={allSelected}
@@ -86,11 +89,11 @@ export function LeadsTable({
                 />
               </th>
               {SORTABLE_COLUMNS.map(({ label, field }) => (
-                <th key={field} className="px-6 py-4">
+                <th key={field} className="px-3 py-3">
                   <button
                     onClick={() => handleHeaderClick(field)}
                     className={cn(
-                      "group flex items-center gap-1.5 text-xs font-black uppercase tracking-wider transition-all select-none rounded-lg px-2.5 py-1.5",
+                      "group flex items-center gap-1 text-[11px] font-black uppercase tracking-wider transition-all select-none rounded-lg px-2 py-1.5",
                       sortBy === field
                         ? "bg-primary/10 text-primary"
                         : "text-slate-500 hover:text-slate-800 hover:bg-slate-100",
@@ -105,7 +108,10 @@ export function LeadsTable({
                   </button>
                 </th>
               ))}
-              <th className="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-wider text-right">
+              <th className="px-3 py-3 text-[11px] font-black text-slate-500 uppercase tracking-wider">
+                Campaigns
+              </th>
+              <th className="px-3 py-3 text-[11px] font-black text-slate-500 uppercase tracking-wider text-right">
                 Actions
               </th>
             </tr>

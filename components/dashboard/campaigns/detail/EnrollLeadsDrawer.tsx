@@ -4,7 +4,10 @@ import { useState, useMemo } from "react";
 import { Campaign, EnrollmentScope } from "@/types/campaign";
 import { LeadStatus } from "@/types/lead";
 import { useLeadsQuery } from "@/store/server/lead.queries";
-import { useEnrollLeadsMutation } from "@/store/server/campaign.queries";
+import {
+  useEnrollLeadsMutation,
+  useEnrolledLeadsQuery,
+} from "@/store/server/campaign.queries";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 import { toast } from "sonner";
 
@@ -63,6 +66,14 @@ export function EnrollLeadsDrawer({
 
   const enrollMutation = useEnrollLeadsMutation();
 
+  const { data: enrolledData } = useEnrolledLeadsQuery(campaign.id, {
+    limit: 500,
+  });
+  const enrolledLeadIds = useMemo(
+    () => new Set((enrolledData?.data ?? []).map((e) => e.leadId)),
+    [enrolledData],
+  );
+
   const rawLeads = (data?.data ?? []).filter(Boolean);
 
   const leads = useMemo(() => {
@@ -89,11 +100,15 @@ export function EnrollLeadsDrawer({
 
   const pagination = data?.pagination;
 
+  const enrollableLeads = leads.filter((l) => !enrolledLeadIds.has(l.id));
+
   const allOnPageSelected =
-    leads.length > 0 && leads.every((l) => selectedIds.has(l.id));
+    enrollableLeads.length > 0 &&
+    enrollableLeads.every((l) => selectedIds.has(l.id));
   const someSelected = selectedIds.size > 0 && !allOnPageSelected;
 
   const toggleSelect = (id: string) => {
+    if (enrolledLeadIds.has(id)) return;
     setSelectedIds((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
@@ -105,7 +120,7 @@ export function EnrollLeadsDrawer({
   const toggleSelectAll = () => {
     setSelectedIds((prev) => {
       const next = new Set(prev);
-      const pageIds = leads.map((l) => l.id).filter((id) => !!id);
+      const pageIds = enrollableLeads.map((l) => l.id).filter((id) => !!id);
 
       if (allOnPageSelected) {
         pageIds.forEach((id) => next.delete(id));
@@ -242,6 +257,7 @@ export function EnrollLeadsDrawer({
         <EnrollLeadsList
           isLoading={isLoading}
           leads={leads}
+          enrolledLeadIds={enrolledLeadIds}
           selectedIds={selectedIds}
           allOnPageSelected={allOnPageSelected}
           someSelected={someSelected}

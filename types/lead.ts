@@ -6,6 +6,12 @@ export enum LeadStatus {
   UNSUBSCRIBED = "unsubscribed",
 }
 
+export interface EnrolledCampaignSummary {
+  id: string;
+  name: string;
+  campaignStatus: "active" | "paused" | "draft";
+}
+
 export interface Lead {
   id: string;
   workspaceId: string;
@@ -16,6 +22,7 @@ export interface Lead {
   lastName?: string;
   tags: string[];
   leadStatus: LeadStatus;
+  enrolledCampaigns?: EnrolledCampaignSummary[];
   createdAt: string;
   updatedAt: string;
 }
@@ -51,6 +58,7 @@ export interface SearchLeadsDto {
   sortOrder?: "asc" | "desc";
   page?: number;
   limit?: number;
+  includeCampaigns?: boolean;
 }
 
 export interface PaginatedLeadsResponse {
