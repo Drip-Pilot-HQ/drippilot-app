@@ -13,6 +13,7 @@ import {
   Info,
 } from "lucide-react";
 import { CustomSelect } from "@/components/common/CustomSelect";
+import { CharacterCounter } from "@/components/common/CharacterCounter";
 import { toast } from "sonner";
 import { CreateTemplateDto, Template, TemplateChannel } from "@/types/template";
 import {
@@ -365,6 +366,11 @@ export function CreateTemplateDialog({
                         ? "border-slate-200"
                         : "border-rose-200 bg-rose-50/30",
                     )}
+                  />
+
+                  <CharacterCounter
+                    value={formData.content}
+                    isSMS={formData.templateChannel === TemplateChannel.SMS}
                   />
 
                   {/* Compliance Notices */}
