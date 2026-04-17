@@ -10,7 +10,8 @@ export type LeadSortField =
   | "name"
   | "email"
   | "status"
-  | "tags";
+  | "tags"
+  | "campaigns";
 export type LeadSortOrder = "asc" | "desc";
 
 interface LeadsSortProps {

@@ -100,6 +100,16 @@ export function LeadsClient() {
         const lenB = b.tags?.length ?? 0;
         return tableSortOrder === "asc" ? lenA - lenB : lenB - lenA;
       }
+      if (tableSortBy === "campaigns") {
+        const lenA = a.enrolledCampaigns?.length ?? 0;
+        const lenB = b.enrolledCampaigns?.length ?? 0;
+        return tableSortOrder === "asc" ? lenA - lenB : lenB - lenA;
+      }
+      if (tableSortBy === "createdAt") {
+        const valA = new Date(a.createdAt).getTime();
+        const valB = new Date(b.createdAt).getTime();
+        return tableSortOrder === "asc" ? valA - valB : valB - valA;
+      }
       return 0;
     });
   }, [data, tableSortBy, tableSortOrder]);

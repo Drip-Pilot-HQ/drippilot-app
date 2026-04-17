@@ -22,6 +22,8 @@ const SORTABLE_COLUMNS: { label: string; field: LeadSortField }[] = [
   { label: "Contact", field: "email" },
   { label: "Status", field: "status" },
   { label: "Tags", field: "tags" },
+  { label: "Campaigns", field: "campaigns" },
+  { label: "Added On", field: "createdAt" },
 ];
 
 function SortIcon({
@@ -74,7 +76,7 @@ export function LeadsTable({
   return (
     <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
       <div className="overflow-x-auto custom-scrollbar">
-        <table className="w-full text-left border-collapse min-w-[860px]">
+        <table className="w-full text-left min-w-[1040px]">
           <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
               <th className="pl-3 pr-2 py-3 w-9">
@@ -89,7 +91,7 @@ export function LeadsTable({
                 />
               </th>
               {SORTABLE_COLUMNS.map(({ label, field }) => (
-                <th key={field} className="px-3 py-3">
+                <th key={field} className="px-1 py-2">
                   <button
                     onClick={() => handleHeaderClick(field)}
                     className={cn(
@@ -108,15 +110,12 @@ export function LeadsTable({
                   </button>
                 </th>
               ))}
-              <th className="px-3 py-3 text-[11px] font-black text-slate-500 uppercase tracking-wider">
-                Campaigns
-              </th>
               <th className="px-3 py-3 text-[11px] font-black text-slate-500 uppercase tracking-wider text-right">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody>
             {leads.map((lead) => (
               <LeadRow
                 key={lead.id}

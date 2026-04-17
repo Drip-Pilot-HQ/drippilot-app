@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Lead, LeadStatus } from "@/types/lead";
 import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 import {
   useDeleteLeadMutation,
   useUpdateLeadStatusMutation,
@@ -88,7 +89,7 @@ export function LeadRow({
   return (
     <tr
       className={cn(
-        "group hover:bg-slate-50 transition-colors",
+        "group border-b border-slate-100 hover:bg-slate-50 transition-[background-color]",
         isSelected && "bg-primary/5",
       )}
     >
@@ -132,7 +133,7 @@ export function LeadRow({
       <td className="px-3 py-3">
         <div className="flex flex-col gap-0.5">
           {lead.email ? (
-            <span className="flex items-center gap-1 text-xs text-slate-600 font-semibold truncate max-w-[160px]">
+            <span className="flex items-center gap-1 text-xs text-slate-600 font-semibold truncate max-w-[220px]">
               <Mail className="w-3 h-3 shrink-0 text-slate-400" />
               {lead.email}
             </span>
@@ -213,6 +214,11 @@ export function LeadRow({
           campaigns={lead.enrolledCampaigns ?? []}
           leadId={lead.id}
         />
+      </td>
+      <td className="px-3 py-3">
+        <span className="text-xs text-slate-500 font-medium whitespace-nowrap">
+          {format(new Date(lead.createdAt), "MMM d, yyyy")}
+        </span>
       </td>
       <td className="px-3 py-3 text-right">
         <DropdownMenu>
