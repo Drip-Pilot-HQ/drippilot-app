@@ -77,7 +77,13 @@ export function CampaignPills({ campaigns, leadId }: CampaignPillsProps) {
         </span>
       ))}
       {overflow > 0 && (
-        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-bold text-slate-500">
+        <span
+          className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-bold text-slate-500 cursor-default"
+          title={campaigns
+            .slice(MAX_VISIBLE)
+            .map((c) => c.name)
+            .join("\n")}
+        >
           +{overflow}
         </span>
       )}
