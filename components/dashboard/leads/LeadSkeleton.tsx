@@ -37,6 +37,10 @@ export function LeadRowSkeleton() {
           <div className="h-5 w-5 bg-slate-100 rounded-md" />
         </div>
       </td>
+      {/* Address */}
+      <td className="px-3 py-3">
+        <div className="h-3 w-28 bg-slate-100 rounded" />
+      </td>
       {/* Added On */}
       <td className="px-3 py-3">
         <div className="h-3 w-20 bg-slate-100 rounded" />
@@ -59,13 +63,15 @@ export function LeadListSkeleton() {
               <th className="pl-3 pr-2 py-3 w-9">
                 <div className="w-4 h-4 rounded bg-slate-100 animate-pulse" />
               </th>
-              {["w-16", "w-14", "w-12", "w-10", "w-20", "w-16"].map((w, i) => (
-                <th key={i} className="px-1 py-2">
-                  <div
-                    className={`h-3 ${w} bg-slate-100 rounded animate-pulse ml-2`}
-                  />
-                </th>
-              ))}
+              {["w-16", "w-14", "w-12", "w-10", "w-20", "w-20", "w-16"].map(
+                (w, i) => (
+                  <th key={i} className="px-1 py-2">
+                    <div
+                      className={`h-3 ${w} bg-slate-100 rounded animate-pulse ml-2`}
+                    />
+                  </th>
+                ),
+              )}
               <th className="px-3 py-3">
                 <div className="h-3 w-14 bg-slate-100 rounded animate-pulse ml-auto" />
               </th>

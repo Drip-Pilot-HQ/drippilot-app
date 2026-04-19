@@ -86,6 +86,12 @@ const FIELDS: {
     required: false,
     desc: "hot | warm | cold | converted",
   },
+  {
+    name: "address",
+    type: "string",
+    required: false,
+    desc: "Lead's mailing or physical address",
+  },
 ];
 
 const SINGLE_EXAMPLE = `{
@@ -94,6 +100,7 @@ const SINGLE_EXAMPLE = `{
   "firstName": "Jane",
   "lastName": "Doe",
   "name": "Jane Doe",
+  "address": "123 Main St, New York, NY 10001",
   "tags": ["meta-ads", "webinar"],
   "leadStatus": "warm"
 }`;
@@ -104,6 +111,7 @@ const BATCH_EXAMPLE = `{
       "email": "jane@example.com",
       "phone": "+12125551234",
       "name": "Jane Doe",
+      "address": "123 Main St, New York, NY 10001",
       "tags": ["meta-ads"],
       "leadStatus": "warm"
     },
@@ -111,6 +119,7 @@ const BATCH_EXAMPLE = `{
       "email": "john@example.com",
       "phone": "+12125559876",
       "name": "John Smith",
+      "address": "456 Elm Ave, Los Angeles, CA 90001",
       "tags": ["google-ads"],
       "leadStatus": "hot"
     }
@@ -124,6 +133,7 @@ const CURL_EXAMPLE = `curl -X POST "https://api.drippilot.com/sources/{your-slug
     "email": "jane@example.com",
     "phone": "+12125551234",
     "name": "Jane Doe",
+    "address": "123 Main St, New York, NY 10001",
     "tags": ["meta-ads"],
     "leadStatus": "warm"
   }'`;

@@ -10,6 +10,7 @@ import {
   User,
   Loader2,
   ChevronDown,
+  MapPin,
 } from "lucide-react";
 import { Lead, LeadStatus } from "@/types/lead";
 import { cn } from "@/lib/utils";
@@ -214,6 +215,16 @@ export function LeadRow({
           campaigns={lead.enrolledCampaigns ?? []}
           leadId={lead.id}
         />
+      </td>
+      <td className="px-3 py-3">
+        {lead.address ? (
+          <span className="flex items-center gap-1 text-xs text-slate-600 font-semibold truncate max-w-[160px]">
+            <MapPin className="w-3 h-3 shrink-0 text-slate-400" />
+            {lead.address}
+          </span>
+        ) : (
+          <span className="text-xs text-slate-300 italic">—</span>
+        )}
       </td>
       <td className="px-3 py-3">
         <span className="text-xs text-slate-500 font-medium whitespace-nowrap">

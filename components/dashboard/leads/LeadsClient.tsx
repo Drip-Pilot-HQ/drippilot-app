@@ -105,6 +105,13 @@ export function LeadsClient() {
         const lenB = b.enrolledCampaigns?.length ?? 0;
         return tableSortOrder === "asc" ? lenA - lenB : lenB - lenA;
       }
+      if (tableSortBy === "address") {
+        const addrA = (a.address || "").toLowerCase();
+        const addrB = (b.address || "").toLowerCase();
+        return tableSortOrder === "asc"
+          ? addrA.localeCompare(addrB)
+          : addrB.localeCompare(addrA);
+      }
       if (tableSortBy === "createdAt") {
         const valA = new Date(a.createdAt).getTime();
         const valB = new Date(b.createdAt).getTime();

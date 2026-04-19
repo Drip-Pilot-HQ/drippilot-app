@@ -142,7 +142,7 @@ export function CreateTemplateDialog({
 
   const insertPlaceholder = (placeholder: string) => {
     const formatted = `{{ ${placeholder} }}`;
-    setFormData((prev) => ({ ...prev, content: prev.content + formatted }));
+    setFormData((prev) => ({ ...prev, content: formatted + prev.content }));
   };
 
   return (

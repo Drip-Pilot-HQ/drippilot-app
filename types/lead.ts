@@ -20,6 +20,7 @@ export interface Lead {
   name?: string;
   firstName?: string;
   lastName?: string;
+  address?: string;
   tags: string[];
   leadStatus: LeadStatus;
   enrolledCampaigns?: EnrolledCampaignSummary[];
@@ -33,6 +34,7 @@ export interface CreateLeadDto {
   name?: string;
   firstName?: string;
   lastName?: string;
+  address?: string;
   tags?: string[];
   leadStatus?: LeadStatus;
 }
@@ -43,6 +45,7 @@ export interface UpdateLeadDto {
   name?: string;
   firstName?: string;
   lastName?: string;
+  address?: string;
   tags?: string[];
 }
 

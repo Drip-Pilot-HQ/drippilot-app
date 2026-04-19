@@ -23,6 +23,7 @@ const SORTABLE_COLUMNS: { label: string; field: LeadSortField }[] = [
   { label: "Status", field: "status" },
   { label: "Tags", field: "tags" },
   { label: "Campaigns", field: "campaigns" },
+  { label: "Address", field: "address" },
   { label: "Added On", field: "createdAt" },
 ];
 
@@ -76,7 +77,7 @@ export function LeadsTable({
   return (
     <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
       <div className="overflow-x-auto custom-scrollbar">
-        <table className="w-full text-left min-w-[1040px]">
+        <table className="w-full text-left min-w-[1200px]">
           <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
               <th className="pl-3 pr-2 py-3 w-9">

@@ -10,6 +10,7 @@ import {
   Phone,
   User,
   Plus,
+  MapPin,
 } from "lucide-react";
 import { toast } from "sonner";
 import { CreateLeadDto, Lead, LeadStatus } from "@/types/lead";
@@ -44,6 +45,7 @@ export function CreateLeadDialog({
         name: editLead.name || fallbackName,
         firstName: editLead.firstName || "",
         lastName: editLead.lastName || "",
+        address: editLead.address || "",
         leadStatus: editLead.leadStatus,
         tags: editLead.tags,
       };
@@ -54,6 +56,7 @@ export function CreateLeadDialog({
       name: "",
       firstName: "",
       lastName: "",
+      address: "",
       leadStatus: LeadStatus.COLD,
       tags: [],
     };
@@ -101,6 +104,7 @@ export function CreateLeadDialog({
             name: formData.name,
             firstName: formData.firstName,
             lastName: formData.lastName,
+            address: formData.address || undefined,
             tags: formData.tags,
           },
         });
@@ -228,6 +232,24 @@ export function CreateLeadDialog({
                     setFormData({ ...formData, phone: e.target.value })
                   }
                   placeholder="+1 234 567 890"
+                  className="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-bold text-slate-900 text-sm"
+                />
+              </div>
+            </div>
+
+            {/* Address */}
+            <div className="col-span-1 sm:col-span-2 space-y-2">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
+                Address
+              </label>
+              <div className="relative">
+                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  value={formData.address}
+                  onChange={(e) =>
+                    setFormData({ ...formData, address: e.target.value })
+                  }
+                  placeholder="e.g. 123 Main St, New York, NY 10001"
                   className="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-bold text-slate-900 text-sm"
                 />
               </div>

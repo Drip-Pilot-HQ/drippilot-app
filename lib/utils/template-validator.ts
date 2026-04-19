@@ -3,6 +3,7 @@ export const ALLOWED_PLACEHOLDERS = [
   "lead.phone",
   "lead.firstName",
   "lead.lastName",
+  "lead.address",
 ];
 
 export function validateTemplatePlaceholders(content: string): {
