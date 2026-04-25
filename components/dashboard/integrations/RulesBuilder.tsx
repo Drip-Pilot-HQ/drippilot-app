@@ -8,7 +8,6 @@ import {
   Tag,
   Filter,
   Rocket,
-  ChevronRight,
   Search,
   Check,
   ChevronDown,
@@ -25,7 +24,7 @@ const LEAD_STATUSES: {
 }[] = [
   {
     value: LeadStatus.HOT,
-    label: "Hot 🔥",
+    label: "Hot",
     activeClass: "bg-rose-50 text-rose-600 border-rose-200",
   },
   {
@@ -142,10 +141,10 @@ function CampaignSelector({
         onClick={handleOpen}
         disabled={isLoading}
         className={cn(
-          "w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl border-2 transition-all text-sm font-medium",
+          "w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl border transition-all text-sm font-medium shadow-sm",
           open
-            ? "border-primary bg-primary/5 text-primary"
-            : "border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:bg-slate-50",
+            ? "border-primary ring-1 ring-primary/20 bg-primary/5 text-primary"
+            : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50",
           isLoading && "opacity-50 cursor-wait",
         )}
       >
@@ -214,15 +213,18 @@ function CampaignSelector({
                     <button
                       key={c.id}
                       type="button"
+                      disabled={c.status !== "active"}
                       onClick={() => onToggle(c.id)}
                       className={cn(
                         "w-full flex items-center gap-3 px-4 py-3 text-left transition-colors",
                         isSel ? "bg-primary/5" : "hover:bg-slate-50",
+                        c.status !== "active" &&
+                          "opacity-50 cursor-not-allowed hover:bg-transparent",
                       )}
                     >
                       <div
                         className={cn(
-                          "w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all",
+                          "w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all",
                           isSel
                             ? "bg-primary border-primary"
                             : "border-slate-300",
@@ -386,24 +388,24 @@ function RuleRow({
   };
 
   return (
-    <div className="border-2 border-slate-200 rounded-2xl overflow-hidden">
+    <div className="border border-slate-200 rounded-2xl overflow-hidden shadow-sm bg-white">
       {/* Row header */}
-      <div className="flex items-center justify-between px-5 py-3 bg-slate-50 border-b-2 border-slate-200">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
-            <span className="text-[10px] font-black text-primary">
+      <div className="flex items-center justify-between px-5 py-3.5 bg-slate-50/80 border-b border-slate-200">
+        <div className="flex items-center gap-2.5">
+          <div className="w-6 h-6 rounded-md bg-white border border-slate-200 shadow-sm flex items-center justify-center">
+            <span className="text-xs font-semibold text-slate-600">
               {index + 1}
             </span>
           </div>
-          <span className="text-xs font-black text-slate-600 uppercase tracking-wider">
-            Rule {index + 1}
+          <span className="text-sm font-semibold text-slate-700">
+            Routing Rule
           </span>
         </div>
         {canRemove && (
           <button
             type="button"
             onClick={onRemove}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-all"
           >
             <Trash2 className="w-3.5 h-3.5" />
             Remove
@@ -411,37 +413,35 @@ function RuleRow({
         )}
       </div>
 
-      <div className="p-5 space-y-4 bg-white">
+      <div className="p-5 sm:p-6 space-y-5">
         {/* ── When (Condition) ── */}
-        <div className="bg-slate-50 border-2 border-slate-200 rounded-xl p-4 space-y-4">
-          <div className="flex items-center gap-2 text-xs font-black text-slate-500 uppercase tracking-wider">
-            <Filter className="w-3.5 h-3.5" />
+        <div className="bg-slate-50/50 border border-slate-100 rounded-xl p-5 space-y-5">
+          <div className="flex items-center gap-2 text-sm font-semibold text-slate-800">
+            <Filter className="w-4 h-4 text-slate-400" />
             When a lead matches…
           </div>
 
           {/* Tags condition */}
-          <div className="space-y-2.5">
-            <div className="flex flex-wrap items-center gap-2 min-h-[44px] bg-white border-2 border-slate-200 rounded-xl px-3 py-2">
-              <span className="text-xs font-black text-slate-500 uppercase">
-                If
-              </span>
-              <span className="px-2.5 py-1 bg-slate-100 rounded-lg text-xs font-bold text-slate-600">
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2 min-h-[44px] bg-white border border-slate-200 shadow-sm rounded-xl px-3 py-2">
+              <span className="text-xs font-medium text-slate-500">If</span>
+              <span className="px-2.5 py-1 bg-slate-100 rounded-md text-xs font-semibold text-slate-700">
                 Tags
               </span>
-              <span className="text-xs font-bold text-slate-400 uppercase">
+              <span className="text-xs font-medium text-slate-500">
                 contains
               </span>
               {(rule.condition.tags || []).map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1 bg-secondary/10 text-secondary rounded-xl text-xs font-bold border border-secondary/20"
+                  className="inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1 bg-indigo-50 text-indigo-600 rounded-md text-xs font-medium border border-indigo-100/50"
                 >
                   <Tag className="w-3 h-3 shrink-0" />
                   {tag}
                   <button
                     type="button"
                     onClick={() => removeTag(tag)}
-                    className="hover:text-rose-500 transition-colors w-4 h-4 flex items-center justify-center rounded hover:bg-rose-50 font-black text-sm leading-none"
+                    className="hover:text-rose-500 hover:bg-rose-50 transition-colors w-4 h-4 flex items-center justify-center rounded text-sm leading-none"
                   >
                     ×
                   </button>
@@ -460,12 +460,12 @@ function RuleRow({
                   e.key === "Enter" && (e.preventDefault(), addTag())
                 }
                 placeholder="Type a tag name and press Enter…"
-                className="flex-1 h-10 px-4 text-sm bg-white border-2 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder:text-slate-400"
+                className="flex-1 h-10 px-4 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder:text-slate-400 shadow-sm"
               />
               <button
                 type="button"
                 onClick={addTag}
-                className="h-10 px-2 text-xs font-black text-primary bg-primary/5 border-2 border-primary/20 rounded-xl hover:bg-primary/10 hover:border-primary/30 transition-all uppercase tracking-wide shrink-0 flex items-center justify-center gap-2"
+                className="h-10 px-4 text-xs font-semibold text-slate-700 bg-white border border-slate-200 shadow-sm rounded-xl hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
               >
                 <Plus className="w-4 h-4 sm:hidden" />
                 <span className="hidden sm:inline">Add Tag</span>
@@ -497,19 +497,15 @@ function RuleRow({
           </div>
 
           {/* Lead Status condition */}
-          <div className="space-y-2.5">
-            <div className="flex flex-wrap items-center gap-2 min-h-[44px] bg-white border-2 border-slate-200 rounded-xl px-3 py-2">
-              <span className="text-xs font-black text-slate-500 uppercase">
-                If
-              </span>
-              <span className="px-2.5 py-1 bg-slate-100 rounded-lg text-xs font-bold text-slate-600">
+          <div className="space-y-3 pt-2">
+            <div className="flex flex-wrap items-center gap-2 min-h-[44px] bg-white border border-slate-200 shadow-sm rounded-xl px-3 py-2">
+              <span className="text-xs font-medium text-slate-500">If</span>
+              <span className="px-2.5 py-1 bg-slate-100 rounded-md text-xs font-semibold text-slate-700">
                 Lead Status
               </span>
-              <span className="text-xs font-bold text-slate-400 uppercase">
-                is
-              </span>
+              <span className="text-xs font-medium text-slate-500">is</span>
               {rule.condition.leadStatus ? (
-                <span className="px-2.5 py-1 bg-primary/10 text-primary rounded-xl text-xs font-bold border border-primary/20 capitalize">
+                <span className="px-2.5 py-1 bg-primary/5 text-primary rounded-md text-xs font-semibold border border-primary/20 capitalize">
                   {rule.condition.leadStatus}
                 </span>
               ) : (
@@ -533,10 +529,10 @@ function RuleRow({
                     })
                   }
                   className={cn(
-                    "px-3.5 py-2 rounded-xl text-xs font-bold border-2 transition-all",
+                    "px-4 py-2 rounded-xl text-sm font-medium border transition-all shadow-sm",
                     rule.condition.leadStatus === s.value
                       ? s.activeClass
-                      : "bg-white text-slate-500 border-slate-200 hover:border-slate-300",
+                      : "bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50",
                   )}
                 >
                   {s.label}
@@ -547,11 +543,10 @@ function RuleRow({
         </div>
 
         {/* ── Then (Action) ── */}
-        <div className="bg-primary/5 border-2 border-primary/15 rounded-xl p-4 space-y-3">
-          <div className="flex items-center gap-2 text-xs font-black text-primary uppercase tracking-wider">
-            <Rocket className="w-3.5 h-3.5" />
+        <div className="bg-gradient-to-br from-indigo-50/50 to-white border border-indigo-100 rounded-xl p-5 space-y-4 shadow-sm">
+          <div className="flex items-center gap-2 text-sm font-semibold text-indigo-700">
+            <Rocket className="w-4 h-4" />
             Then — Enroll in Campaign
-            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
           </div>
           <CampaignSelector
             selectedIds={rule.action.campaignIds}

@@ -51,7 +51,7 @@ export function WebhookCard({
   const updateMutation = useUpdateLeadSourceMutation();
   const confirm = useConfirm();
 
-  const webhookUrl = `${process.env.NEXT_PUBLIC_API_URL || ""}/sources/${source.slug}`;
+  const webhookUrl = `${process.env.NEXT_PUBLIC_API_URL || ""}/lead-sources/webhook/${source.slug}`;
 
   const copyUrl = async () => {
     await navigator.clipboard.writeText(webhookUrl);
