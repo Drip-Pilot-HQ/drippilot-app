@@ -2,7 +2,7 @@
   "name": "Drip Pilot",
   "short_name": "DripPilot",
   "description": "AI-Powered Sales Assistant — automate outreach and close deals faster",
-  "start_url": "/dashboard",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -54,7 +54,7 @@
       "purpose": "maskable"
     }
   ],
-  "id": "/dashboard",
+  "id": "/",
   "screenshots": [
     {
       "src": "/assets/campaign-dashboard.png",

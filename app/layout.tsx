@@ -45,13 +45,13 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   robots: { index: true, follow: true },
   icons: {
-    icon: "/assets/favicon.ico",
-    apple: "/assets/logo-icon.png",
+    icon: "/favicon.ico",
+    apple: "/icons/ios/apple-touch-icon.png",
   },
   appleWebApp: {
     capable: true,
     title: "Drip Pilot",
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "default",
   },
 
   openGraph: {
@@ -114,6 +114,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="mobile-web-app-capable" content="yes" />
+        <link rel="apple-touch-icon" href="/icons/ios/apple-touch-icon.png" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
