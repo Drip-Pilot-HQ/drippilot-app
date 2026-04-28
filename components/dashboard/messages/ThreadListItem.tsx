@@ -7,7 +7,7 @@ import { LeadStatus } from "@/types/lead";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 
-const STATUS_BADGE: Record<string, string> = {
+export const STATUS_BADGE: Record<string, string> = {
   [LeadStatus.HOT]: "bg-red-100 text-red-600 border-red-200",
   [LeadStatus.WARM]: "bg-yellow-100 text-yellow-700 border-yellow-200",
   [LeadStatus.COLD]: "bg-blue-100 text-blue-600 border-blue-200",

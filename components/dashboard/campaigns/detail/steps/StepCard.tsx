@@ -119,7 +119,9 @@ export function StepCard({
               className={cn(
                 "inline-flex items-center justify-center w-6 h-6 rounded-lg text-[11px] font-bold",
                 isAction
-                  ? "bg-blue-50 text-blue-600"
+                  ? template?.templateChannel === TemplateChannel.SMS
+                    ? "bg-purple-50 text-purple-600"
+                    : "bg-blue-50 text-blue-600"
                   : "bg-amber-50 text-amber-600",
               )}
             >

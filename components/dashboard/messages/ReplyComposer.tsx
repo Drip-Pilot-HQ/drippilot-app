@@ -86,6 +86,15 @@ export function ReplyComposer({
             <Phone className="w-3 h-3" />
             SMS
           </button>
+
+          <div className="flex flex-1 justify-end items-center gap-3">
+            {isSms && charCount > 0 && (
+              <span className="text-[10px] font-semibold text-slate-300">
+                {charCount} chars · {credits}{" "}
+                {credits === 1 ? "credit" : "credits"}
+              </span>
+            )}
+          </div>
         </div>
       )}
 
@@ -98,71 +107,57 @@ export function ReplyComposer({
         className="w-full resize-none rounded-xl border border-slate-100 bg-slate-50/50 px-4 py-3 text-sm text-slate-700 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary/20 transition-all font-medium leading-relaxed"
       />
 
-      {isSms && charCount > 0 && (
-        <div
-          className={cn(
-            "flex items-start gap-2 mt-2 px-3 py-2 rounded-lg text-[11px] font-medium transition-colors",
-            isMultiSegment
-              ? "bg-amber-50/50 text-amber-600"
-              : "bg-slate-50/50 text-slate-400",
-          )}
-        >
-          <Info
+      <div className="flex items-center justify-end mt-2.5 w-full gap-3">
+        {isSms && charCount > 0 && (
+          <div
             className={cn(
-              "w-3.5 h-3.5 shrink-0 mt-px",
-              isMultiSegment ? "text-amber-400" : "text-slate-300",
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors mr-auto w-fit",
+              isMultiSegment ? "text-amber-600" : "text-slate-400",
             )}
-          />
-          <span>
-            {isMultiSegment ? (
-              <>
-                Spans{" "}
-                <span className="font-semibold text-amber-700">
-                  {credits} segments
-                </span>{" "}
-                ({charCount} chars). Costs{" "}
-                <span className="font-semibold text-amber-700">
-                  {credits} credits
-                </span>
-                .
-              </>
-            ) : (
-              <>
-                Costs{" "}
-                <span className="font-semibold text-slate-600">1 credit</span>{" "}
-                to send.{" "}
-                <span className="opacity-70">
-                  {segmentRemaining} chars left in segment.
-                </span>
-              </>
-            )}
-          </span>
-        </div>
-      )}
-
-      {!isSms && charCount > 0 && (
-        <div className="flex items-start gap-2 mt-2 px-3 py-2 rounded-lg text-[11px] font-medium bg-slate-50/50 text-slate-400">
-          <Info className="w-3.5 h-3.5 shrink-0 mt-px text-slate-300" />
-          <span>
-            Costs{" "}
-            <span className="font-semibold text-slate-600">0.2 credits</span> to
-            send, regardless of length.
-          </span>
-        </div>
-      )}
-
-      <div className="flex items-center justify-between mt-2.5">
-        <div className="flex items-center gap-3">
-          {isSms && charCount > 0 && (
-            <span className="text-[10px] font-semibold text-slate-300">
-              {charCount} chars · {credits}{" "}
-              {credits === 1 ? "credit" : "credits"}
+          >
+            <Info
+              className={cn(
+                "w-3.5 h-3.5 shrink-0",
+                isMultiSegment ? "text-amber-400" : "text-slate-300",
+              )}
+            />
+            <span className="truncate">
+              {isMultiSegment ? (
+                <>
+                  Spans{" "}
+                  <span className="font-semibold text-amber-700">
+                    {credits} segments
+                  </span>{" "}
+                  ({charCount} chars). Costs{" "}
+                  <span className="font-semibold text-amber-700">
+                    {credits} credits
+                  </span>
+                  .
+                </>
+              ) : (
+                <>
+                  Costs{" "}
+                  <span className="font-semibold text-slate-600">1 credit</span>{" "}
+                  to send.{" "}
+                  <span className="opacity-70">
+                    {segmentRemaining} chars left in segment.
+                  </span>
+                </>
+              )}
             </span>
-          )}
-          <span className="text-[10px] text-slate-300 hidden sm:block font-medium">
-            ⌘+Enter to send
-          </span>
-        </div>
+          </div>
+        )}
+
+        {!isSms && charCount > 0 && (
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium text-slate-400 mr-auto w-fit">
+            <Info className="w-3.5 h-3.5 shrink-0 text-slate-300" />
+            <span className="truncate">
+              Costs{" "}
+              <span className="font-semibold text-slate-600">0.2 credits</span>{" "}
+              to send.
+            </span>
+          </div>
+        )}
 
         <button
           onClick={handleSend}

@@ -25,6 +25,7 @@ import {
 import { MessageBubble, MessageDateDivider } from "./MessageBubble";
 import { ReplyComposer } from "./ReplyComposer";
 import { ThreadDetailSkeleton } from "./MessagesSkeleton";
+import { STATUS_BADGE } from "./ThreadListItem";
 import { useConfirm } from "@/components/branding/ConfirmProvider";
 import { cn } from "@/lib/utils";
 import { isSameDay } from "date-fns";
@@ -116,7 +117,13 @@ export function ThreadDetail({ thread, onBack, onDeleted }: ThreadDetailProps) {
                 : `Thread ${thread.id.slice(0, 8)}`}
             </span>
             {thread.lead?.leadStatus && (
-              <span className="px-1.5 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-tight bg-slate-100 text-slate-500 border border-slate-200">
+              <span
+                className={cn(
+                  "px-1.5 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-tight border",
+                  STATUS_BADGE[thread.lead.leadStatus] ??
+                    "bg-slate-100 text-slate-500 border-slate-200",
+                )}
+              >
                 {thread.lead.leadStatus}
               </span>
             )}

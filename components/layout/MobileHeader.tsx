@@ -1,8 +1,6 @@
 "use client";
 
 import { PanelLeftOpen } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import { NotificationBell } from "./NotificationBell";
 
 interface MobileHeaderProps {
@@ -23,7 +21,7 @@ export function MobileHeader({
       >
         <PanelLeftOpen className="w-5 h-5" />
       </button>
-      <Link href="/" className="lg:hidden mx-auto">
+      {/* <Link href="/" className="lg:hidden mx-auto">
         <Image
           src="/assets/logo-icon.png"
           alt="Drip Pilot"
@@ -31,8 +29,8 @@ export function MobileHeader({
           height={32}
           className="object-contain"
         />
-      </Link>
-      <div className="hidden lg:block flex-1" />
+      </Link> */}
+      <div className="flex-1" />
       {showNotifications && <NotificationBell />}
     </header>
   );
