@@ -30,7 +30,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         { name: "Overview", href: `${base}`, icon: LayoutGrid },
         { name: "Campaigns", href: `${base}/campaigns`, icon: Workflow },
         {
-          name: "AI Lab",
+          name: "AI Campaign Lab",
           href: `${base}/ai-lab`,
           icon: Sparkles,
           badge: "Beta",

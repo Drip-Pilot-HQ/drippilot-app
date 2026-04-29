@@ -286,7 +286,8 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
               className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-900 text-sm"
             />
             <p className="text-xs text-slate-500 px-1 leading-relaxed">
-              We&apos;ll automatically create this folder or use an existing one.
+              We&apos;ll automatically create this folder or use an existing
+              one.
             </p>
           </div>
 
