@@ -18,8 +18,8 @@ export function SidebarLogo({ collapsed }: SidebarLogoProps) {
       <Image
         src="/assets/logo-dark.png"
         alt="Drip Pilot"
-        width={collapsed ? 34 : 68}
-        height={collapsed ? 34 : 68}
+        width={68}
+        height={68}
         className="object-contain transition-all duration-300"
       />
     </Link>

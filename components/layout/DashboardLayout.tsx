@@ -29,7 +29,12 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       items: [
         { name: "Overview", href: `${base}`, icon: LayoutGrid },
         { name: "Campaigns", href: `${base}/campaigns`, icon: Workflow },
-        { name: "AI Lab", href: `${base}/ai-lab`, icon: Sparkles },
+        {
+          name: "AI Lab",
+          href: `${base}/ai-lab`,
+          icon: Sparkles,
+          badge: "Beta",
+        },
         { name: "Messages", href: `${base}/messages`, icon: MessageSquare },
         { name: "Leads", href: `${base}/leads`, icon: Users },
         { name: "Assets", href: `${base}/assets`, icon: Box },

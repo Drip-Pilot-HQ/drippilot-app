@@ -25,6 +25,9 @@ export function AiLabClient() {
           <div className="flex items-center gap-3 mb-1">
             <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2">
               AI Campaign Lab
+              <span className="text-[10px] md:text-xs font-bold px-2 py-0.5 rounded-full bg-orange-100 text-orange-600 border border-orange-200">
+                BETA
+              </span>
             </h1>
           </div>
           <p className="text-sm md:text-base text-slate-500 font-medium">
@@ -66,6 +69,15 @@ export function AiLabClient() {
         ) : (
           <AiJobsHistory activeJobId={activeJobId} />
         )}
+      </div>
+
+      <div className="mt-8 pt-6 border-t border-slate-100 text-center">
+        <p className="text-[11px] text-slate-400 max-w-2xl mx-auto leading-relaxed">
+          This AI campaign generation feature is in beta mode so enjoy freely
+          using this feature for the ongoing moment, but Drip Pilot reserves the
+          right to change the feature to paid or apply usage limits in the
+          future.
+        </p>
       </div>
     </div>
   );

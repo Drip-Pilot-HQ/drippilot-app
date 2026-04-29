@@ -15,6 +15,7 @@ export enum AiCampaignJobStatus {
 export interface AiCampaignGenerateDto {
   name: string;
   description?: string;
+  templateFolderName?: string;
   campaignChannel: CampaignChannel;
   emailAliasId?: string;
   phoneAliasId?: string;

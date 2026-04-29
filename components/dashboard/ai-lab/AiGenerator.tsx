@@ -34,6 +34,8 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
   const [useCase, setUseCase] = useState("");
   const [showConfig, setShowConfig] = useState(false);
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [templateFolderName, setTemplateFolderName] = useState("");
   const [channel, setChannel] = useState<CampaignChannel>(
     CampaignChannel.EMAIL,
   );
@@ -85,6 +87,8 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
       const result = await generateMutation.mutateAsync({
         useCase,
         name,
+        description: description || undefined,
+        templateFolderName: templateFolderName || undefined,
         campaignChannel: channel,
         emailAliasId: emailAliasId || undefined,
         phoneAliasId: phoneAliasId || undefined,
@@ -113,13 +117,13 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
       {/* Central Magic Input Box */}
       <div
         className={cn(
-          "w-full bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-200/60 p-3 transition-all duration-300 relative",
+          "w-full bg-white/90 backdrop-blur-xl rounded-[32px] shadow-[0_8px_40px_rgb(0,0,0,0.06)] border border-slate-200/80 p-2 sm:p-4 transition-all duration-500 relative group focus-within:shadow-[0_8px_40px_rgb(99,102,241,0.12)] focus-within:border-indigo-300/50",
           generateMutation.isPending &&
             "opacity-70 pointer-events-none ring-2 ring-indigo-500/50 ring-offset-2",
         )}
       >
         {/* Glow effect */}
-        <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-3xl blur opacity-10 -z-10 pointer-events-none" />
+        <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500/20 to-purple-600/20 rounded-[34px] blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-700 -z-10 pointer-events-none" />
 
         <div className="flex flex-col">
           <textarea
@@ -134,57 +138,60 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
             disabled={generateMutation.isPending}
           />
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between mt-2 pt-3 border-t border-slate-100 gap-3">
-            <div className="flex items-center gap-2 px-2 justify-between sm:justify-start">
+          <div className="flex items-center justify-between mt-3 pt-4 border-t border-slate-100/80 px-1 sm:px-2">
+            {/* Left Side: Config & Channels */}
+            <div className="flex items-center gap-2 sm:gap-3">
               <button
                 onClick={() => setShowConfig(!showConfig)}
                 className={cn(
-                  "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs md:text-sm font-bold transition-colors border",
+                  "relative flex items-center justify-center sm:justify-start gap-2 h-10 w-10 sm:w-auto sm:px-4 rounded-full text-xs sm:text-sm font-semibold transition-all border shadow-sm hover:shadow",
                   showConfig
                     ? "bg-slate-100 text-slate-900 border-slate-200"
-                    : "bg-white text-slate-500 border-slate-100 hover:bg-slate-50",
+                    : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50",
                 )}
+                title={name ? name : "Configuration"}
               >
-                <Settings className="w-4 h-4" />
-                <span className="truncate max-w-[120px] sm:max-w-none">
+                <Settings className="w-5 h-5 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline truncate max-w-[120px] sm:max-w-none">
                   {name ? name : "Configuration"}
                 </span>
                 {(!name || !emailAliasId) && (
-                  <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse ml-1 shrink-0" />
+                  <span className="absolute top-0 right-0 sm:static sm:ml-1 w-2.5 h-2.5 sm:w-2 sm:h-2 rounded-full bg-amber-500 animate-pulse shrink-0 border-2 border-white sm:border-0" />
                 )}
               </button>
 
-              <div className="flex items-center ml-2 space-x-1">
+              <div className="flex items-center space-x-1 sm:ml-2">
                 {channel === CampaignChannel.EMAIL ||
                 channel === CampaignChannel.BOTH ? (
                   <span
-                    className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 rounded-full bg-indigo-50 text-indigo-600 tooltip"
+                    className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 text-blue-600 tooltip"
                     title="Email Enabled"
                   >
-                    <Mail className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                    <Mail className="w-4 h-4" />
                   </span>
                 ) : null}
                 {channel === CampaignChannel.SMS ||
                 channel === CampaignChannel.BOTH ? (
                   <span
-                    className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 rounded-full bg-emerald-50 text-emerald-600 tooltip"
+                    className="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 tooltip"
                     title="SMS Enabled"
                   >
-                    <MessageSquare className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                    <MessageSquare className="w-4 h-4" />
                   </span>
                 ) : null}
               </div>
             </div>
 
-            <div className="flex items-center gap-4 justify-end">
+            {/* Right Side: Char Count & Generate */}
+            <div className="flex items-center gap-2 sm:gap-4">
               <span
                 className={cn(
-                  "text-[10px] md:text-xs font-light uppercase tracking-widest",
+                  "text-[10px] md:text-xs font-medium px-1 sm:px-2",
                   useCase.length > 950
-                    ? "text-red-400"
+                    ? "text-rose-500"
                     : useCase.length > 800
-                      ? "text-amber-400"
-                      : "text-slate-300",
+                      ? "text-amber-500"
+                      : "text-slate-400",
                 )}
               >
                 {useCase.length}/1000
@@ -200,18 +207,19 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
                 }
                 isLoading={generateMutation.isPending}
                 className={cn(
-                  "relative h-10 rounded-full font-light transition-all duration-300 w-full sm:w-auto",
+                  "relative h-10 w-10 sm:w-auto p-0 sm:px-6 rounded-full font-medium transition-all duration-300 shadow-sm flex items-center justify-center shrink-0",
                   useCase.trim().length >= 10 &&
                     useCase.length <= 1000 &&
                     isConfigValid
-                    ? "bg-orange-400 hover:bg-orange-500 text-white backdrop-blur-md shadow-[0_8px_25px_rgba(251,146,60,0.35),inset_0_1px_2px_rgba(255,255,255,0.4)] border border-white/20 hover:scale-[1.02]"
-                    : "bg-slate-100 text-slate-400 cursor-not-allowed shadow-none border border-slate-200",
+                    ? "bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white border-0 hover:shadow-lg hover:shadow-orange-500/25 hover:-translate-y-0.5"
+                    : "bg-slate-100 text-slate-400 cursor-not-allowed shadow-none border border-slate-200 hover:translate-y-0 hover:shadow-none",
                 )}
+                title="Generate Campaign"
               >
                 {!generateMutation.isPending && (
                   <>
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    Generate
+                    <Sparkles className="w-5 h-5 sm:w-4 sm:h-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Generate</span>
                   </>
                 )}
               </Button>
@@ -223,33 +231,68 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
       {/* Configuration Panel - Slides down if open */}
       <div
         className={cn(
-          "w-full bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl shadow-slate-200/20 rounded-3xl p-4 md:p-6 transition-all duration-500",
+          "w-full bg-white/80 backdrop-blur-xl border border-slate-200/80 shadow-xl shadow-slate-200/40 rounded-[32px] p-5 sm:p-8 transition-all duration-500",
           showConfig
             ? "opacity-100 max-h-[1200px] translate-y-0 overflow-visible"
-            : "opacity-0 max-h-0 -translate-y-4 p-0 border-transparent shadow-none overflow-hidden",
+            : "opacity-0 max-h-0 -translate-y-8 p-0 border-transparent shadow-none overflow-hidden",
         )}
       >
-        <h3 className="text-base md:text-lg font-black text-slate-900 mb-6 flex items-center gap-2">
-          <Settings className="w-5 h-5 text-indigo-500" />
+        <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center shrink-0">
+            <Settings className="w-4 h-4 text-orange-500" />
+          </div>
           Generation Settings
         </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
-              Campaign Name *
+            <label className="text-sm font-semibold text-slate-700 px-1">
+              Campaign Name <span className="text-rose-500">*</span>
             </label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Winter Promo Sequence"
-              className="w-full px-4 py-3 rounded-2xl bg-white border border-slate-200 focus:outline-none focus:ring-0 focus:border-slate-300 transition-all font-semibold text-slate-900 text-sm"
+              className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-900 text-sm"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
-              Channels *
+            <label className="text-sm font-semibold text-slate-700 px-1 flex items-center gap-2">
+              Description{" "}
+              <span className="text-xs font-medium text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">
+                Optional
+              </span>
+            </label>
+            <input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="e.g. Generated drip for cold leads"
+              className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-900 text-sm"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-slate-700 px-1 flex items-center gap-2">
+              Template Folder{" "}
+              <span className="text-xs font-medium text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">
+                Optional
+              </span>
+            </label>
+            <input
+              value={templateFolderName}
+              onChange={(e) => setTemplateFolderName(e.target.value)}
+              placeholder="e.g. Winter Promo Templates"
+              className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-900 text-sm"
+            />
+            <p className="text-xs text-slate-500 px-1 leading-relaxed">
+              We&apos;ll automatically create this folder or use an existing one.
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-slate-700 px-1">
+              Channels <span className="text-rose-500">*</span>
             </label>
             <CustomSelect
               value={channel}
@@ -269,10 +312,14 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
           {(channel === CampaignChannel.EMAIL ||
             channel === CampaignChannel.BOTH) && (
             <div className="space-y-2 animate-in fade-in zoom-in-95 duration-300">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1 flex justify-between">
-                Email Sender *
+              <label className="text-sm font-semibold text-slate-700 px-1 flex justify-between items-center">
+                <span>
+                  Email Sender <span className="text-rose-500">*</span>
+                </span>
                 {isLoadingEmail && (
-                  <span className="animate-pulse">Loading...</span>
+                  <span className="animate-pulse text-xs text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-full">
+                    Loading...
+                  </span>
                 )}
               </label>
               <CustomSelect
@@ -293,10 +340,14 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
           {(channel === CampaignChannel.SMS ||
             channel === CampaignChannel.BOTH) && (
             <div className="space-y-2 animate-in fade-in zoom-in-95 duration-300">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1 flex justify-between">
-                SMS Sender *
+              <label className="text-sm font-semibold text-slate-700 px-1 flex justify-between items-center">
+                <span>
+                  SMS Sender <span className="text-rose-500">*</span>
+                </span>
                 {isLoadingPhone && (
-                  <span className="animate-pulse">Loading...</span>
+                  <span className="animate-pulse text-xs text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-full">
+                    Loading...
+                  </span>
                 )}
               </label>
               <CustomSelect
@@ -315,7 +366,7 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
           )}
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1 flex justify-between">
+            <label className="text-sm font-semibold text-slate-700 px-1">
               Send Window Start
             </label>
             <TimeSelector
@@ -325,14 +376,14 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1 flex justify-between">
+            <label className="text-sm font-semibold text-slate-700 px-1">
               Send Window End
             </label>
             <TimeSelector value={sendWindowEnd} onChange={setSendWindowEnd} />
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1 flex justify-between">
+            <label className="text-sm font-semibold text-slate-700 px-1">
               Timezone
             </label>
             <TimezoneSelector value={timezone} onChange={setTimezone} />
@@ -343,13 +394,13 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
       {/* Suggested Prompts */}
       <div
         className={cn(
-          "w-full transition-all duration-500 delay-100",
+          "w-full transition-all duration-500 delay-100 overflow-hidden",
           showConfig
-            ? "opacity-0 translate-y-4 pointer-events-none"
-            : "opacity-100 translate-y-0",
+            ? "opacity-0 translate-y-4 max-h-0 !mt-0 pointer-events-none"
+            : "opacity-100 translate-y-0 max-h-[400px]",
         )}
       >
-        <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 text-center">
+        <p className="text-sm font-semibold text-slate-500 mb-4 text-center">
           Or try one of these
         </p>
         <div className="flex flex-wrap justify-center gap-3">
