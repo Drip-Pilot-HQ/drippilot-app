@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Settings, Mail, MessageSquare, Sparkles } from "lucide-react";
+import { Settings, Mail, MessageSquare, Sparkles, Info } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/branding/Button";
@@ -18,17 +18,11 @@ import {
 import { useGenerateAiCampaignMutation } from "@/store/server/ai-campaign.queries";
 import { CampaignChannel } from "@/types/ai-campaign";
 import { formatNumber } from "@/lib/utils/format-number";
+import { INDUSTRY_PROMPTS } from "./ai-prompts";
 
 interface AiGeneratorProps {
   onJobStarted: (jobId: string) => void;
 }
-
-const SUGGESTED_PROMPTS = [
-  "Nurture sequence for SaaS free trial users",
-  "Win-back campaign for churned customers",
-  "Welcome series for newsletter subscribers",
-  "Cold outreach for enterprise IT directors",
-];
 
 export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
   const [useCase, setUseCase] = useState("");
@@ -392,28 +386,89 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
         </div>
       </div>
 
-      {/* Suggested Prompts */}
+      {/* Industry Starter Prompts */}
       <div
         className={cn(
           "w-full transition-all duration-500 delay-100 overflow-hidden",
           showConfig
             ? "opacity-0 translate-y-4 max-h-0 !mt-0 pointer-events-none"
-            : "opacity-100 translate-y-0 max-h-[400px]",
+            : "opacity-100 translate-y-0 max-h-[800px]",
         )}
       >
         <p className="text-sm font-semibold text-slate-500 mb-4 text-center">
-          Or try one of these
+          Industry Starter Prompts
         </p>
         <div className="flex flex-wrap justify-center gap-3">
-          {SUGGESTED_PROMPTS.map((prompt, idx) => (
+          {INDUSTRY_PROMPTS.map((item, idx) => (
             <button
               key={idx}
-              onClick={() => setUseCase(prompt)}
-              className="px-4 py-2 bg-white/50 hover:bg-white border border-slate-200/60 hover:border-indigo-200 hover:shadow-md hover:shadow-indigo-500/5 rounded-full text-sm font-medium text-slate-600 transition-all duration-300 hover:-translate-y-0.5"
+              onClick={() => setUseCase(item.prompt)}
+              className="px-4 py-2 bg-white/50 hover:bg-white border border-slate-200/60 hover:border-orange-200 hover:shadow-md hover:shadow-orange-500/5 rounded-full text-sm font-medium text-slate-600 transition-all duration-300 hover:-translate-y-0.5"
             >
-              {prompt}
+              {item.title}
             </button>
           ))}
+        </div>
+
+        {/* Variables Tip Section */}
+        <div className="mt-8 max-w-2xl mx-auto animate-in fade-in slide-in-from-top-2 duration-500">
+          <div className="bg-orange-50/50 border border-orange-100 rounded-2xl p-4 flex gap-4">
+            <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center shrink-0 mt-0.5">
+              <Info className="w-5 h-5 text-orange-600" />
+            </div>
+            <div className="space-y-3">
+              <div>
+                <h4 className="text-sm font-bold text-orange-900">
+                  Quick Info: Variables to Swap
+                </h4>
+                <p className="text-[12px] text-orange-700 font-medium leading-relaxed mt-1">
+                  If you&apos;re using a starter prompt, make sure to replace
+                  the bracketed placeholders with your actual details:
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
+                <div className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-orange-400 mt-1.5 shrink-0" />
+                  <p className="text-[11px] text-orange-800 leading-tight">
+                    <span className="font-bold">[Agent/Rep Name]</span> — Your
+                    name
+                  </p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-orange-400 mt-1.5 shrink-0" />
+                  <p className="text-[11px] text-orange-800 leading-tight">
+                    <span className="font-bold">[Company/Agency]</span> — Your
+                    company
+                  </p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-orange-400 mt-1.5 shrink-0" />
+                  <p className="text-[11px] text-orange-800 leading-tight">
+                    <span className="font-bold">[auto/home/life/health]</span> —
+                    Coverage type
+                  </p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-orange-400 mt-1.5 shrink-0" />
+                  <p className="text-[11px] text-orange-800 leading-tight">
+                    <span className="font-bold">[plumbing/HVAC/etc]</span> —
+                    Select trade
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-orange-100/50">
+                <p className="text-[11px] text-orange-700 italic">
+                  Tip: Use{" "}
+                  <code className="bg-orange-100 px-1 rounded text-orange-900 font-bold not-italic">
+                    {"{{ lead.firstName }}"}
+                  </code>{" "}
+                  to dynamically insert the lead&apos;s name.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
