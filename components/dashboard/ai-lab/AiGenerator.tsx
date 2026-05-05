@@ -16,6 +16,7 @@ import {
   usePhoneNumbersQuery,
 } from "@/store/server/assets.queries";
 import { useGenerateAiCampaignMutation } from "@/store/server/ai-campaign.queries";
+import { useFoldersQuery } from "@/store/server/template.queries";
 import { CampaignChannel } from "@/types/ai-campaign";
 import { formatNumber } from "@/lib/utils/format-number";
 import { INDUSTRY_PROMPTS } from "./ai-prompts";
@@ -29,7 +30,7 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
   const [showConfig, setShowConfig] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [templateFolderName, setTemplateFolderName] = useState("");
+  const [templateFolderId, setTemplateFolderId] = useState("");
   const [channel, setChannel] = useState<CampaignChannel>(
     CampaignChannel.EMAIL,
   );
@@ -49,6 +50,8 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
     useEmailAliasesQuery();
   const { data: phoneNumbers, isLoading: isLoadingPhone } =
     usePhoneNumbersQuery();
+  const { data: templateFolders, isLoading: isLoadingFolders } =
+    useFoldersQuery();
 
   const generateMutation = useGenerateAiCampaignMutation();
 
@@ -82,7 +85,7 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
         useCase,
         name,
         description: description || undefined,
-        templateFolderName: templateFolderName || undefined,
+        templateFolderId: templateFolderId || undefined,
         campaignChannel: channel,
         emailAliasId: emailAliasId || undefined,
         phoneAliasId: phoneAliasId || undefined,
@@ -205,7 +208,7 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
                   useCase.trim().length >= 10 &&
                     useCase.length <= 1000 &&
                     isConfigValid
-                    ? "bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white border-0 hover:shadow-lg hover:shadow-orange-500/25 hover:-translate-y-0.5"
+                    ? "bg-linear-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white border-0 hover:shadow-lg hover:shadow-orange-500/25 hover:-translate-y-0.5"
                     : "bg-slate-100 text-slate-400 cursor-not-allowed shadow-none border border-slate-200 hover:translate-y-0 hover:shadow-none",
                 )}
                 title="Generate Campaign"
@@ -227,7 +230,7 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
         className={cn(
           "w-full bg-white/80 backdrop-blur-xl border border-slate-200/80 shadow-xl shadow-slate-200/40 rounded-[32px] p-5 sm:p-8 transition-all duration-500",
           showConfig
-            ? "opacity-100 max-h-[1200px] translate-y-0 overflow-visible"
+            ? "opacity-100 max-h-300 translate-y-0 overflow-visible"
             : "opacity-0 max-h-0 -translate-y-8 p-0 border-transparent shadow-none overflow-hidden",
         )}
       >
@@ -273,15 +276,21 @@ export function AiGenerator({ onJobStarted }: AiGeneratorProps) {
                 Optional
               </span>
             </label>
-            <input
-              value={templateFolderName}
-              onChange={(e) => setTemplateFolderName(e.target.value)}
-              placeholder="e.g. Winter Promo Templates"
-              className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-900 text-sm"
+            <CustomSelect
+              value={templateFolderId}
+              onChange={(val) => setTemplateFolderId(val as string)}
+              options={[
+                { value: "", label: "Select a folder" },
+                ...(templateFolders?.map((folder) => ({
+                  value: folder.id,
+                  label: folder.name,
+                })) || []),
+              ]}
+              placeholder="Loading folders..."
+              disabled={isLoadingFolders}
             />
             <p className="text-xs text-slate-500 px-1 leading-relaxed">
-              We&apos;ll automatically create this folder or use an existing
-              one.
+              Select an existing folder to save generated templates in it.
             </p>
           </div>
 
