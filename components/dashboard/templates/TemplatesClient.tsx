@@ -12,6 +12,7 @@ import { CreateTemplateDialog } from "./CreateTemplateDialog";
 import { TemplatesSearch } from "./TemplatesSearch";
 import { TemplatesFilters } from "./TemplatesFilters";
 import { TemplatesPagination } from "./TemplatesPagination";
+import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 import { naturalSort } from "@/lib/utils/string";
 import { LayoutGrid, List } from "lucide-react";
@@ -19,6 +20,7 @@ import { TemplateRow } from "./TemplateRow";
 import { FolderSelector } from "./FolderSelector";
 
 export function TemplatesClient() {
+  const { isOwnerOrAdmin } = useWorkspaceRole();
   const [searchInput, setSearchInput] = useState("");
   const debouncedSearch = useDebounce(searchInput, 500);
   const [page, setPage] = useState(1);
@@ -84,15 +86,19 @@ export function TemplatesClient() {
           </p>
         </div>
 
-        <Button
-          onClick={() => setIsCreateOpen(true)}
-          className="rounded-xl h-10 px-5 shadow-md shadow-primary/10 text-sm w-full md:w-auto"
-        >
-          <div className="flex items-center gap-2 justify-center">
-            <Plus className="w-4 h-4" />
-            <span className="font-bold whitespace-nowrap">Create Template</span>
-          </div>
-        </Button>
+        {isOwnerOrAdmin && (
+          <Button
+            onClick={() => setIsCreateOpen(true)}
+            className="rounded-xl h-10 px-5 shadow-md shadow-primary/10 text-sm w-full md:w-auto"
+          >
+            <div className="flex items-center gap-2 justify-center">
+              <Plus className="w-4 h-4" />
+              <span className="font-bold whitespace-nowrap">
+                Create Template
+              </span>
+            </div>
+          </Button>
+        )}
       </div>
 
       {/* Toolbar */}
@@ -218,6 +224,7 @@ export function TemplatesClient() {
                     key={template.id}
                     template={template}
                     onEdit={handleEdit}
+                    isOwnerOrAdmin={isOwnerOrAdmin}
                   />
                 ))}
               </div>
@@ -228,6 +235,7 @@ export function TemplatesClient() {
                     key={template.id}
                     template={template}
                     onEdit={handleEdit}
+                    isOwnerOrAdmin={isOwnerOrAdmin}
                   />
                 ))}
               </div>
@@ -263,30 +271,34 @@ export function TemplatesClient() {
                 ? "Create a template and assign it to this folder, or move an existing template here."
                 : "Create reusable message templates to maintain consistent brand messaging across all automated campaigns."}
             </p>
-            <Button
-              onClick={() => setIsCreateOpen(true)}
-              className="rounded-xl px-10 h-12 shadow-lg shadow-primary/20"
-            >
-              <div className="flex items-center gap-2">
-                <Plus className="w-5 h-5" />
-                <span className="font-bold">
-                  {selectedFolderId
-                    ? "Create Template Here"
-                    : "Design First Template"}
-                </span>
-              </div>
-            </Button>
+            {isOwnerOrAdmin && (
+              <Button
+                onClick={() => setIsCreateOpen(true)}
+                className="rounded-xl px-10 h-12 shadow-lg shadow-primary/20"
+              >
+                <div className="flex items-center gap-2">
+                  <Plus className="w-5 h-5" />
+                  <span className="font-bold">
+                    {selectedFolderId
+                      ? "Create Template Here"
+                      : "Design First Template"}
+                  </span>
+                </div>
+              </Button>
+            )}
           </div>
         )}
       </div>
 
-      <CreateTemplateDialog
-        key={isCreateOpen ? editingTemplate?.id || "new" : "closed"}
-        isOpen={isCreateOpen}
-        onClose={closeDialog}
-        editTemplate={editingTemplate}
-        defaultFolderId={selectedFolderId}
-      />
+      {isOwnerOrAdmin && (
+        <CreateTemplateDialog
+          key={isCreateOpen ? editingTemplate?.id || "new" : "closed"}
+          isOpen={isCreateOpen}
+          onClose={closeDialog}
+          editTemplate={editingTemplate}
+          defaultFolderId={selectedFolderId}
+        />
+      )}
     </div>
   );
 }

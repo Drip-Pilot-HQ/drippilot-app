@@ -51,6 +51,7 @@ interface StepCardProps {
   isEditing: boolean;
   onEditStart: () => void;
   onEditEnd: () => void;
+  isOwnerOrAdmin: boolean;
 }
 
 export function StepCard({
@@ -59,6 +60,7 @@ export function StepCard({
   isEditing,
   onEditStart,
   onEditEnd,
+  isOwnerOrAdmin,
 }: StepCardProps) {
   const updateMutation = useUpdateCampaignStepMutation(campaign.id);
   const deleteMutation = useDeleteCampaignStepMutation(campaign.id);
@@ -150,7 +152,7 @@ export function StepCard({
             </span>
           </div>
 
-          {!isEditing && (
+          {!isEditing && isOwnerOrAdmin && (
             <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
               <button
                 onClick={onEditStart}
@@ -284,7 +286,7 @@ function StepSummary({
               {actionConfig?.timezone && (
                 <div className="flex items-center gap-1.5 text-slate-400">
                   <Globe className="w-3 h-3" />
-                  <span className="text-[10px] font-medium truncate max-w-[120px]">
+                  <span className="text-[10px] font-medium truncate max-w-30">
                     {actionConfig.timezone}
                   </span>
                 </div>

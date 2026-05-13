@@ -44,6 +44,7 @@ interface WebhookRowProps {
   isExpanded: boolean;
   onToggleExpand: () => void;
   onSecretRegenerated: (secret: string, name: string, slug: string) => void;
+  isOwnerOrAdmin: boolean;
 }
 
 export function WebhookRow({
@@ -53,6 +54,7 @@ export function WebhookRow({
   isExpanded,
   onToggleExpand,
   onSecretRegenerated,
+  isOwnerOrAdmin,
 }: WebhookRowProps) {
   const [copiedUrl, setCopiedUrl] = useState(false);
 
@@ -230,72 +232,74 @@ export function WebhookRow({
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center gap-1 shrink-0">
-            <button
-              onClick={onToggleExpand}
-              className={cn(
-                "flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all",
-                isExpanded
-                  ? "bg-primary text-white hover:bg-primary/90"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200",
-              )}
-            >
-              <Edit2 className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">
-                {isExpanded ? "Editing" : "Edit"}
-              </span>
-              {isExpanded ? (
-                <ChevronUp className="w-3.5 h-3.5" />
-              ) : (
-                <ChevronDown className="w-3.5 h-3.5" />
-              )}
-            </button>
+          {/* Actions — OWNER/ADMIN only */}
+          {isOwnerOrAdmin && (
+            <div className="flex items-center gap-1 shrink-0">
+              <button
+                onClick={onToggleExpand}
+                className={cn(
+                  "flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all",
+                  isExpanded
+                    ? "bg-primary text-white hover:bg-primary/90"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200",
+                )}
+              >
+                <Edit2 className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">
+                  {isExpanded ? "Editing" : "Edit"}
+                </span>
+                {isExpanded ? (
+                  <ChevronUp className="w-3.5 h-3.5" />
+                ) : (
+                  <ChevronDown className="w-3.5 h-3.5" />
+                )}
+              </button>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all focus:outline-none">
-                  <MoreVertical className="w-4 h-4" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-52">
-                <DropdownMenuItem
-                  onClick={() =>
-                    updateMutation.mutate({
-                      id: source.id,
-                      dto: { isActive: !source.isActive },
-                    })
-                  }
-                >
-                  {source.isActive ? (
-                    <>
-                      <PowerOff className="w-3.5 h-3.5 text-amber-500" />
-                      Deactivate Webhook
-                    </>
-                  ) : (
-                    <>
-                      <Power className="w-3.5 h-3.5 text-emerald-500" />
-                      Activate Webhook
-                    </>
-                  )}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleRegenerate}>
-                  <RefreshCw className="w-3.5 h-3.5 text-primary" />
-                  Regenerate Secret
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleDelete} variant="danger">
-                  <Trash2 className="w-3.5 h-3.5" />
-                  Delete Webhook
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all focus:outline-none">
+                    <MoreVertical className="w-4 h-4" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-52">
+                  <DropdownMenuItem
+                    onClick={() =>
+                      updateMutation.mutate({
+                        id: source.id,
+                        dto: { isActive: !source.isActive },
+                      })
+                    }
+                  >
+                    {source.isActive ? (
+                      <>
+                        <PowerOff className="w-3.5 h-3.5 text-amber-500" />
+                        Deactivate Webhook
+                      </>
+                    ) : (
+                      <>
+                        <Power className="w-3.5 h-3.5 text-emerald-500" />
+                        Activate Webhook
+                      </>
+                    )}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleRegenerate}>
+                    <RefreshCw className="w-3.5 h-3.5 text-primary" />
+                    Regenerate Secret
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleDelete} variant="danger">
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Delete Webhook
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
         </div>
       </div>
 
       {/* ── Expanded Edit Form ── */}
-      {isExpanded && (
+      {isExpanded && isOwnerOrAdmin && (
         <div className="border-t-2 border-primary/15 bg-slate-50/50 p-4 sm:p-6">
           <div>
             <div className="flex items-center gap-2 mb-5">

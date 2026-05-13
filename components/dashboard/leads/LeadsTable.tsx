@@ -4,6 +4,7 @@ import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
 import { Lead } from "@/types/lead";
 import { LeadRow } from "./LeadRow";
 import { LeadSortField, LeadSortOrder } from "./LeadsSort";
+import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
 import { cn } from "@/lib/utils";
 
 interface LeadsTableProps {
@@ -15,9 +16,10 @@ interface LeadsTableProps {
   selectedLeadIds: Set<string>;
   onToggleSelect: (id: string) => void;
   onToggleAll: (ids: string[]) => void;
+  memberMap?: Map<string, string>;
 }
 
-const SORTABLE_COLUMNS: { label: string; field: LeadSortField }[] = [
+const BASE_COLUMNS: { label: string; field: LeadSortField }[] = [
   { label: "Name", field: "name" },
   { label: "Contact", field: "email" },
   { label: "Status", field: "status" },
@@ -56,7 +58,9 @@ export function LeadsTable({
   selectedLeadIds,
   onToggleSelect,
   onToggleAll,
+  memberMap,
 }: LeadsTableProps) {
+  const { isOwnerOrAdmin } = useWorkspaceRole();
   const handleHeaderClick = (field: LeadSortField) => {
     onSortChange(
       field,
@@ -80,18 +84,20 @@ export function LeadsTable({
         <table className="w-full text-left min-w-[1200px]">
           <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
-              <th className="pl-3 pr-2 py-3 w-9">
-                <input
-                  type="checkbox"
-                  checked={allSelected}
-                  ref={(el) => {
-                    if (el) el.indeterminate = someSelected;
-                  }}
-                  onChange={() => onToggleAll(allIds)}
-                  className="w-4 h-4 rounded border-slate-300 text-primary accent-primary cursor-pointer"
-                />
-              </th>
-              {SORTABLE_COLUMNS.map(({ label, field }) => (
+              {isOwnerOrAdmin && (
+                <th className="pl-3 pr-2 py-3 w-9">
+                  <input
+                    type="checkbox"
+                    checked={allSelected}
+                    ref={(el) => {
+                      if (el) el.indeterminate = someSelected;
+                    }}
+                    onChange={() => onToggleAll(allIds)}
+                    className="w-4 h-4 rounded border-slate-300 text-primary accent-primary cursor-pointer"
+                  />
+                </th>
+              )}
+              {BASE_COLUMNS.slice(0, -1).map(({ label, field }) => (
                 <th key={field} className="px-1 py-2">
                   <button
                     onClick={() => handleHeaderClick(field)}
@@ -111,9 +117,38 @@ export function LeadsTable({
                   </button>
                 </th>
               ))}
-              <th className="px-3 py-3 text-[11px] font-black text-slate-500 uppercase tracking-wider text-right">
-                Actions
-              </th>
+              {isOwnerOrAdmin && (
+                <th className="px-2 py-2">
+                  <span className="flex items-center gap-1 text-[11px] font-black uppercase tracking-wider text-slate-500 px-2 py-1.5">
+                    Assigned To
+                  </span>
+                </th>
+              )}
+              {BASE_COLUMNS.slice(-1).map(({ label, field }) => (
+                <th key={field} className="px-1 py-2">
+                  <button
+                    onClick={() => handleHeaderClick(field)}
+                    className={cn(
+                      "group flex items-center gap-1 text-[11px] font-black uppercase tracking-wider transition-all select-none rounded-lg px-2 py-1.5",
+                      sortBy === field
+                        ? "bg-primary/10 text-primary"
+                        : "text-slate-500 hover:text-slate-800 hover:bg-slate-100",
+                    )}
+                  >
+                    {label}
+                    <SortIcon
+                      field={field}
+                      sortBy={sortBy}
+                      sortOrder={sortOrder}
+                    />
+                  </button>
+                </th>
+              ))}
+              {isOwnerOrAdmin && (
+                <th className="px-3 py-3 text-[11px] font-black text-slate-500 uppercase tracking-wider text-right">
+                  Actions
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -124,6 +159,8 @@ export function LeadsTable({
                 onEdit={onEdit}
                 isSelected={selectedLeadIds.has(lead.id)}
                 onToggleSelect={onToggleSelect}
+                isOwnerOrAdmin={isOwnerOrAdmin}
+                memberMap={memberMap}
               />
             ))}
           </tbody>

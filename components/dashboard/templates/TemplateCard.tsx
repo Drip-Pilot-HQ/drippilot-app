@@ -25,9 +25,14 @@ import {
 interface TemplateCardProps {
   template: Template;
   onEdit: (template: Template) => void;
+  isOwnerOrAdmin: boolean;
 }
 
-export function TemplateCard({ template, onEdit }: TemplateCardProps) {
+export function TemplateCard({
+  template,
+  onEdit,
+  isOwnerOrAdmin,
+}: TemplateCardProps) {
   const deleteMutation = useDeleteTemplateMutation();
   const [isDeleting, setIsDeleting] = useState(false);
   const confirm = useConfirm();
@@ -80,28 +85,30 @@ export function TemplateCard({ template, onEdit }: TemplateCardProps) {
             {template.templateChannel}
           </span>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none outline-none">
-                <MoreVertical className="w-4 h-4" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-44">
-              <DropdownMenuItem onClick={() => onEdit(template)}>
-                <Edit2 className="w-3.5 h-3.5" />
-                Edit Template
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={handleDelete}
-                disabled={isDeleting}
-                variant="danger"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {isOwnerOrAdmin && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none outline-none">
+                  <MoreVertical className="w-4 h-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-44">
+                <DropdownMenuItem onClick={() => onEdit(template)}>
+                  <Edit2 className="w-3.5 h-3.5" />
+                  Edit Template
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  variant="danger"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </div>
 

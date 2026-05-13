@@ -16,7 +16,9 @@ const SUPPORT_PATH = "/dashboard/support";
 
 export function CrispProvider() {
   const { user } = useAuthStore();
-  const { activeWorkspace } = useAccountStore();
+  const activeWorkspace = useAccountStore(
+    (s) => s.workspaces.find((w) => w.id === s.activeWorkspaceId) ?? null,
+  );
   const pathname = usePathname();
 
   useEffect(() => {

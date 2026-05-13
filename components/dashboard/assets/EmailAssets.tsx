@@ -15,6 +15,7 @@ import {
   useDeleteEmailAliasMutation,
 } from "@/store/server/assets.queries";
 import { useConfirm } from "@/components/branding/ConfirmProvider";
+import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
 import { AssetListSkeleton } from "./AssetSkeleton";
 import { EmailAliasDialog } from "./EmailAliasDialog";
 import { EmailAlias } from "@/types/assets";
@@ -29,6 +30,7 @@ import {
 } from "@/components/common/DropdownMenu";
 
 export function EmailAssets() {
+  const { isOwnerOrAdmin } = useWorkspaceRole();
   const { data: aliases, isLoading } = useEmailAliasesQuery();
   const deleteMutation = useDeleteEmailAliasMutation();
   const confirm = useConfirm();
@@ -74,13 +76,15 @@ export function EmailAssets() {
             Create your first professional sending identity to start running
             email campaigns.
           </p>
-          <Button
-            onClick={() => setIsDialogOpen(true)}
-            className="rounded-xl px-8 h-12 shadow-lg shadow-primary/20"
-          >
-            <Plus className="w-5 h-5 mr-2" />
-            Email Alias
-          </Button>
+          {isOwnerOrAdmin && (
+            <Button
+              onClick={() => setIsDialogOpen(true)}
+              className="rounded-xl px-8 h-12 shadow-lg shadow-primary/20"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              Email Alias
+            </Button>
+          )}
         </div>
 
         <EmailAliasDialog
@@ -118,27 +122,29 @@ export function EmailAssets() {
                   Verified
                 </span>
 
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none outline-none">
-                      <MoreVertical className="w-4 h-4" />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-44">
-                    <DropdownMenuItem onClick={() => handleEdit(alias)}>
-                      <Edit2 className="w-3.5 h-3.5" />
-                      Edit Alias
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={() => handleDelete(alias)}
-                      variant="danger"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                {isOwnerOrAdmin && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none outline-none">
+                        <MoreVertical className="w-4 h-4" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-44">
+                      <DropdownMenuItem onClick={() => handleEdit(alias)}>
+                        <Edit2 className="w-3.5 h-3.5" />
+                        Edit Alias
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={() => handleDelete(alias)}
+                        variant="danger"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
               </div>
             </div>
 
@@ -160,18 +166,19 @@ export function EmailAssets() {
           </div>
         ))}
 
-        {/* Quick Add Card */}
-        <button
-          onClick={() => setIsDialogOpen(true)}
-          className="group relative bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-3xl p-5 flex flex-col items-center justify-center gap-3 hover:bg-primary/5 hover:border-primary/30 transition-all min-h-[180px]"
-        >
-          <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-slate-300 group-hover:text-primary group-hover:scale-110 transition-all shadow-sm">
-            <Plus className="w-6 h-6" />
-          </div>
-          <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest group-hover:text-primary">
-            Add Email Alias
-          </span>
-        </button>
+        {isOwnerOrAdmin && (
+          <button
+            onClick={() => setIsDialogOpen(true)}
+            className="group relative bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-3xl p-5 flex flex-col items-center justify-center gap-3 hover:bg-primary/5 hover:border-primary/30 transition-all min-h-45"
+          >
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-slate-300 group-hover:text-primary group-hover:scale-110 transition-all shadow-sm">
+              <Plus className="w-6 h-6" />
+            </div>
+            <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest group-hover:text-primary">
+              Add Email Alias
+            </span>
+          </button>
+        )}
       </div>
 
       <EmailAliasDialog

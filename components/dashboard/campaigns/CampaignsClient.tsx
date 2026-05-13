@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Plus, Rocket, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useCampaignsQuery } from "@/store/server/campaign.queries";
+import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
 import { CampaignListSkeleton } from "./CampaignSkeleton";
 import { CampaignCard } from "./CampaignCard";
 import { CreateCampaignDialog } from "./CreateCampaignDialog";
@@ -14,6 +15,7 @@ import { Button } from "@/components/branding/Button";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 
 export function CampaignsClient() {
+  const { isOwnerOrAdmin } = useWorkspaceRole();
   const [searchInput, setSearchInput] = useState("");
   const debouncedSearch = useDebounce(searchInput, 500);
   const [selectedStatuses, setSelectedStatuses] = useState<CampaignStatus[]>(
@@ -61,25 +63,29 @@ export function CampaignsClient() {
             Manage and automate your drip sequences
           </p>
         </div>
-        <div className="flex flex-row gap-3 w-full md:w-auto">
-          <Link
-            href={`/dashboard/ai-lab`}
-            className="flex-1 md:flex-none flex items-center justify-center gap-2 h-10 px-5 rounded-xl bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 border border-indigo-100 text-indigo-700 text-sm font-bold shadow-sm transition-all"
-          >
-            <Sparkles className="w-4 h-4" />
-            <span className="whitespace-nowrap">AI Generator</span>
-          </Link>
-          <Button
-            onClick={() => setIsCreateOpen(true)}
-            data-onboarding="new-campaign-btn"
-            className="rounded-xl h-10 px-5 shadow-md shadow-primary/10 text-sm w-full flex-1"
-          >
-            <div className="flex items-center gap-2 justify-center">
-              <Plus className="w-4 h-4" />
-              <span className="font-bold whitespace-nowrap">New Campaign</span>
-            </div>
-          </Button>
-        </div>
+        {isOwnerOrAdmin && (
+          <div className="flex flex-row gap-3 w-full md:w-auto">
+            <Link
+              href={`/dashboard/ai-lab`}
+              className="flex-1 md:flex-none flex items-center justify-center gap-2 h-10 px-5 rounded-xl bg-linear-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 border border-indigo-100 text-indigo-700 text-sm font-bold shadow-sm transition-all"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span className="whitespace-nowrap">AI Generator</span>
+            </Link>
+            <Button
+              onClick={() => setIsCreateOpen(true)}
+              data-onboarding="new-campaign-btn"
+              className="rounded-xl h-10 px-5 shadow-md shadow-primary/10 text-sm w-full flex-1"
+            >
+              <div className="flex items-center gap-2 justify-center">
+                <Plus className="w-4 h-4" />
+                <span className="font-bold whitespace-nowrap">
+                  New Campaign
+                </span>
+              </div>
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Filters and Search */}
@@ -114,6 +120,7 @@ export function CampaignsClient() {
                   key={campaign.id}
                   campaign={campaign}
                   onEdit={handleEdit}
+                  isOwnerOrAdmin={isOwnerOrAdmin}
                 />
               ))}
             </div>
@@ -130,7 +137,7 @@ export function CampaignsClient() {
               You haven&apos;t created any campaigns yet. Launch your first one
               to start driving results.
             </p>
-            <div className="flex items-center gap-3">
+            {isOwnerOrAdmin && (
               <Button
                 onClick={() => setIsCreateOpen(true)}
                 className="rounded-xl px-8 h-12 shadow-lg shadow-primary/20"
@@ -138,17 +145,19 @@ export function CampaignsClient() {
                 <Plus className="w-5 h-5 mr-2" />
                 First Campaign
               </Button>
-            </div>
+            )}
           </div>
         )}
       </div>
 
-      <CreateCampaignDialog
-        key={isCreateOpen ? editingCampaign?.id || "new" : "closed"}
-        isOpen={isCreateOpen}
-        onClose={closeDialog}
-        editCampaign={editingCampaign}
-      />
+      {isOwnerOrAdmin && (
+        <CreateCampaignDialog
+          key={isCreateOpen ? editingCampaign?.id || "new" : "closed"}
+          isOpen={isCreateOpen}
+          onClose={closeDialog}
+          editCampaign={editingCampaign}
+        />
+      )}
     </div>
   );
 }

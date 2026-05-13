@@ -15,6 +15,7 @@ export interface EnrolledCampaignSummary {
 export interface Lead {
   id: string;
   workspaceId: string;
+  assignedUserId?: string | null;
   email?: string;
   phone?: string;
   name?: string;
@@ -62,6 +63,16 @@ export interface SearchLeadsDto {
   page?: number;
   limit?: number;
   includeCampaigns?: boolean;
+  assignedUserId?: string;
+}
+
+export interface AssignLeadDto {
+  assignedUserId: string | null;
+}
+
+export interface BulkAssignLeadsDto {
+  leadIds: string[];
+  assignedUserId: string | null;
 }
 
 export interface PaginatedLeadsResponse {

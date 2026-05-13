@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Users,
   Workflow,
@@ -14,8 +14,11 @@ import {
   useBenchmarksQuery,
   useLifecycleMetricsQuery,
 } from "@/store/server/analytics.queries";
+import { useMembersQuery } from "@/store/server/workspace.queries";
+import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
 import type { DaysFilter } from "@/types/analytics";
 import { OverviewHeader } from "./OverviewHeader";
+import { ViewAsMemberSelector } from "./ViewAsMemberSelector";
 import { StatCard } from "./StatCard";
 import { ActivityChart } from "./ActivityChart";
 import { ConversionFunnel } from "./ConversionFunnel";
@@ -29,30 +32,91 @@ import { OverviewSkeleton } from "./OverviewSkeleton";
 export function OverviewClient() {
   const [days, setDays] = useState<DaysFilter>(30);
   const [configOpen, setConfigOpen] = useState(false);
+  const [viewAsMemberId, setViewAsMemberId] = useState<string | undefined>();
 
-  const { data: stats, isLoading: statsLoading } = useDashboardStatsQuery();
+  const { isOwnerOrAdmin, isMember } = useWorkspaceRole();
+  const { data: membersData } = useMembersQuery(isOwnerOrAdmin);
+  const members = useMemo(() => membersData ?? [], [membersData]);
+
+  const memberMap = useMemo(
+    () =>
+      new Map(
+        members
+          .filter((m) => m.userId !== null)
+          .map((m) => [
+            m.userId as string,
+            m.memberName || m.inviteEmail || "Unknown",
+          ]),
+      ),
+    [members],
+  );
+
+  const { data: stats, isLoading: statsLoading } = useDashboardStatsQuery(
+    isOwnerOrAdmin ? viewAsMemberId : undefined,
+  );
   const { data: activity, isLoading: activityLoading } =
-    useActivityInsightsQuery(days);
-  const { data: benchmarks, isLoading: benchmarksLoading } =
-    useBenchmarksQuery();
+    useActivityInsightsQuery(days, isOwnerOrAdmin ? viewAsMemberId : undefined);
+  const { data: benchmarks, isLoading: benchmarksLoading } = useBenchmarksQuery(
+    isOwnerOrAdmin ? viewAsMemberId : undefined,
+  );
   const { data: lifecycle, isLoading: lifecycleLoading } =
-    useLifecycleMetricsQuery(days);
+    useLifecycleMetricsQuery(days, isOwnerOrAdmin ? viewAsMemberId : undefined);
 
   const isLoading =
     statsLoading || activityLoading || benchmarksLoading || lifecycleLoading;
+
+  const scopeLabel = (() => {
+    if (isOwnerOrAdmin && viewAsMemberId) {
+      const name = memberMap.get(viewAsMemberId);
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-bold">
+          {name ? `${name}'s metrics` : "Member metrics"}
+        </span>
+      );
+    }
+    if (isOwnerOrAdmin) {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-bold">
+          Team metrics
+        </span>
+      );
+    }
+    if (isMember) {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-bold">
+          Your metrics
+        </span>
+      );
+    }
+    return null;
+  })();
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <OverviewHeader
         days={days}
         onDaysChange={setDays}
-        onConfigureClick={() => setConfigOpen(true)}
+        onConfigureClick={
+          isOwnerOrAdmin ? () => setConfigOpen(true) : undefined
+        }
+        scopeLabel={scopeLabel}
+        viewAsSelectorSlot={
+          isOwnerOrAdmin ? (
+            <ViewAsMemberSelector
+              members={members}
+              value={viewAsMemberId}
+              onChange={setViewAsMemberId}
+            />
+          ) : undefined
+        }
       />
 
-      <AnalyticsConfigPanel
-        isOpen={configOpen}
-        onClose={() => setConfigOpen(false)}
-      />
+      {isOwnerOrAdmin && (
+        <AnalyticsConfigPanel
+          isOpen={configOpen}
+          onClose={() => setConfigOpen(false)}
+        />
+      )}
 
       {isLoading ? (
         <OverviewSkeleton />
@@ -106,15 +170,6 @@ export function OverviewClient() {
               trendLabel={stats.responseRate >= 2.5 ? "above avg" : "below avg"}
               tooltip="Percentage of outbound messages that received any reply, including opt-outs and negative responses. Industry average is ~2.5%."
             />
-            {/* <StatCard
-              label="Engagement Rate"
-              value={`${stats.engagementRate.toFixed(1)}%`}
-              subValue="of leads who replied"
-              icon={Percent}
-              iconColor="text-accent"
-              iconBg="bg-pink-50"
-              tooltip="Of the leads who replied, how many are genuinely interested — not just a one-word reply or opt-out."
-            /> */}
             <StatCard
               label="Conversion Rate"
               value={`${stats.conversionRate.toFixed(1)}%`}

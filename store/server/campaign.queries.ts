@@ -146,7 +146,7 @@ export const useDeleteCampaignStepMutation = (campaignId: string) => {
   })
 }
 
-export const useEnrolledLeadsQuery = (campaignId: string, query: GetEnrolledLeadsDto = {}) => {
+export const useEnrolledLeadsQuery = (campaignId: string, query: GetEnrolledLeadsDto = {}, enabled = true) => {
   return useQuery({
     queryKey: ['enrolled-leads', campaignId, query],
     queryFn: async () => {
@@ -156,7 +156,7 @@ export const useEnrolledLeadsQuery = (campaignId: string, query: GetEnrolledLead
       )
       return data
     },
-    enabled: !!campaignId,
+    enabled: !!campaignId && enabled,
   })
 }
 
@@ -203,7 +203,7 @@ export const useRemoveLeadsFromCampaignMutation = () => {
   })
 }
 
-export const useExecutionLogsQuery = (campaignId: string, query: GetExecutionLogsDto = {}) => {
+export const useExecutionLogsQuery = (campaignId: string, query: GetExecutionLogsDto = {}, enabled = true) => {
   return useQuery({
     queryKey: ['execution-logs', campaignId, query],
     queryFn: async () => {
@@ -213,6 +213,6 @@ export const useExecutionLogsQuery = (campaignId: string, query: GetExecutionLog
       )
       return data
     },
-    enabled: !!campaignId,
+    enabled: !!campaignId && enabled,
   })
 }

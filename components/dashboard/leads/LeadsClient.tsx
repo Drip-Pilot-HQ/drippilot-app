@@ -9,17 +9,22 @@ import {
   X,
   Workflow,
   UserMinus,
+  UserCheck,
 } from "lucide-react";
 import {
   useLeadsQuery,
   useDeleteLeadsMutation,
 } from "@/store/server/lead.queries";
+import { useMembersQuery } from "@/store/server/workspace.queries";
+import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
 import { LeadListSkeleton } from "./LeadSkeleton";
 import { LeadsTable } from "./LeadsTable";
 import { LeadsFilters } from "./LeadsFilters";
 import { LeadsSearch } from "./LeadsSearch";
 import { LeadsPagination } from "./LeadsPagination";
 import { CreateLeadDialog } from "./CreateLeadDialog";
+import { BulkAssignDialog } from "./BulkAssignDialog";
+import { AssigneeFilter } from "./AssigneeFilter";
 import { LeadsSort, LeadSortField, LeadSortOrder } from "./LeadsSort";
 import { Lead, LeadStatus } from "@/types/lead";
 import { Button } from "@/components/branding/Button";
@@ -29,16 +34,17 @@ import { CampaignPickerModal } from "./CampaignPickerModal";
 import { useConfirm } from "@/components/branding/ConfirmProvider";
 
 export function LeadsClient() {
+  const { isOwnerOrAdmin } = useWorkspaceRole();
+
   const [searchInput, setSearchInput] = useState("");
   const debouncedSearch = useDebounce(searchInput, 500);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(500);
   const [selectedStatuses, setSelectedStatuses] = useState<LeadStatus[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  // Server-side sort (sent to API via LeadsSort dropdown)
+  const [assigneeFilter, setAssigneeFilter] = useState<string | undefined>();
   const [sortBy, setSortBy] = useState<LeadSortField>("createdAt");
   const [sortOrder, setSortOrder] = useState<LeadSortOrder>("desc");
-  // Client-side sort (table header clicks, applied in-memory on fetched page)
   const [tableSortBy, setTableSortBy] = useState<LeadSortField | null>(null);
   const [tableSortOrder, setTableSortOrder] = useState<LeadSortOrder>("asc");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -46,12 +52,29 @@ export function LeadsClient() {
   const [pickerMode, setPickerMode] = useState<"enroll" | "remove">("enroll");
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
+  const [isBulkAssignOpen, setIsBulkAssignOpen] = useState(false);
   const [selectedLeadIds, setSelectedLeadIds] = useState<Set<string>>(
     new Set(),
   );
 
   const deleteLeadsMutation = useDeleteLeadsMutation();
   const confirm = useConfirm();
+
+  const { data: membersData } = useMembersQuery(isOwnerOrAdmin);
+  const members = useMemo(() => membersData ?? [], [membersData]);
+
+  const memberMap = useMemo(
+    () =>
+      new Map(
+        members
+          .filter((m) => m.userId !== null)
+          .map((m) => [
+            m.userId as string,
+            m.memberName || m.inviteEmail || "Unknown",
+          ]),
+      ),
+    [members],
+  );
 
   const { data, isLoading } = useLeadsQuery({
     search: debouncedSearch || undefined,
@@ -61,6 +84,7 @@ export function LeadsClient() {
     limit,
     sortBy: sortBy as "name" | "createdAt" | "updatedAt",
     sortOrder,
+    assignedUserId: isOwnerOrAdmin ? assigneeFilter : undefined,
   });
 
   const sortedLeads = useMemo(() => {
@@ -190,36 +214,40 @@ export function LeadsClient() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3 w-full md:w-auto">
-          <Button
-            variant="outline"
-            onClick={() => setIsImportOpen(true)}
-            className="rounded-xl h-10 px-5 text-sm flex-1 md:flex-none"
-          >
-            <Upload className="w-4 h-4 mr-2" />
-            Import
-          </Button>
-          <Button
-            onClick={() => setIsCreateOpen(true)}
-            className="rounded-xl h-10 px-5 shadow-md shadow-primary/10 text-sm flex-1 md:flex-none"
-          >
-            <div className="flex items-center gap-2 justify-center">
-              <UserPlus className="w-4 h-4" />
-              <span className="font-bold whitespace-nowrap">Add Lead</span>
-            </div>
-          </Button>
-        </div>
+        {isOwnerOrAdmin && (
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <Button
+              variant="outline"
+              onClick={() => setIsImportOpen(true)}
+              className="rounded-xl h-10 px-5 text-sm flex-1 md:flex-none"
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              Import
+            </Button>
+            <Button
+              onClick={() => setIsCreateOpen(true)}
+              className="rounded-xl h-10 px-5 shadow-md shadow-primary/10 text-sm flex-1 md:flex-none"
+            >
+              <div className="flex items-center gap-2 justify-center">
+                <UserPlus className="w-4 h-4" />
+                <span className="font-bold whitespace-nowrap">Add Lead</span>
+              </div>
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Filters and Search */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <LeadsSearch
-          value={searchInput}
-          onChange={(val) => {
-            setSearchInput(val);
-            setPage(1);
-          }}
-        />
+      <div className="flex flex-wrap gap-3">
+        <div className="flex-1 min-w-0">
+          <LeadsSearch
+            value={searchInput}
+            onChange={(val) => {
+              setSearchInput(val);
+              setPage(1);
+            }}
+          />
+        </div>
         <LeadsFilters
           selectedStatuses={selectedStatuses}
           onToggleStatus={toggleStatusFilter}
@@ -238,6 +266,16 @@ export function LeadsClient() {
             setPage(1);
           }}
         />
+        {isOwnerOrAdmin && (
+          <AssigneeFilter
+            members={members}
+            value={assigneeFilter}
+            onChange={(id) => {
+              setAssigneeFilter(id);
+              setPage(1);
+            }}
+          />
+        )}
         <LeadsSort
           sortBy={sortBy}
           sortOrder={sortOrder}
@@ -255,7 +293,7 @@ export function LeadsClient() {
           <LeadListSkeleton />
         ) : data?.data && data.data.length > 0 ? (
           <>
-            {selectedLeadIds.size > 0 && (
+            {isOwnerOrAdmin && selectedLeadIds.size > 0 && (
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 py-3 bg-primary/5 border border-primary/20 rounded-2xl">
                 <span className="text-sm font-bold text-primary">
                   {selectedLeadIds.size} lead
@@ -269,6 +307,14 @@ export function LeadsClient() {
                     <X className="w-3.5 h-3.5" />
                     Cancel
                   </button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsBulkAssignOpen(true)}
+                    className="flex items-center gap-1.5 h-8 px-3 text-xs rounded-lg border-primary/20 text-primary hover:bg-primary/5 hover:border-primary/30"
+                  >
+                    <UserCheck className="w-3.5 h-3.5" />
+                    Assign
+                  </Button>
                   <Button
                     variant="outline"
                     onClick={() => {
@@ -316,6 +362,7 @@ export function LeadsClient() {
               selectedLeadIds={selectedLeadIds}
               onToggleSelect={handleToggleSelect}
               onToggleAll={handleToggleAll}
+              memberMap={memberMap}
             />
 
             <LeadsPagination
@@ -334,40 +381,26 @@ export function LeadsClient() {
             />
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center py-24 px-6 text-center bg-white border border-slate-100 rounded-[40px] shadow-sm">
-            <div className="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center mb-6 text-slate-300">
-              <Users className="w-10 h-10" />
+          <div className="bg-white border border-slate-100 rounded-[32px] py-24 text-center shadow-sm">
+            <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mx-auto mb-4 text-slate-300">
+              <Users className="w-8 h-8" />
             </div>
-            <h2 className="text-2xl font-black text-slate-900 mb-2">
-              Build your audience
-            </h2>
-            <p className="text-slate-500 max-w-sm mb-8 font-medium">
-              Start by adding leads manually or importing them from a CSV file
-              to begin your outreach.
+            <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">
+              No leads found
             </p>
-            <div className="flex items-center gap-3">
-              <Button
-                onClick={() => setIsCreateOpen(true)}
-                className="rounded-2xl px-8 h-12 shadow-lg shadow-primary/20"
-              >
-                <UserPlus className="w-5 h-5 mr-2" />
-                First Lead
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => setIsImportOpen(true)}
-                className="rounded-2xl px-8 h-12 border-2"
-              >
-                <Upload className="w-5 h-5 mr-2" />
-                Import CSV
-              </Button>
-            </div>
+            <p className="text-slate-400 text-sm mt-2">
+              {debouncedSearch ||
+              selectedStatuses.length > 0 ||
+              selectedTags.length > 0 ||
+              assigneeFilter
+                ? "Try adjusting your filters"
+                : "Add your first lead to get started"}
+            </p>
           </div>
         )}
       </div>
 
       <CreateLeadDialog
-        key={isCreateOpen ? editingLead?.id || "new" : "closed"}
         isOpen={isCreateOpen}
         onClose={closeDialog}
         editLead={editingLead}
@@ -380,11 +413,22 @@ export function LeadsClient() {
 
       <CampaignPickerModal
         open={isPickerOpen}
-        onClose={() => setIsPickerOpen(false)}
         mode={pickerMode}
         leadIds={Array.from(selectedLeadIds)}
-        onSuccess={() => setSelectedLeadIds(new Set())}
+        onClose={() => {
+          setIsPickerOpen(false);
+          setSelectedLeadIds(new Set());
+        }}
       />
+
+      {isOwnerOrAdmin && isBulkAssignOpen && (
+        <BulkAssignDialog
+          leadIds={Array.from(selectedLeadIds)}
+          members={members}
+          onClose={() => setIsBulkAssignOpen(false)}
+          onSuccess={() => setSelectedLeadIds(new Set())}
+        />
+      )}
     </div>
   );
 }

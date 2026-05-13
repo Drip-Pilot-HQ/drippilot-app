@@ -5,6 +5,7 @@ import { Workflow } from "lucide-react";
 import { CampaignStep } from "@/types/campaign";
 import { TemplateChannel } from "@/types/template";
 import { Campaign } from "@/types/campaign";
+import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
 import { StepCard } from "./StepCard";
 import { AddStepButton } from "./AddStepButton";
 import { StepCardSkeleton } from "../CampaignDetailSkeleton";
@@ -22,6 +23,7 @@ export function StepList({
   isLoading,
   allowedChannels,
 }: StepListProps) {
+  const { isOwnerOrAdmin } = useWorkspaceRole();
   const [editingStepId, setEditingStepId] = useState<string | null>(null);
 
   if (isLoading) {
@@ -65,6 +67,7 @@ export function StepList({
                   isEditing={editingStepId === step.id}
                   onEditStart={() => setEditingStepId(step.id)}
                   onEditEnd={() => setEditingStepId(null)}
+                  isOwnerOrAdmin={isOwnerOrAdmin}
                 />
               </div>
               {index < sorted.length - 1 && <StepConnector />}
@@ -74,9 +77,14 @@ export function StepList({
         </div>
       )}
 
-      <div className="w-full">
-        <AddStepButton campaign={campaign} allowedChannels={allowedChannels} />
-      </div>
+      {isOwnerOrAdmin && (
+        <div className="w-full">
+          <AddStepButton
+            campaign={campaign}
+            allowedChannels={allowedChannels}
+          />
+        </div>
+      )}
     </div>
   );
 }

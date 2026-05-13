@@ -31,7 +31,7 @@ export const useCreateWorkspaceMutation = () => {
     },
     onSuccess: (newWorkspace) => {
       queryClient.invalidateQueries({ queryKey: ['workspaces'] })
-      if (!useAccountStore.getState().activeWorkspace) {
+      if (!useAccountStore.getState().activeWorkspaceId) {
         useAccountStore.getState().setActiveWorkspace(newWorkspace)
       }
     },
@@ -51,9 +51,9 @@ export const useUpdateWorkspaceMutation = () => {
     },
     onSuccess: (updatedWorkspace) => {
       queryClient.invalidateQueries({ queryKey: ['workspaces'] })
-      const currentActive = useAccountStore.getState().activeWorkspace
-      if (currentActive?.id === updatedWorkspace.id) {
-        useAccountStore.getState().setActiveWorkspace(updatedWorkspace)
+      const { activeWorkspaceId, setActiveWorkspace } = useAccountStore.getState()
+      if (activeWorkspaceId === updatedWorkspace.id) {
+        setActiveWorkspace(updatedWorkspace)
       }
     },
   })
@@ -71,10 +71,11 @@ export const useDeleteWorkspaceMutation = () => {
     },
     onSuccess: (_, deletedId) => {
       queryClient.invalidateQueries({ queryKey: ['workspaces'] })
-      const currentActive = useAccountStore.getState().activeWorkspace
-      if (currentActive?.id === deletedId) {
-        const remainingWorkspaces = useAccountStore.getState().workspaces.filter(w => w.id !== deletedId)
-        useAccountStore.getState().setActiveWorkspace(remainingWorkspaces[0] || null)
+      const store = useAccountStore.getState()
+      if (store.activeWorkspaceId === deletedId) {
+        const remaining = store.workspaces.filter(w => w.id !== deletedId)
+        if (remaining[0]) store.setActiveWorkspace(remaining[0])
+        else store.clearAccountState()
       }
     },
   })

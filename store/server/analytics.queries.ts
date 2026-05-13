@@ -10,50 +10,58 @@ import type {
   DaysFilter,
 } from "@/types/analytics";
 
-export const useDashboardStatsQuery = () => {
+export const useDashboardStatsQuery = (viewAs?: string) => {
   return useQuery({
-    queryKey: ["analytics", "dashboard"],
+    queryKey: ["analytics", "dashboard", viewAs],
     queryFn: async () => {
       const { data } = await apiClient.get<DashboardStats>(
         "/analytics/dashboard",
+        { params: viewAs ? { viewAs } : undefined },
       );
       return data;
     },
   });
 };
 
-export const useActivityInsightsQuery = (days: DaysFilter = 30) => {
+export const useActivityInsightsQuery = (
+  days: DaysFilter = 30,
+  viewAs?: string,
+) => {
   return useQuery({
-    queryKey: ["analytics", "activity", days],
+    queryKey: ["analytics", "activity", days, viewAs],
     queryFn: async () => {
       const { data } = await apiClient.get<ActivityInsights>(
         "/analytics/activity",
-        { params: { days } },
+        { params: { days, ...(viewAs ? { viewAs } : {}) } },
       );
       return data;
     },
   });
 };
 
-export const useBenchmarksQuery = () => {
+export const useBenchmarksQuery = (viewAs?: string) => {
   return useQuery({
-    queryKey: ["analytics", "benchmarks"],
+    queryKey: ["analytics", "benchmarks", viewAs],
     queryFn: async () => {
       const { data } = await apiClient.get<BenchmarksResult>(
         "/analytics/benchmarks",
+        { params: viewAs ? { viewAs } : undefined },
       );
       return data;
     },
   });
 };
 
-export const useLifecycleMetricsQuery = (days: DaysFilter = 30) => {
+export const useLifecycleMetricsQuery = (
+  days: DaysFilter = 30,
+  viewAs?: string,
+) => {
   return useQuery({
-    queryKey: ["analytics", "lifecycle", days],
+    queryKey: ["analytics", "lifecycle", days, viewAs],
     queryFn: async () => {
       const { data } = await apiClient.get<LifecycleMetricsResult>(
         "/analytics/response-times",
-        { params: { days } },
+        { params: { days, ...(viewAs ? { viewAs } : {}) } },
       );
       return data;
     },

@@ -9,6 +9,7 @@ import {
   useEnrolledLeadsQuery,
   useExecutionLogsQuery,
 } from "@/store/server/campaign.queries";
+import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
 import { CampaignDetailHeader } from "./CampaignDetailHeader";
 import { StepList } from "./steps/StepList";
 import { LeadsEnrolledTab } from "./LeadsEnrolledTab";
@@ -54,6 +55,7 @@ export function CampaignDetailClient({
   campaignId,
 }: CampaignDetailClientProps) {
   const [activeTab, setActiveTab] = useState<Tab>("workflow");
+  const { isOwnerOrAdmin } = useWorkspaceRole();
 
   const {
     data: campaign,
@@ -64,16 +66,17 @@ export function CampaignDetailClient({
   const { data: steps = [], isLoading: isStepsLoading } =
     useCampaignStepsQuery(campaignId);
 
-  const { data: enrolledLeadsResponse } = useEnrolledLeadsQuery(campaignId, {
-    page: 1,
-    limit: 500,
-    search: undefined,
-  });
+  const { data: enrolledLeadsResponse } = useEnrolledLeadsQuery(
+    campaignId,
+    { page: 1, limit: 500, search: undefined },
+    isOwnerOrAdmin,
+  );
 
-  const { data: executionLogsResponse } = useExecutionLogsQuery(campaignId, {
-    page: 1,
-    limit: 100,
-  });
+  const { data: executionLogsResponse } = useExecutionLogsQuery(
+    campaignId,
+    { page: 1, limit: 100 },
+    isOwnerOrAdmin,
+  );
 
   if (isCampaignLoading) {
     return <CampaignDetailSkeleton />;
@@ -109,7 +112,10 @@ export function CampaignDetailClient({
 
       <div className="border-b border-slate-200">
         <nav className="-mb-px flex gap-0 overflow-x-auto custom-scrollbar">
-          {TABS.map((tab) => (
+          {TABS.filter(
+            (tab) =>
+              isOwnerOrAdmin || (tab.id !== "history" && tab.id !== "leads"),
+          ).map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
@@ -131,7 +137,7 @@ export function CampaignDetailClient({
               {tab.id === "workflow" && steps.length > 0 && (
                 <span
                   className={cn(
-                    "inline-flex items-center justify-center min-w-[20px] px-1 h-5 rounded-full text-[10px] font-black",
+                    "inline-flex items-center justify-center min-w-5 px-1 h-5 rounded-full text-[10px] font-black",
                     activeTab === tab.id
                       ? "bg-primary/10 text-primary"
                       : "bg-slate-100 text-slate-500",
@@ -145,7 +151,7 @@ export function CampaignDetailClient({
                 enrolledLeadsResponse.pagination.total > 0 && (
                   <span
                     className={cn(
-                      "inline-flex items-center justify-center min-w-[20px] px-1 h-5 rounded-full text-[10px] font-black",
+                      "inline-flex items-center justify-center min-w-5 px-1 h-5 rounded-full text-[10px] font-black",
                       activeTab === tab.id
                         ? "bg-primary/10 text-primary"
                         : "bg-slate-100 text-slate-500",
@@ -159,7 +165,7 @@ export function CampaignDetailClient({
                 executionLogsResponse.pagination.total > 0 && (
                   <span
                     className={cn(
-                      "inline-flex items-center justify-center min-w-[20px] px-1 h-5 rounded-full text-[10px] font-black",
+                      "inline-flex items-center justify-center min-w-5 px-1 h-5 rounded-full text-[10px] font-black",
                       activeTab === tab.id
                         ? "bg-primary/10 text-primary"
                         : "bg-slate-100 text-slate-500",
@@ -184,8 +190,10 @@ export function CampaignDetailClient({
             />
           </div>
         )}
-        {activeTab === "leads" && <LeadsEnrolledTab campaign={campaign} />}
-        {activeTab === "history" && (
+        {activeTab === "leads" && isOwnerOrAdmin && (
+          <LeadsEnrolledTab campaign={campaign} />
+        )}
+        {activeTab === "history" && isOwnerOrAdmin && (
           <ExecutionHistoryTab campaignId={campaignId} />
         )}
       </div>

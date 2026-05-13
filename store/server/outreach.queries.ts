@@ -18,13 +18,14 @@ export const useOutreachThreadsQuery = () => {
   })
 }
 
-export const useLostThreadsQuery = () => {
+export const useLostThreadsQuery = (enabled = true) => {
   return useQuery({
     queryKey: ['outreach-threads-lost'],
     queryFn: async () => {
       const { data } = await apiClient.get<LostThread[]>('/outreach/threads/lost')
       return data
     },
+    enabled,
   })
 }
 

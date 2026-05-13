@@ -2,7 +2,10 @@ import { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAccountStore } from "@/store/client/useAccountStore";
+import {
+  useAccountStore,
+  selectActiveWorkspace,
+} from "@/store/client/useAccountStore";
 import { useWorkspacesQuery } from "@/store/server/account.queries";
 import { cn } from "@/lib/utils";
 import { WorkspaceSwitcherSkeleton } from "./WorkspaceSwitcherSkeleton";
@@ -20,23 +23,27 @@ export function WorkspaceContextSwitcher({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const { activeWorkspace, workspaces, setActiveWorkspace } = useAccountStore();
+  const { activeWorkspaceId, workspaces, setActiveWorkspace } =
+    useAccountStore();
+  const activeWorkspace = useAccountStore(selectActiveWorkspace);
   const { data: workspacesData, isLoading } = useWorkspacesQuery();
 
   const name = activeWorkspace?.name || "Select Workspace";
 
   useEffect(() => {
-    if (!activeWorkspace && workspacesData?.length) {
+    if (!workspacesData?.length) return;
+    // Auto-select a workspace when none is active
+    if (!activeWorkspaceId) {
       const cookies = document.cookie.split("; ");
       const cookieId = cookies
         .find((row) => row.startsWith("x-workspace-id="))
         ?.split("=")[1];
-      const target = cookieId
-        ? workspacesData.find((w) => w.id === cookieId) || workspacesData[0]
-        : workspacesData[0];
+      const target =
+        (cookieId ? workspacesData.find((w) => w.id === cookieId) : null) ||
+        workspacesData[0];
       if (target) setActiveWorkspace(target);
     }
-  }, [activeWorkspace, workspacesData, setActiveWorkspace]);
+  }, [activeWorkspaceId, workspacesData, setActiveWorkspace]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -58,7 +65,7 @@ export function WorkspaceContextSwitcher({
     router.push("/dashboard");
   };
 
-  if (isLoading && !activeWorkspace) {
+  if (isLoading && !activeWorkspaceId) {
     return <WorkspaceSwitcherSkeleton collapsed={collapsed} />;
   }
 

@@ -49,8 +49,8 @@ export function DripBotChat() {
     setMessages((prev) => [...prev, { role: "bot", content: "" }]);
 
     try {
-      const activeWorkspace = useAccountStore.getState().activeWorkspace;
-      if (!activeWorkspace?.id) {
+      const { activeWorkspaceId } = useAccountStore.getState();
+      if (!activeWorkspaceId) {
         toast.error("No workspace selected");
         setIsTyping(false);
         return;
@@ -69,7 +69,7 @@ export function DripBotChat() {
       const response = await fetch(url.toString(), {
         headers: {
           Authorization: `Bearer ${session?.access_token}`,
-          "x-workspace-id": activeWorkspace.id,
+          "x-workspace-id": activeWorkspaceId,
           Accept: "text/event-stream",
         },
       });

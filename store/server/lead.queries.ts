@@ -7,6 +7,8 @@ import {
   UpdateLeadStatusDto,
   SearchLeadsDto,
   PaginatedLeadsResponse,
+  AssignLeadDto,
+  BulkAssignLeadsDto,
 } from "@/types/lead";
 
 export const useLeadsQuery = (query: SearchLeadsDto = {}) => {
@@ -100,6 +102,32 @@ export const useDeleteLeadsMutation = () => {
   return useMutation({
     mutationFn: async (leadIds: string[]) => {
       await apiClient.delete("/leads", { data: { leadIds } });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["leads"] });
+    },
+  });
+};
+
+export const useAssignLeadMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, dto }: { id: string; dto: AssignLeadDto }) => {
+      const { data } = await apiClient.patch<Lead>(`/leads/${id}/assign`, dto);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["leads"] });
+    },
+  });
+};
+
+export const useBulkAssignLeadsMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (dto: BulkAssignLeadsDto) => {
+      const { data } = await apiClient.patch("/leads/bulk-assign", dto);
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["leads"] });

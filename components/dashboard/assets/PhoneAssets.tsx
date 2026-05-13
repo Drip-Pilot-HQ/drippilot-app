@@ -14,6 +14,7 @@ import {
   useReleasePhoneNumberMutation,
 } from "@/store/server/assets.queries";
 import { useConfirm } from "@/components/branding/ConfirmProvider";
+import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
 import { AssetListSkeleton } from "./AssetSkeleton";
 import { BuyNumberDialog } from "./BuyNumberDialog";
 import { PhoneNumber } from "@/types/assets";
@@ -28,6 +29,7 @@ import {
 } from "@/components/common/DropdownMenu";
 
 export function PhoneAssets() {
+  const { isOwnerOrAdmin } = useWorkspaceRole();
   const { data: numbers, isLoading } = usePhoneNumbersQuery();
   const releaseMutation = useReleasePhoneNumberMutation();
   const confirm = useConfirm();
@@ -62,13 +64,15 @@ export function PhoneAssets() {
             Create your first dedicated phone number to start reaching leads via
             SMS.
           </p>
-          <Button
-            onClick={() => setIsDialogOpen(true)}
-            className="rounded-xl px-8 h-12 shadow-lg shadow-secondary/20 bg-secondary hover:bg-secondary/90 border-none"
-          >
-            <Plus className="w-5 h-5 mr-2" />
-            Phone Number
-          </Button>
+          {isOwnerOrAdmin && (
+            <Button
+              onClick={() => setIsDialogOpen(true)}
+              className="rounded-xl px-8 h-12 shadow-lg shadow-secondary/20 bg-secondary hover:bg-secondary/90 border-none"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              Phone Number
+            </Button>
+          )}
         </div>
 
         <BuyNumberDialog
@@ -104,22 +108,24 @@ export function PhoneAssets() {
                   Active
                 </span>
 
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none outline-none">
-                      <MoreVertical className="w-4 h-4" />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-44">
-                    <DropdownMenuItem
-                      onClick={() => handleRelease(number)}
-                      variant="danger"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      Release Line
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                {isOwnerOrAdmin && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none outline-none">
+                        <MoreVertical className="w-4 h-4" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-44">
+                      <DropdownMenuItem
+                        onClick={() => handleRelease(number)}
+                        variant="danger"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        Release Line
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
               </div>
             </div>
 
@@ -146,18 +152,19 @@ export function PhoneAssets() {
           </div>
         ))}
 
-        {/* Quick Add Card */}
-        <button
-          onClick={() => setIsDialogOpen(true)}
-          className="group relative bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-3xl p-5 flex flex-col items-center justify-center gap-3 hover:bg-secondary/5 hover:border-secondary/30 transition-all min-h-[180px]"
-        >
-          <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-slate-300 group-hover:text-secondary group-hover:scale-110 transition-all shadow-sm">
-            <Plus className="w-6 h-6" />
-          </div>
-          <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest group-hover:text-secondary">
-            Add Number
-          </span>
-        </button>
+        {isOwnerOrAdmin && (
+          <button
+            onClick={() => setIsDialogOpen(true)}
+            className="group relative bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-3xl p-5 flex flex-col items-center justify-center gap-3 hover:bg-secondary/5 hover:border-secondary/30 transition-all min-h-45"
+          >
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-slate-300 group-hover:text-secondary group-hover:scale-110 transition-all shadow-sm">
+              <Plus className="w-6 h-6" />
+            </div>
+            <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest group-hover:text-secondary">
+              Add Number
+            </span>
+          </button>
+        )}
       </div>
 
       <BuyNumberDialog

@@ -6,9 +6,12 @@ import {
   useMembersQuery,
   useRemoveMemberMutation,
   useUpdateMemberRoleMutation,
+  useTransferOwnershipMutation,
 } from "@/store/server/workspace.queries";
 import { useAccountStore } from "@/store/client/useAccountStore";
 import { useAuthStore } from "@/store/client/useAuthStore";
+import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
+import { AccessRestricted } from "@/components/branding/AccessRestricted";
 import { useConfirm } from "@/components/branding/ConfirmProvider";
 import { WorkspaceMember, WorkspaceRole } from "@/types/account";
 import { InviteMemberDialog } from "./InviteMemberDialog";
@@ -19,18 +22,23 @@ import { MemberCard } from "./MemberCard";
 import { MembersSkeleton } from "./MembersSkeleton";
 
 export function MembersClient() {
-  const { data: members, isLoading } = useMembersQuery();
+  const { isOwnerOrAdmin, role: userRole } = useWorkspaceRole();
+  const { data: members, isLoading } = useMembersQuery(isOwnerOrAdmin);
   const removeMutation = useRemoveMemberMutation();
   const updateRoleMutation = useUpdateMemberRoleMutation();
+  const transferOwnershipMutation = useTransferOwnershipMutation();
 
-  const activeWorkspace = useAccountStore((state) => state.activeWorkspace);
+  const workspaceName = useAccountStore(
+    (s) => s.workspaces.find((w) => w.id === s.activeWorkspaceId)?.name,
+  );
   const currentUser = useAuthStore((state) => state.user);
   const confirm = useConfirm();
 
   const [isInviteOpen, setIsInviteOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const userRole = activeWorkspace?.role || WorkspaceRole.MEMBER;
+  if (!isOwnerOrAdmin) return <AccessRestricted />;
+
   const canInvite =
     userRole === WorkspaceRole.OWNER || userRole === WorkspaceRole.ADMIN;
 
@@ -47,7 +55,7 @@ export function MembersClient() {
 
       const isConfirmed = await confirm({
         title: "Leave Workspace",
-        description: `Are you sure you want to leave "${activeWorkspace?.name}"? You will lose all access to campaigns and assets.`,
+        description: `Are you sure you want to leave "${workspaceName}"? You will lose all access to campaigns and assets.`,
         confirmLabel: "Leave Workspace",
         variant: "danger",
       });
@@ -72,19 +80,46 @@ export function MembersClient() {
 
   const promoteToAdmin = async (member: WorkspaceMember) => {
     if (userRole !== WorkspaceRole.OWNER) return;
-
     const isConfirmed = await confirm({
       title: "Promote to Admin",
       description: `Make ${member.memberName || member.inviteEmail} an administrator? They will have full control over the workspace.`,
       confirmLabel: "Promote",
       variant: "primary",
     });
-
     if (isConfirmed) {
       await updateRoleMutation.mutateAsync({
         membershipId: member.id,
         dto: { role: WorkspaceRole.ADMIN },
       });
+    }
+  };
+
+  const demoteToMember = async (member: WorkspaceMember) => {
+    if (userRole !== WorkspaceRole.OWNER) return;
+    const isConfirmed = await confirm({
+      title: "Demote to Member",
+      description: `Remove admin privileges from ${member.memberName || member.inviteEmail}? They will lose admin access immediately.`,
+      confirmLabel: "Demote",
+      variant: "primary",
+    });
+    if (isConfirmed) {
+      await updateRoleMutation.mutateAsync({
+        membershipId: member.id,
+        dto: { role: WorkspaceRole.MEMBER },
+      });
+    }
+  };
+
+  const transferOwnership = async (member: WorkspaceMember) => {
+    if (userRole !== WorkspaceRole.OWNER) return;
+    const isConfirmed = await confirm({
+      title: "Transfer Ownership",
+      description: `Transfer ownership to ${member.memberName || member.inviteEmail}? You will become an admin and lose owner privileges. This cannot be undone.`,
+      confirmLabel: "Transfer Ownership",
+      variant: "danger",
+    });
+    if (isConfirmed) {
+      await transferOwnershipMutation.mutateAsync(member.id);
     }
   };
 
@@ -128,6 +163,8 @@ export function MembersClient() {
                 userRole={userRole}
                 onAction={handleAction}
                 onPromote={promoteToAdmin}
+                onDemote={demoteToMember}
+                onTransferOwnership={transferOwnership}
               />
             ))
           )}

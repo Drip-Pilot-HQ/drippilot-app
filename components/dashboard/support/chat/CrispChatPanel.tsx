@@ -14,11 +14,14 @@ import {
 import { Button } from "@/components/branding/Button";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/client/useAuthStore";
-import { useAccountStore } from "@/store/client/useAccountStore";
+import {
+  useAccountStore,
+  selectActiveWorkspace,
+} from "@/store/client/useAccountStore";
 
 export function CrispChatPanel() {
   const { user } = useAuthStore();
-  const { activeWorkspace } = useAccountStore();
+  const activeWorkspace = useAccountStore(selectActiveWorkspace);
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   const websiteId = process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID;

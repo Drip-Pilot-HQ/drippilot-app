@@ -7,6 +7,7 @@ import {
   useOutreachThreadsQuery,
   useLostThreadsQuery,
 } from "@/store/server/outreach.queries";
+import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
 import { ThreadList } from "./ThreadList";
 import { ThreadDetail, NoThreadSelected } from "./ThreadDetail";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,7 @@ export function MessagesClient({
   initialOutreachId,
 }: MessagesClientProps = {}) {
   const router = useRouter();
+  const { isOwnerOrAdmin } = useWorkspaceRole();
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(
     initialOutreachId ?? null,
   );
@@ -32,7 +34,7 @@ export function MessagesClient({
   const { data: threads = [], isLoading: isLoadingThreads } =
     useOutreachThreadsQuery();
   const { data: lostThreads = [], isLoading: isLoadingLost } =
-    useLostThreadsQuery();
+    useLostThreadsQuery(isOwnerOrAdmin);
 
   const isLoading = isLoadingThreads || isLoadingLost;
 
@@ -109,7 +111,7 @@ export function MessagesClient({
             </span>
             <span className="text-xs text-slate-400 font-medium">threads</span>
           </div>
-          {lostThreads.length > 0 && (
+          {isOwnerOrAdmin && lostThreads.length > 0 && (
             <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-rose-50/50 border border-rose-100 rounded-lg shadow-sm">
               <span className="text-xs font-semibold text-rose-600">
                 {lostThreads.length}
@@ -149,6 +151,7 @@ export function MessagesClient({
               onSelectThread={handleSelectThread}
               onTabChange={setActiveTab}
               onSearchChange={setSearchQuery}
+              showLostTab={isOwnerOrAdmin}
             />
           </div>
         </div>

@@ -24,6 +24,7 @@ interface ThreadListProps {
   onSelectThread: (id: string) => void;
   onTabChange: (tab: Tab) => void;
   onSearchChange: (q: string) => void;
+  showLostTab?: boolean;
 }
 
 function matchesSearch(
@@ -88,6 +89,7 @@ export function ThreadList({
   onSelectThread,
   onTabChange,
   onSearchChange,
+  showLostTab = false,
 }: ThreadListProps) {
   const [statusFilter, setStatusFilter] = useState<LeadStatus | "all">("all");
 
@@ -149,30 +151,32 @@ export function ThreadList({
             </span>
           )}
         </button>
-        <button
-          onClick={() => onTabChange("lost")}
-          className={cn(
-            "flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-semibold transition-all",
-            activeTab === "lost"
-              ? "bg-rose-500 text-white shadow-sm shadow-rose-500/10"
-              : "text-slate-500 hover:text-slate-900 hover:bg-slate-50",
-          )}
-        >
-          <AlertCircle className="w-3.5 h-3.5" />
-          Lost
-          {lostThreads.length > 0 && (
-            <span
-              className={cn(
-                "text-[10px] font-semibold px-1.5 py-0.5 rounded-md",
-                activeTab === "lost"
-                  ? "bg-white/20"
-                  : "bg-rose-50 text-rose-500",
-              )}
-            >
-              {lostThreads.length}
-            </span>
-          )}
-        </button>
+        {showLostTab && (
+          <button
+            onClick={() => onTabChange("lost")}
+            className={cn(
+              "flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-semibold transition-all",
+              activeTab === "lost"
+                ? "bg-rose-500 text-white shadow-sm shadow-rose-500/10"
+                : "text-slate-500 hover:text-slate-900 hover:bg-slate-50",
+            )}
+          >
+            <AlertCircle className="w-3.5 h-3.5" />
+            Lost
+            {lostThreads.length > 0 && (
+              <span
+                className={cn(
+                  "text-[10px] font-semibold px-1.5 py-0.5 rounded-md",
+                  activeTab === "lost"
+                    ? "bg-white/20"
+                    : "bg-rose-50 text-rose-500",
+                )}
+              >
+                {lostThreads.length}
+              </span>
+            )}
+          </button>
+        )}
       </div>
 
       {activeTab === "all" && (

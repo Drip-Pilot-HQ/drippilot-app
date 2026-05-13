@@ -44,10 +44,9 @@ apiClient.interceptors.request.use(
       config.headers.Authorization = `Bearer ${session.access_token}`;
     }
 
-    // Workspace Context
-    const activeWorkspace = useAccountStore.getState().activeWorkspace;
-    if (activeWorkspace?.id && !config.headers["x-workspace-id"]) {
-      config.headers["x-workspace-id"] = activeWorkspace.id;
+    const { activeWorkspaceId } = useAccountStore.getState();
+    if (activeWorkspaceId && !config.headers["x-workspace-id"]) {
+      config.headers["x-workspace-id"] = activeWorkspaceId;
     }
 
     return config;

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Plus, Webhook, X } from "lucide-react";
 import { Button } from "@/components/branding/Button";
+import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
 import {
   useLeadSourcesQuery,
   useCreateLeadSourceMutation,
@@ -22,6 +23,7 @@ interface SecretRevealState {
 }
 
 export function IntegrationClient() {
+  const { isOwnerOrAdmin } = useWorkspaceRole();
   const [isCreating, setIsCreating] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [secretReveal, setSecretReveal] = useState<SecretRevealState | null>(
@@ -69,7 +71,7 @@ export function IntegrationClient() {
             webhook rules
           </p>
         </div>
-        {!isCreating && (
+        {isOwnerOrAdmin && !isCreating && (
           <Button
             onClick={handleStartCreate}
             className="rounded-xl h-10 px-5 shadow-md shadow-primary/10 text-sm w-full md:w-auto flex-none"
@@ -84,7 +86,7 @@ export function IntegrationClient() {
 
       <div className="space-y-6">
         {/* ── Inline Create Form ── */}
-        {isCreating && (
+        {isOwnerOrAdmin && isCreating && (
           <div className="bg-white border-2 border-primary/30 rounded-2xl shadow-lg overflow-hidden">
             <div className="flex items-center justify-between px-5 py-4 bg-primary/5 border-b-2 border-primary/15">
               <div className="flex items-center gap-3">
@@ -135,13 +137,15 @@ export function IntegrationClient() {
               Create your first webhook to start routing CRM leads into
               campaigns automatically.
             </p>
-            <Button
-              onClick={handleStartCreate}
-              className="rounded-xl px-8 h-12 shadow-lg shadow-primary/20"
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              Create First Webhook
-            </Button>
+            {isOwnerOrAdmin && (
+              <Button
+                onClick={handleStartCreate}
+                className="rounded-xl px-8 h-12 shadow-lg shadow-primary/20"
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                Create First Webhook
+              </Button>
+            )}
           </div>
         ) : (
           <div className="space-y-3">
@@ -156,6 +160,7 @@ export function IntegrationClient() {
                 onSecretRegenerated={(secret, name, slug) =>
                   setSecretReveal({ secret, name, slug })
                 }
+                isOwnerOrAdmin={isOwnerOrAdmin}
               />
             ))}
           </div>

@@ -16,6 +16,7 @@ import { Campaign, CampaignStatus } from "@/types/campaign";
 import { useUpdateCampaignStatusMutation } from "@/store/server/campaign.queries";
 import { CreateCampaignDialog } from "@/components/dashboard/campaigns/CreateCampaignDialog";
 import { Button } from "@/components/branding/Button";
+import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
 import { cn } from "@/lib/utils";
 
 interface CampaignDetailHeaderProps {
@@ -71,6 +72,7 @@ export function CampaignDetailHeader({
   stepsCount,
 }: CampaignDetailHeaderProps) {
   const router = useRouter();
+  const { isOwnerOrAdmin } = useWorkspaceRole();
   const [isEditOpen, setIsEditOpen] = useState(false);
   const statusMutation = useUpdateCampaignStatusMutation();
 
@@ -149,49 +151,53 @@ export function CampaignDetailHeader({
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={() => setIsEditOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 h-9 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition-all"
-            >
-              <Settings2 className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Edit</span>
-            </button>
-
-            <div
-              title={
-                stepsCount === 0 &&
-                actionConfig.nextStatus === CampaignStatus.ACTIVE
-                  ? "Add steps to your workflow before activating"
-                  : undefined
-              }
-              className="w-fit"
-            >
-              <Button
-                size="sm"
-                variant={actionConfig.variant}
-                onClick={handleStatusChange}
-                disabled={isTransitionDisabled}
-                className="h-9 px-4 text-xs rounded-xl gap-1.5"
+          {isOwnerOrAdmin && (
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => setIsEditOpen(true)}
+                className="inline-flex items-center gap-1.5 px-3 h-9 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition-all"
               >
-                {statusMutation.isPending ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                ) : (
-                  actionConfig.icon
-                )}
-                {actionConfig.label}
-              </Button>
+                <Settings2 className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Edit</span>
+              </button>
+
+              <div
+                title={
+                  stepsCount === 0 &&
+                  actionConfig.nextStatus === CampaignStatus.ACTIVE
+                    ? "Add steps to your workflow before activating"
+                    : undefined
+                }
+                className="w-fit"
+              >
+                <Button
+                  size="sm"
+                  variant={actionConfig.variant}
+                  onClick={handleStatusChange}
+                  disabled={isTransitionDisabled}
+                  className="h-9 px-4 text-xs rounded-xl gap-1.5"
+                >
+                  {statusMutation.isPending ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    actionConfig.icon
+                  )}
+                  {actionConfig.label}
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
-      <CreateCampaignDialog
-        key={isEditOpen ? campaign.id : "closed"}
-        isOpen={isEditOpen}
-        onClose={() => setIsEditOpen(false)}
-        editCampaign={campaign}
-      />
+      {isOwnerOrAdmin && (
+        <CreateCampaignDialog
+          key={isEditOpen ? campaign.id : "closed"}
+          isOpen={isEditOpen}
+          onClose={() => setIsEditOpen(false)}
+          editCampaign={campaign}
+        />
+      )}
     </>
   );
 }

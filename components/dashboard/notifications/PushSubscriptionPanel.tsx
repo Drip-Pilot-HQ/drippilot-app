@@ -138,7 +138,9 @@ export function PushSubscriptionPanel({
     unsubscribe,
   } = usePushSubscription();
   const testMutation = useSendTestPushMutation();
-  const workspaceName = useAccountStore((s) => s.activeWorkspace?.name);
+  const workspaceName = useAccountStore(
+    (s) => s.workspaces.find((w) => w.id === s.activeWorkspaceId)?.name,
+  );
 
   const handleToggle = async () => {
     if (isSubscribed) {

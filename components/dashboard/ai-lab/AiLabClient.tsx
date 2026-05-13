@@ -4,13 +4,18 @@ import { useState } from "react";
 import { Sparkles, History } from "lucide-react";
 import { AiGenerator } from "./AiGenerator";
 import { AiJobsHistory } from "./AiJobsHistory";
+import { AccessRestricted } from "@/components/branding/AccessRestricted";
+import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
 import { cn } from "@/lib/utils";
 
 export function AiLabClient() {
+  const { isOwnerOrAdmin } = useWorkspaceRole();
   const [activeTab, setActiveTab] = useState<"generator" | "history">(
     "generator",
   );
   const [activeJobId, setActiveJobId] = useState<string | null>(null);
+
+  if (!isOwnerOrAdmin) return <AccessRestricted />;
 
   const handleJobStarted = (jobId: string) => {
     setActiveJobId(jobId);

@@ -7,6 +7,8 @@ import { UsageCredits } from "./UsageCredits";
 import { OverageProtection } from "./OverageProtection";
 import { CustomPlanCTA } from "./CustomPlanCTA";
 import { NoSubscriptionState } from "./NoSubscriptionState";
+import { AccessRestricted } from "@/components/branding/AccessRestricted";
+import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
 import {
   useSubscriptionQuery,
   useAddonsQuery,
@@ -39,11 +41,14 @@ function BillingSkeleton() {
 }
 
 export function BillingClient() {
-  const subscriptionQuery = useSubscriptionQuery();
-  const addonsQuery = useAddonsQuery();
-  const limitsQuery = useEffectiveLimitsQuery();
-  const creditBalanceQuery = useCreditBalanceQuery();
-  const overageQuery = useOverageStatusQuery();
+  const { isOwnerOrAdmin } = useWorkspaceRole();
+  const subscriptionQuery = useSubscriptionQuery(isOwnerOrAdmin);
+  const addonsQuery = useAddonsQuery(isOwnerOrAdmin);
+  const limitsQuery = useEffectiveLimitsQuery(isOwnerOrAdmin);
+  const creditBalanceQuery = useCreditBalanceQuery(isOwnerOrAdmin);
+  const overageQuery = useOverageStatusQuery(isOwnerOrAdmin);
+
+  if (!isOwnerOrAdmin) return <AccessRestricted />;
 
   const isLoading =
     subscriptionQuery.isLoading ||

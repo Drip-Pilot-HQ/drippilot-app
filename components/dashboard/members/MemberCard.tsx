@@ -3,6 +3,8 @@
 import {
   User,
   ShieldCheck,
+  ShieldMinus,
+  Crown,
   Clock,
   MoreVertical,
   Trash2,
@@ -28,6 +30,8 @@ interface MemberCardProps {
   userRole: WorkspaceRole;
   onAction: (member: WorkspaceMember) => void;
   onPromote: (member: WorkspaceMember) => void;
+  onDemote: (member: WorkspaceMember) => void;
+  onTransferOwnership: (member: WorkspaceMember) => void;
 }
 
 export function MemberCard({
@@ -36,11 +40,15 @@ export function MemberCard({
   userRole,
   onAction,
   onPromote,
+  onDemote,
+  onTransferOwnership,
 }: MemberCardProps) {
   const showAction =
     isSelf ||
     (userRole === WorkspaceRole.OWNER && member.role !== WorkspaceRole.OWNER) ||
-    (userRole === WorkspaceRole.ADMIN && member.role === WorkspaceRole.MEMBER);
+    (userRole === WorkspaceRole.ADMIN &&
+      member.role === WorkspaceRole.MEMBER &&
+      !isSelf);
 
   const displayDate = member.joinedAt || member.createdAt;
 
@@ -165,6 +173,7 @@ export function MemberCard({
                         Settings
                       </p>
                     </div>
+
                     {userRole === WorkspaceRole.OWNER &&
                       member.role === WorkspaceRole.MEMBER && (
                         <DropdownMenuItem
@@ -177,6 +186,34 @@ export function MemberCard({
                           Promote to Admin
                         </DropdownMenuItem>
                       )}
+
+                    {userRole === WorkspaceRole.OWNER &&
+                      member.role === WorkspaceRole.ADMIN && (
+                        <DropdownMenuItem
+                          onClick={() => onDemote(member)}
+                          className="font-bold py-2 text-slate-700 hover:text-amber-600"
+                        >
+                          <div className="w-7 h-7 rounded-md bg-amber-50 flex items-center justify-center text-amber-500 mr-1">
+                            <ShieldMinus className="w-3.5 h-3.5" />
+                          </div>
+                          Demote to Member
+                        </DropdownMenuItem>
+                      )}
+
+                    {userRole === WorkspaceRole.OWNER &&
+                      member.role !== WorkspaceRole.OWNER &&
+                      member.userId && (
+                        <DropdownMenuItem
+                          onClick={() => onTransferOwnership(member)}
+                          className="font-bold py-2 text-slate-700 hover:text-amber-600"
+                        >
+                          <div className="w-7 h-7 rounded-md bg-amber-50 flex items-center justify-center text-amber-500 mr-1">
+                            <Crown className="w-3.5 h-3.5" />
+                          </div>
+                          Transfer Ownership
+                        </DropdownMenuItem>
+                      )}
+
                     <DropdownMenuItem
                       onClick={() => onAction(member)}
                       variant="danger"

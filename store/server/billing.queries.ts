@@ -22,13 +22,14 @@ export const billingKeys = {
   overageStatus: ['billing', 'overage', 'status'] as const,
 };
 
-export const useSubscriptionQuery = () => {
+export const useSubscriptionQuery = (enabled = true) => {
   return useQuery({
     queryKey: billingKeys.subscription,
     queryFn: async () => {
       const { data } = await apiClient.get<SubscriptionStatus>('/billing/subscription');
       return data;
     },
+    enabled,
   });
 };
 
@@ -110,23 +111,25 @@ export const useBillingPortalMutation = () => {
   });
 };
 
-export const useAddonsQuery = () => {
+export const useAddonsQuery = (enabled = true) => {
   return useQuery({
     queryKey: billingKeys.addons,
     queryFn: async () => {
       const { data } = await apiClient.get<Addon[]>('/billing/addons');
       return data;
     },
+    enabled,
   });
 };
 
-export const useEffectiveLimitsQuery = () => {
+export const useEffectiveLimitsQuery = (enabled = true) => {
   return useQuery({
     queryKey: billingKeys.limits,
     queryFn: async () => {
       const { data } = await apiClient.get<EffectiveLimits>('/billing/limits');
       return data;
     },
+    enabled,
   });
 };
 
@@ -162,24 +165,26 @@ export const useRemoveAddonMutation = () => {
   });
 };
 
-export const useCreditBalanceQuery = () => {
+export const useCreditBalanceQuery = (enabled = true) => {
   return useQuery({
     queryKey: billingKeys.creditBalance,
     queryFn: async () => {
       const { data } = await apiClient.get<CreditBalance>('/billing/credits/balance');
       return data;
     },
+    enabled,
   });
 };
 
 
-export const useOverageStatusQuery = () => {
+export const useOverageStatusQuery = (enabled = true) => {
   return useQuery({
     queryKey: billingKeys.overageStatus,
     queryFn: async () => {
       const { data } = await apiClient.get<OverageStatus>('/billing/overage/status');
       return data;
     },
+    enabled,
   });
 };
 

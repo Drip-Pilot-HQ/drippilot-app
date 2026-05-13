@@ -28,7 +28,7 @@ function urlBase64ToUint8Array(base64: string): Uint8Array {
 
 export function usePushSubscription() {
   const [status, setStatus] = useState<PushStatus>("checking");
-  const activeWorkspaceId = useAccountStore((s) => s.activeWorkspace?.id);
+  const activeWorkspaceId = useAccountStore((s) => s.activeWorkspaceId);
 
   const { data: vapidKey } = useVapidPublicKeyQuery();
   const registerMutation = useRegisterPushMutation();

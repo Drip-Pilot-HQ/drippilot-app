@@ -31,9 +31,14 @@ import {
 interface CampaignCardProps {
   campaign: Campaign;
   onEdit: (campaign: Campaign) => void;
+  isOwnerOrAdmin: boolean;
 }
 
-export function CampaignCard({ campaign, onEdit }: CampaignCardProps) {
+export function CampaignCard({
+  campaign,
+  onEdit,
+  isOwnerOrAdmin,
+}: CampaignCardProps) {
   const router = useRouter();
   const deleteMutation = useDeleteCampaignMutation();
   const statusMutation = useUpdateCampaignStatusMutation();
@@ -79,7 +84,7 @@ export function CampaignCard({ campaign, onEdit }: CampaignCardProps) {
       onClick={() => router.push(`/dashboard/campaigns/${campaign.id}`)}
       style={{ touchAction: "manipulation" }}
       className="group relative bg-white border border-slate-200/80 rounded-2xl p-5
-    shadow-sm hover:shadow-xl hover:-translate-y-[2px] cursor-pointer
+    shadow-sm hover:shadow-xl hover:-translate-y-0.5 cursor-pointer
     hover:border-primary/30 transition-all duration-300
     active:scale-[0.98] active:shadow-sm active:brightness-95"
     >
@@ -125,49 +130,51 @@ export function CampaignCard({ campaign, onEdit }: CampaignCardProps) {
             {campaign.status}
           </span>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                className="p-1.5 rounded-md text-slate-400 
-              hover:text-slate-700 hover:bg-slate-100 
+          {isOwnerOrAdmin && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="p-1.5 rounded-md text-slate-400
+              hover:text-slate-700 hover:bg-slate-100
               transition-all focus:outline-none outline-none"
-              >
-                <MoreVertical className="w-4 h-4" />
-              </button>
-            </DropdownMenuTrigger>
+                >
+                  <MoreVertical className="w-4 h-4" />
+                </button>
+              </DropdownMenuTrigger>
 
-            <DropdownMenuContent align="end" className="w-44">
-              <DropdownMenuItem onClick={() => onEdit(campaign)}>
-                <Edit2 className="w-3.5 h-3.5" />
-                Edit Details
-              </DropdownMenuItem>
+              <DropdownMenuContent align="end" className="w-44">
+                <DropdownMenuItem onClick={() => onEdit(campaign)}>
+                  <Edit2 className="w-3.5 h-3.5" />
+                  Edit Details
+                </DropdownMenuItem>
 
-              <DropdownMenuItem onClick={toggleStatus}>
-                {campaign.status === CampaignStatus.ACTIVE ? (
-                  <>
-                    <Pause className="w-3.5 h-3.5 text-rose-500" />
-                    Pause Campaign
-                  </>
-                ) : (
-                  <>
-                    <Play className="w-3.5 h-3.5 text-emerald-500" />
-                    Start Campaign
-                  </>
-                )}
-              </DropdownMenuItem>
+                <DropdownMenuItem onClick={toggleStatus}>
+                  {campaign.status === CampaignStatus.ACTIVE ? (
+                    <>
+                      <Pause className="w-3.5 h-3.5 text-rose-500" />
+                      Pause Campaign
+                    </>
+                  ) : (
+                    <>
+                      <Play className="w-3.5 h-3.5 text-emerald-500" />
+                      Start Campaign
+                    </>
+                  )}
+                </DropdownMenuItem>
 
-              <DropdownMenuSeparator />
+                <DropdownMenuSeparator />
 
-              <DropdownMenuItem
-                onClick={handleDelete}
-                disabled={isDeleting}
-                variant="danger"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <DropdownMenuItem
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  variant="danger"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </div>
 
@@ -179,7 +186,7 @@ export function CampaignCard({ campaign, onEdit }: CampaignCardProps) {
           {campaign.name}
         </h3>
 
-        <p className="text-xs text-slate-500 leading-relaxed line-clamp-2 min-h-[32px]">
+        <p className="text-xs text-slate-500 leading-relaxed line-clamp-2 min-h-8">
           {campaign.description || "No description provided"}
         </p>
       </div>

@@ -23,9 +23,14 @@ import {
 interface KnowledgeBaseCardProps {
   entry: KbEntry;
   onEdit: (entry: KbEntry) => void;
+  isOwnerOrAdmin: boolean;
 }
 
-export function KnowledgeBaseCard({ entry, onEdit }: KnowledgeBaseCardProps) {
+export function KnowledgeBaseCard({
+  entry,
+  onEdit,
+  isOwnerOrAdmin,
+}: KnowledgeBaseCardProps) {
   const deleteMutation = useDeleteKbEntryMutation();
   const confirm = useConfirm();
 
@@ -56,24 +61,26 @@ export function KnowledgeBaseCard({ entry, onEdit }: KnowledgeBaseCardProps) {
             {wordCount} Words
           </div>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none outline-none">
-                <MoreVertical className="w-4 h-4" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-44">
-              <DropdownMenuItem onClick={() => onEdit(entry)}>
-                <Edit2 className="w-3.5 h-3.5" />
-                Edit Insight
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleDelete} variant="danger">
-                <Trash2 className="w-3.5 h-3.5" />
-                Delete Entry
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {isOwnerOrAdmin && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none outline-none">
+                  <MoreVertical className="w-4 h-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-44">
+                <DropdownMenuItem onClick={() => onEdit(entry)}>
+                  <Edit2 className="w-3.5 h-3.5" />
+                  Edit Insight
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleDelete} variant="danger">
+                  <Trash2 className="w-3.5 h-3.5" />
+                  Delete Entry
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </div>
 
