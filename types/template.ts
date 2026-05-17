@@ -7,6 +7,7 @@ export interface TemplateFolder {
   id: string;
   workspaceId: string;
   name: string;
+  assignedUserId?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -19,8 +20,17 @@ export interface Template {
   subject?: string;
   content: string;
   templateChannel: TemplateChannel;
+  assignedUserId?: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface AssignTemplateFolderDto {
+  assignedUserId: string | null;
+}
+
+export interface AssignTemplateDto {
+  assignedUserId: string | null;
 }
 
 export interface CreateTemplateDto {

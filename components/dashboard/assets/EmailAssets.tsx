@@ -28,6 +28,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/common/DropdownMenu";
+import { AssignEmailAliasSubmenu } from "./AssignEmailAliasSubmenu";
+import { AssigneeBadge } from "@/components/common/AssigneeBadge";
 
 export function EmailAssets() {
   const { isOwnerOrAdmin } = useWorkspaceRole();
@@ -76,15 +78,13 @@ export function EmailAssets() {
             Create your first professional sending identity to start running
             email campaigns.
           </p>
-          {isOwnerOrAdmin && (
-            <Button
-              onClick={() => setIsDialogOpen(true)}
-              className="rounded-xl px-8 h-12 shadow-lg shadow-primary/20"
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              Email Alias
-            </Button>
-          )}
+          <Button
+            onClick={() => setIsDialogOpen(true)}
+            className="rounded-xl px-8 h-12 shadow-lg shadow-primary/20"
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            Email Alias
+          </Button>
         </div>
 
         <EmailAliasDialog
@@ -102,7 +102,7 @@ export function EmailAssets() {
       <div className="flex items-center px-4 mb-6">
         <p className="text-sm text-slate-400 font-bold">
           Showing <span className="text-slate-900">{aliases.length}</span>{" "}
-          verified aliases
+          {isOwnerOrAdmin ? "verified aliases" : "your aliases"}
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-in fade-in duration-500">
@@ -134,6 +134,7 @@ export function EmailAssets() {
                         <Edit2 className="w-3.5 h-3.5" />
                         Edit Alias
                       </DropdownMenuItem>
+                      <AssignEmailAliasSubmenu alias={alias} />
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
                         onClick={() => handleDelete(alias)}
@@ -148,7 +149,7 @@ export function EmailAssets() {
               </div>
             </div>
 
-            <div className="mb-6">
+            <div className="mb-4">
               <h3 className="text-base font-black text-slate-900 truncate mb-1">
                 {alias.emailAlias}
               </h3>
@@ -157,28 +158,32 @@ export function EmailAssets() {
               </p>
             </div>
 
-            <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest pt-5 border-t border-slate-50">
-              <Calendar className="w-3.5 h-3.5" />
-              {formatDistanceToNow(new Date(alias.createdAt), {
-                addSuffix: true,
-              })}
+            <div className="flex items-center justify-between gap-2 pt-5 border-t border-slate-50">
+              <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                <Calendar className="w-3.5 h-3.5" />
+                {formatDistanceToNow(new Date(alias.createdAt), {
+                  addSuffix: true,
+                })}
+              </div>
+
+              {isOwnerOrAdmin && (
+                <AssigneeBadge assignedUserId={alias.assignedUserId} />
+              )}
             </div>
           </div>
         ))}
 
-        {isOwnerOrAdmin && (
-          <button
-            onClick={() => setIsDialogOpen(true)}
-            className="group relative bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-3xl p-5 flex flex-col items-center justify-center gap-3 hover:bg-primary/5 hover:border-primary/30 transition-all min-h-45"
-          >
-            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-slate-300 group-hover:text-primary group-hover:scale-110 transition-all shadow-sm">
-              <Plus className="w-6 h-6" />
-            </div>
-            <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest group-hover:text-primary">
-              Add Email Alias
-            </span>
-          </button>
-        )}
+        <button
+          onClick={() => setIsDialogOpen(true)}
+          className="group relative bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-3xl p-5 flex flex-col items-center justify-center gap-3 hover:bg-primary/5 hover:border-primary/30 transition-all min-h-45"
+        >
+          <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-slate-300 group-hover:text-primary group-hover:scale-110 transition-all shadow-sm">
+            <Plus className="w-6 h-6" />
+          </div>
+          <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest group-hover:text-primary">
+            Add Email Alias
+          </span>
+        </button>
       </div>
 
       <EmailAliasDialog

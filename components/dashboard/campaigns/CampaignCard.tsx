@@ -27,6 +27,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/common/DropdownMenu";
+import { AssignCampaignSubmenu } from "./AssignCampaignSubmenu";
+import { AssigneeBadge } from "@/components/common/AssigneeBadge";
 
 interface CampaignCardProps {
   campaign: Campaign;
@@ -130,57 +132,57 @@ export function CampaignCard({
             {campaign.status}
           </span>
 
-          {isOwnerOrAdmin && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  className="p-1.5 rounded-md text-slate-400
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="p-1.5 rounded-md text-slate-400
               hover:text-slate-700 hover:bg-slate-100
               transition-all focus:outline-none outline-none"
-                >
-                  <MoreVertical className="w-4 h-4" />
-                </button>
-              </DropdownMenuTrigger>
+              >
+                <MoreVertical className="w-4 h-4" />
+              </button>
+            </DropdownMenuTrigger>
 
-              <DropdownMenuContent align="end" className="w-44">
-                <DropdownMenuItem onClick={() => onEdit(campaign)}>
-                  <Edit2 className="w-3.5 h-3.5" />
-                  Edit Details
-                </DropdownMenuItem>
+            <DropdownMenuContent align="end" className="w-44">
+              <DropdownMenuItem onClick={() => onEdit(campaign)}>
+                <Edit2 className="w-3.5 h-3.5" />
+                Edit Details
+              </DropdownMenuItem>
 
-                <DropdownMenuItem onClick={toggleStatus}>
-                  {campaign.status === CampaignStatus.ACTIVE ? (
-                    <>
-                      <Pause className="w-3.5 h-3.5 text-rose-500" />
-                      Pause Campaign
-                    </>
-                  ) : (
-                    <>
-                      <Play className="w-3.5 h-3.5 text-emerald-500" />
-                      Start Campaign
-                    </>
-                  )}
-                </DropdownMenuItem>
+              <DropdownMenuItem onClick={toggleStatus}>
+                {campaign.status === CampaignStatus.ACTIVE ? (
+                  <>
+                    <Pause className="w-3.5 h-3.5 text-rose-500" />
+                    Pause Campaign
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-3.5 h-3.5 text-emerald-500" />
+                    Start Campaign
+                  </>
+                )}
+              </DropdownMenuItem>
 
-                <DropdownMenuSeparator />
+              {isOwnerOrAdmin && <AssignCampaignSubmenu campaign={campaign} />}
 
-                <DropdownMenuItem
-                  onClick={handleDelete}
-                  disabled={isDeleting}
-                  variant="danger"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem
+                onClick={handleDelete}
+                disabled={isDeleting}
+                variant="danger"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
       <div className="relative mb-5">
         <h3
-          className="text-[15px] font-black text-slate-900 
+          className="text-[15px] font-black text-slate-900
         group-hover:text-primary transition-colors truncate mb-1"
         >
           {campaign.name}
@@ -191,7 +193,7 @@ export function CampaignCard({
         </p>
       </div>
 
-      <div className="relative pt-5 border-t border-slate-100/80">
+      <div className="relative pt-5 border-t border-slate-100/80 flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
           <Calendar className="w-3.5 h-3.5" />
           Created{" "}
@@ -199,6 +201,10 @@ export function CampaignCard({
             addSuffix: true,
           })}
         </div>
+
+        {isOwnerOrAdmin && (
+          <AssigneeBadge assignedUserId={campaign.assignedUserId} />
+        )}
       </div>
     </div>
   );

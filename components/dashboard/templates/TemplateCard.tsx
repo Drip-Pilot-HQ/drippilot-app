@@ -21,6 +21,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/common/DropdownMenu";
+import { AssignTemplateSubmenu } from "./AssignTemplateSubmenu";
+import { AssigneeBadge } from "@/components/common/AssigneeBadge";
 
 interface TemplateCardProps {
   template: Template;
@@ -85,30 +87,31 @@ export function TemplateCard({
             {template.templateChannel}
           </span>
 
-          {isOwnerOrAdmin && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none outline-none">
-                  <MoreVertical className="w-4 h-4" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-44">
-                <DropdownMenuItem onClick={() => onEdit(template)}>
-                  <Edit2 className="w-3.5 h-3.5" />
-                  Edit Template
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={handleDelete}
-                  disabled={isDeleting}
-                  variant="danger"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none outline-none">
+                <MoreVertical className="w-4 h-4" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-44">
+              <DropdownMenuItem onClick={() => onEdit(template)}>
+                <Edit2 className="w-3.5 h-3.5" />
+                Edit Template
+              </DropdownMenuItem>
+
+              {isOwnerOrAdmin && <AssignTemplateSubmenu template={template} />}
+
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={handleDelete}
+                disabled={isDeleting}
+                variant="danger"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
@@ -124,12 +127,18 @@ export function TemplateCard({
         </p>
       </div>
 
-      <div className="flex items-center gap-1.5 pt-4 border-t border-slate-100 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-        <Calendar className="w-3.5 h-3.5" />
-        Updated{" "}
-        {formatDistanceToNow(new Date(template.updatedAt), {
-          addSuffix: true,
-        })}
+      <div className="flex items-center justify-between gap-2 pt-4 border-t border-slate-100">
+        <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+          <Calendar className="w-3.5 h-3.5" />
+          Updated{" "}
+          {formatDistanceToNow(new Date(template.updatedAt), {
+            addSuffix: true,
+          })}
+        </div>
+
+        {isOwnerOrAdmin && (
+          <AssigneeBadge assignedUserId={template.assignedUserId} />
+        )}
       </div>
     </div>
   );

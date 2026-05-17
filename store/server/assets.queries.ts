@@ -1,13 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/axios";
-import { 
-  EmailAlias, 
-  PhoneNumber, 
-  CreateEmailAliasDto, 
-  UpdateEmailAliasDto, 
-  SearchPhoneNumbersDto, 
+import {
+  EmailAlias,
+  PhoneNumber,
+  CreateEmailAliasDto,
+  UpdateEmailAliasDto,
+  SearchPhoneNumbersDto,
   BuyPhoneNumberDto,
-  AvailablePhoneNumber
+  AvailablePhoneNumber,
+  AssignEmailAliasDto,
+  AssignPhoneNumberDto,
 } from "@/types/assets";
 import { toast } from "sonner";
 
@@ -108,6 +110,32 @@ export const useReleasePhoneNumberMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["phone-numbers"] });
       toast.success("Phone number released successfully");
+    },
+  });
+};
+
+export const useAssignEmailAliasMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, dto }: { id: string; dto: AssignEmailAliasDto }) => {
+      const { data } = await apiClient.patch<EmailAlias>(`/assets/email-aliases/${id}/assign`, dto);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["email-aliases"] });
+    },
+  });
+};
+
+export const useAssignPhoneNumberMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, dto }: { id: string; dto: AssignPhoneNumberDto }) => {
+      const { data } = await apiClient.patch<PhoneNumber>(`/assets/phone-numbers/${id}/assign`, dto);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["phone-numbers"] });
     },
   });
 };

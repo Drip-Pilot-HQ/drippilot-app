@@ -37,7 +37,6 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       href: `${base}/ai-lab`,
       icon: Sparkles,
       badge: "Beta",
-      allowedRoles: ADMIN_ONLY,
     },
     { name: "Messages", href: `${base}/messages`, icon: MessageSquare },
     { name: "Leads", href: `${base}/leads`, icon: Users },

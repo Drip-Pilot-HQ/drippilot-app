@@ -51,8 +51,13 @@ export interface Campaign {
   smsBased: boolean;
   emailAliasId?: string;
   phoneAliasId?: string;
+  assignedUserId?: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface AssignCampaignDto {
+  assignedUserId: string | null;
 }
 
 export interface CreateCampaignDto {

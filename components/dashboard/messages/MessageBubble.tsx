@@ -49,27 +49,27 @@ export const MessageBubble = memo(function MessageBubble({
   }
 
   const bubbleColor = isSystem
-    ? "bg-amber-100 text-amber-900"
+    ? "bg-orange-400 text-white"
     : isAi
-      ? "bg-violet-100 text-violet-900"
-      : "bg-orange-100 text-orange-900";
+      ? "bg-gradient-to-br from-violet-500 to-indigo-500 text-white"
+      : "bg-[#007AFF] text-white";
 
   const avatarColor = isSystem
-    ? "bg-amber-50"
+    ? "bg-orange-100"
     : isAi
-      ? "bg-violet-50"
-      : "bg-orange-50";
+      ? "bg-violet-100"
+      : "bg-blue-100";
 
   const avatarIcon = isSystem ? (
-    <Zap className="w-3.5 h-3.5 text-amber-500" />
+    <Zap className="w-3.5 h-3.5 text-orange-500" />
   ) : isAi ? (
     <Bot className="w-3.5 h-3.5 text-violet-500" />
   ) : (
-    <User className="w-3.5 h-3.5 text-orange-400" />
+    <User className="w-3.5 h-3.5 text-[#007AFF]" />
   );
 
   const label = isSystem ? (
-    <span className="text-[10px] text-amber-500 font-semibold uppercase tracking-wider flex items-center gap-1.5">
+    <span className="text-[10px] text-orange-500 font-semibold uppercase tracking-wider flex items-center gap-1.5">
       <Zap className="w-2.5 h-2.5" />
       Drip · {message.channel}
     </span>
@@ -120,11 +120,11 @@ export const MessageBubble = memo(function MessageBubble({
 export function MessageDateDivider({ date }: MessageDateDividerProps) {
   return (
     <div className="flex items-center gap-4 my-6">
-      <div className="flex-1 h-px bg-slate-50" />
-      <span className="text-[10px] font-semibold text-slate-300 uppercase tracking-widest px-2">
+      <div className="flex-1 h-px bg-slate-200" />
+      <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-2">
         {format(date, "MMMM d, yyyy")}
       </span>
-      <div className="flex-1 h-px bg-slate-50" />
+      <div className="flex-1 h-px bg-slate-200" />
     </div>
   );
 }

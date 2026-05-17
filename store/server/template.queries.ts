@@ -7,6 +7,8 @@ import {
   UpdateTemplateDto,
   SearchTemplatesDto,
   PaginatedTemplatesResponse,
+  AssignTemplateFolderDto,
+  AssignTemplateDto,
 } from "@/types/template";
 import { toast } from "sonner";
 
@@ -175,6 +177,36 @@ export function useDeleteTemplateMutation() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to delete template");
+    },
+  });
+}
+
+export function useAssignFolderMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ folderId, dto }: { folderId: string; dto: AssignTemplateFolderDto }) => {
+      const { data } = await apiClient.patch<TemplateFolder>(
+        `/templates/folders/${folderId}/assign`,
+        dto,
+      );
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: folderKeys.all });
+    },
+  });
+}
+
+export function useAssignTemplateMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, dto }: { id: string; dto: AssignTemplateDto }) => {
+      const { data } = await apiClient.patch<Template>(`/templates/${id}/assign`, dto);
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: templateKeys.all });
+      queryClient.invalidateQueries({ queryKey: templateKeys.detail(data.id) });
     },
   });
 }

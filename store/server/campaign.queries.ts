@@ -6,6 +6,7 @@ import {
   CreateCampaignDto,
   UpdateCampaignDto,
   UpdateCampaignStatusDto,
+  AssignCampaignDto,
   SearchCampaignsDto,
   CreateCampaignStepDto,
   UpdateCampaignStepDto,
@@ -199,6 +200,20 @@ export const useRemoveLeadsFromCampaignMutation = () => {
     onSuccess: (_, { campaignId }) => {
       queryClient.invalidateQueries({ queryKey: ['leads'] })
       queryClient.invalidateQueries({ queryKey: ['enrolled-leads', campaignId] })
+    },
+  })
+}
+
+export const useAssignCampaignMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ id, dto }: { id: string; dto: AssignCampaignDto }) => {
+      const { data } = await apiClient.patch<Campaign>(`/campaigns/${id}/assign`, dto)
+      return data
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['campaigns'] })
+      queryClient.invalidateQueries({ queryKey: ['campaign', data.id] })
     },
   })
 }

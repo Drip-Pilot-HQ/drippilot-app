@@ -50,7 +50,6 @@ export interface FinancialMetrics {
   roi: number;
   roiMultiplier: number;
   projectedCloseRate: number;
-  engagementRate: number;
   conversionRate: number;
   industryComparison: IndustryComparison;
 }
@@ -60,7 +59,6 @@ export interface DashboardStats {
   campaigns: CampaignCounts;
   messages: MessageCounts;
   responseRate: number;
-  engagementRate: number;
   conversionRate: number;
   conversionFunnel: ConversionFunnel;
   messageBreakdown: MessageBreakdown;

@@ -25,8 +25,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/common/DropdownMenu";
+import { AssignPhoneNumberSubmenu } from "./AssignPhoneNumberSubmenu";
+import { AssigneeBadge } from "@/components/common/AssigneeBadge";
 
 export function PhoneAssets() {
   const { isOwnerOrAdmin } = useWorkspaceRole();
@@ -64,15 +67,13 @@ export function PhoneAssets() {
             Create your first dedicated phone number to start reaching leads via
             SMS.
           </p>
-          {isOwnerOrAdmin && (
-            <Button
-              onClick={() => setIsDialogOpen(true)}
-              className="rounded-xl px-8 h-12 shadow-lg shadow-secondary/20 bg-secondary hover:bg-secondary/90 border-none"
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              Phone Number
-            </Button>
-          )}
+          <Button
+            onClick={() => setIsDialogOpen(true)}
+            className="rounded-xl px-8 h-12 shadow-lg shadow-secondary/20 bg-secondary hover:bg-secondary/90 border-none"
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            Phone Number
+          </Button>
         </div>
 
         <BuyNumberDialog
@@ -88,7 +89,7 @@ export function PhoneAssets() {
       <div className="flex items-center px-4 mb-6">
         <p className="text-sm text-slate-400 font-bold">
           Showing <span className="text-slate-900">{numbers.length}</span>{" "}
-          active lines
+          {isOwnerOrAdmin ? "active lines" : "your lines"}
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-in fade-in duration-500">
@@ -116,6 +117,8 @@ export function PhoneAssets() {
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-44">
+                      <AssignPhoneNumberSubmenu phoneNumber={number} />
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem
                         onClick={() => handleRelease(number)}
                         variant="danger"
@@ -129,7 +132,7 @@ export function PhoneAssets() {
               </div>
             </div>
 
-            <div className="mb-6">
+            <div className="mb-4">
               <h3 className="text-xl font-black text-slate-900 truncate mb-1">
                 {formatNumber(number.phoneNumber)}
               </h3>
@@ -138,33 +141,36 @@ export function PhoneAssets() {
               </p>
             </div>
 
-            <div className="flex items-center gap-4 pt-5 border-t border-slate-50">
+            <div className="flex items-center justify-between gap-4 pt-5 border-t border-slate-50">
               <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                 <Calendar className="w-3.5 h-3.5" />
                 {formatDistanceToNow(new Date(number.createdAt), {
                   addSuffix: true,
                 })}
               </div>
-              <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-auto">
-                {number.provider}
-              </div>
+
+              {isOwnerOrAdmin ? (
+                <AssigneeBadge assignedUserId={number.assignedUserId} />
+              ) : (
+                <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                  {number.provider}
+                </div>
+              )}
             </div>
           </div>
         ))}
 
-        {isOwnerOrAdmin && (
-          <button
-            onClick={() => setIsDialogOpen(true)}
-            className="group relative bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-3xl p-5 flex flex-col items-center justify-center gap-3 hover:bg-secondary/5 hover:border-secondary/30 transition-all min-h-45"
-          >
-            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-slate-300 group-hover:text-secondary group-hover:scale-110 transition-all shadow-sm">
-              <Plus className="w-6 h-6" />
-            </div>
-            <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest group-hover:text-secondary">
-              Add Number
-            </span>
-          </button>
-        )}
+        <button
+          onClick={() => setIsDialogOpen(true)}
+          className="group relative bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-3xl p-5 flex flex-col items-center justify-center gap-3 hover:bg-secondary/5 hover:border-secondary/30 transition-all min-h-45"
+        >
+          <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-slate-300 group-hover:text-secondary group-hover:scale-110 transition-all shadow-sm">
+            <Plus className="w-6 h-6" />
+          </div>
+          <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest group-hover:text-secondary">
+            Add Number
+          </span>
+        </button>
       </div>
 
       <BuyNumberDialog

@@ -365,7 +365,7 @@ function RuleRow({
     onChange({ ...rule, condition: { ...rule.condition, ...patch } });
 
   const addTag = () => {
-    const val = tagInput.trim().toLowerCase();
+    const val = tagInput.trim();
     if (!val) return;
     const tags = rule.condition.tags || [];
     if (!tags.includes(val)) setCondition({ tags: [...tags, val] });
