@@ -144,11 +144,9 @@ export function LeadsTable({
                   </button>
                 </th>
               ))}
-              {isOwnerOrAdmin && (
-                <th className="px-3 py-3 text-[11px] font-black text-slate-500 uppercase tracking-wider text-right">
-                  Actions
-                </th>
-              )}
+              <th className="px-3 py-3 text-[11px] font-black text-slate-500 uppercase tracking-wider text-right">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>

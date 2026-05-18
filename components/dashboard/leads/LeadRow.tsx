@@ -279,37 +279,35 @@ export function LeadRow({
           {format(new Date(lead.createdAt), "MMM d, yyyy")}
         </span>
       </td>
-      {isOwnerOrAdmin && (
-        <td className="px-3 py-3 text-right">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none outline-none">
-                <MoreVertical className="w-4 h-4" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40">
-              <DropdownMenuItem onClick={() => onEdit(lead)}>
-                <Edit2 className="w-4 h-4" />
-                Edit Lead
-              </DropdownMenuItem>
+      <td className="px-3 py-3 text-right">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none outline-none">
+              <MoreVertical className="w-4 h-4" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuItem onClick={() => onEdit(lead)}>
+              <Edit2 className="w-4 h-4" />
+              Edit Lead
+            </DropdownMenuItem>
 
-              <AssignLeadSubmenu lead={lead} />
+            {isOwnerOrAdmin && <AssignLeadSubmenu lead={lead} />}
 
-              <EnrollLeadSubmenu leadId={lead.id} />
+            <EnrollLeadSubmenu leadId={lead.id} />
 
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={handleDelete}
-                disabled={isDeleting}
-                variant="danger"
-              >
-                <Trash2 className="w-4 h-4" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </td>
-      )}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={handleDelete}
+              disabled={isDeleting}
+              variant="danger"
+            >
+              <Trash2 className="w-4 h-4" />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </td>
     </tr>
   );
 }

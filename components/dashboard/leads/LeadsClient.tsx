@@ -214,27 +214,25 @@ export function LeadsClient() {
           </p>
         </div>
 
-        {isOwnerOrAdmin && (
-          <div className="flex items-center gap-3 w-full md:w-auto">
-            <Button
-              variant="outline"
-              onClick={() => setIsImportOpen(true)}
-              className="rounded-xl h-10 px-5 text-sm flex-1 md:flex-none"
-            >
-              <Upload className="w-4 h-4 mr-2" />
-              Import
-            </Button>
-            <Button
-              onClick={() => setIsCreateOpen(true)}
-              className="rounded-xl h-10 px-5 shadow-md shadow-primary/10 text-sm flex-1 md:flex-none"
-            >
-              <div className="flex items-center gap-2 justify-center">
-                <UserPlus className="w-4 h-4" />
-                <span className="font-bold whitespace-nowrap">Add Lead</span>
-              </div>
-            </Button>
-          </div>
-        )}
+        <div className="flex items-center gap-3 w-full md:w-auto">
+          <Button
+            variant="outline"
+            onClick={() => setIsImportOpen(true)}
+            className="rounded-xl h-10 px-5 text-sm flex-1 md:flex-none"
+          >
+            <Upload className="w-4 h-4 mr-2" />
+            Import
+          </Button>
+          <Button
+            onClick={() => setIsCreateOpen(true)}
+            className="rounded-xl h-10 px-5 shadow-md shadow-primary/10 text-sm flex-1 md:flex-none"
+          >
+            <div className="flex items-center gap-2 justify-center">
+              <UserPlus className="w-4 h-4" />
+              <span className="font-bold whitespace-nowrap">Add Lead</span>
+            </div>
+          </Button>
+        </div>
       </div>
 
       {/* Filters and Search */}
@@ -401,6 +399,7 @@ export function LeadsClient() {
       </div>
 
       <CreateLeadDialog
+        key={isCreateOpen ? editingLead?.id || "new" : "closed"}
         isOpen={isCreateOpen}
         onClose={closeDialog}
         editLead={editingLead}
