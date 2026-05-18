@@ -85,6 +85,26 @@ export const useResetPasswordMutation = () => {
   })
 }
 
+export const useUpdateProfileMutation = () => {
+  return useMutation({
+    mutationFn: async ({ name }: { name: string }) => {
+      const supabase = createClient()
+      const { data, error } = await supabase.auth.updateUser({
+        data: { name, full_name: name },
+      })
+      if (error) throw new Error(error.message)
+      return data.user
+    },
+    onSuccess: (user) => {
+      if (user) useAuthStore.getState().setUser(user)
+      toast.success('Profile updated successfully.')
+    },
+    onError: (error: Error) => {
+      toast.error(error.message)
+    },
+  })
+}
+
 export const useChangePasswordMutation = () => {
   return useMutation({
     mutationFn: async ({

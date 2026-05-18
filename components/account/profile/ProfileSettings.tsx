@@ -4,19 +4,31 @@ import { useState } from "react";
 import { User, Shield } from "lucide-react";
 import { Button } from "@/components/branding/Button";
 import { useAuthStore } from "@/store/client/useAuthStore";
-import { useChangePasswordMutation } from "@/store/server/auth.queries";
+import {
+  useChangePasswordMutation,
+  useUpdateProfileMutation,
+} from "@/store/server/auth.queries";
 
 export function ProfileSettings() {
   const user = useAuthStore((s) => s.user);
-  const name = user?.user_metadata?.name ?? user?.email ?? "—";
+  const currentName =
+    user?.user_metadata?.name ?? user?.user_metadata?.full_name ?? "";
   const email = user?.email ?? "—";
 
+  const [nameValue, setNameValue] = useState(currentName);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
 
+  const updateProfile = useUpdateProfileMutation();
   const changePassword = useChangePasswordMutation();
+
+  const handleProfileSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!nameValue.trim()) return;
+    updateProfile.mutate({ name: nameValue.trim() });
+  };
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,27 +77,40 @@ export function ProfileSettings() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                Full Name
-              </label>
-              <div className="w-full px-5 py-3 rounded-2xl bg-slate-50 border border-slate-200 font-semibold text-slate-900 text-sm select-all">
-                {name}
+          <form onSubmit={handleProfileSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="Your name"
+                  value={nameValue}
+                  onChange={(e) => setNameValue(e.target.value)}
+                  required
+                  className="w-full px-5 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-primary focus:ring-4 focus:ring-primary/5 outline-none transition-all font-semibold text-slate-900 text-sm"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                  Email Address
+                </label>
+                <div className="w-full px-5 py-3 rounded-2xl bg-slate-50 border border-slate-200 font-semibold text-slate-900 text-sm select-all">
+                  {email}
+                </div>
               </div>
             </div>
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                Email Address
-              </label>
-              <div className="w-full px-5 py-3 rounded-2xl bg-slate-50 border border-slate-200 font-semibold text-slate-900 text-sm select-all">
-                {email}
-              </div>
-            </div>
-          </div>
-          <p className="text-xs text-slate-400 mt-4 ml-1">
-            To update your name or email, please contact support.
-          </p>
+            <Button
+              variant="primary"
+              size="md"
+              type="submit"
+              disabled={updateProfile.isPending || !nameValue.trim()}
+              className="rounded-xl"
+            >
+              {updateProfile.isPending ? "Saving..." : "Save Changes"}
+            </Button>
+          </form>
         </section>
 
         <section className="bg-white rounded-3xl border border-slate-200 p-6 lg:p-8 shadow-sm">
