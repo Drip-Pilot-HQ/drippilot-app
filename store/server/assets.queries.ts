@@ -12,13 +12,15 @@ import {
   AssignPhoneNumberDto,
 } from "@/types/assets";
 import { toast } from "sonner";
+import { useViewMode } from "@/lib/hooks/use-view-mode";
 
 // Email Aliases
 export const useEmailAliasesQuery = () => {
+  const { viewMode } = useViewMode();
   return useQuery({
-    queryKey: ["email-aliases"],
+    queryKey: ["email-aliases", viewMode],
     queryFn: async () => {
-      const { data } = await apiClient.get<EmailAlias[]>("/assets/email-aliases");
+      const { data } = await apiClient.get<EmailAlias[]>("/assets/email-aliases", { params: { viewMode } });
       return data;
     },
   });
@@ -67,10 +69,11 @@ export const useDeleteEmailAliasMutation = () => {
 
 // Phone Numbers
 export const usePhoneNumbersQuery = () => {
+  const { viewMode } = useViewMode();
   return useQuery({
-    queryKey: ["phone-numbers"],
+    queryKey: ["phone-numbers", viewMode],
     queryFn: async () => {
-      const { data } = await apiClient.get<PhoneNumber[]>("/assets/phone-numbers");
+      const { data } = await apiClient.get<PhoneNumber[]>("/assets/phone-numbers", { params: { viewMode } });
       return data;
     },
   });
@@ -121,7 +124,11 @@ export const useAssignEmailAliasMutation = () => {
       const { data } = await apiClient.patch<EmailAlias>(`/assets/email-aliases/${id}/assign`, dto);
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      queryClient.setQueriesData<EmailAlias[]>(
+        { queryKey: ["email-aliases"], exact: false },
+        (old) => old?.map((a) => a.id === data.id ? { ...a, assignedUserIds: data.assignedUserIds } : a),
+      );
       queryClient.invalidateQueries({ queryKey: ["email-aliases"] });
     },
   });
@@ -134,7 +141,11 @@ export const useAssignPhoneNumberMutation = () => {
       const { data } = await apiClient.patch<PhoneNumber>(`/assets/phone-numbers/${id}/assign`, dto);
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      queryClient.setQueriesData<PhoneNumber[]>(
+        { queryKey: ["phone-numbers"], exact: false },
+        (old) => old?.map((n) => n.id === data.id ? { ...n, assignedUserIds: data.assignedUserIds } : n),
+      );
       queryClient.invalidateQueries({ queryKey: ["phone-numbers"] });
     },
   });

@@ -2,7 +2,7 @@ export interface EmailAlias {
   id: string;
   workspaceId: string;
   emailAlias: string;
-  assignedUserId?: string | null;
+  assignedUserIds?: string[];
   createdAt: string;
   updatedAt: string;
 }
@@ -13,17 +13,17 @@ export interface PhoneNumber {
   phoneNumber: string;
   sid: string;
   provider: string;
-  assignedUserId?: string | null;
+  assignedUserIds?: string[];
   createdAt: string;
   updatedAt: string;
 }
 
 export interface AssignEmailAliasDto {
-  assignedUserId: string | null;
+  userIds: string[];
 }
 
 export interface AssignPhoneNumberDto {
-  assignedUserId: string | null;
+  userIds: string[];
 }
 
 export interface CreateEmailAliasDto {

@@ -32,9 +32,11 @@ import { useDebounce } from "@/lib/hooks/use-debounce";
 import { ImportLeadsDialog } from "./ImportLeadsDialog";
 import { CampaignPickerModal } from "./CampaignPickerModal";
 import { useConfirm } from "@/components/branding/ConfirmProvider";
+import { useViewMode } from "@/lib/hooks/use-view-mode";
 
 export function LeadsClient() {
   const { isOwnerOrAdmin } = useWorkspaceRole();
+  const { isPersonal } = useViewMode();
 
   const [searchInput, setSearchInput] = useState("");
   const debouncedSearch = useDebounce(searchInput, 500);
@@ -392,7 +394,9 @@ export function LeadsClient() {
               selectedTags.length > 0 ||
               assigneeFilter
                 ? "Try adjusting your filters"
-                : "Add your first lead to get started"}
+                : isPersonal
+                  ? "No leads assigned to you yet"
+                  : "Add your first lead to get started"}
             </p>
           </div>
         )}

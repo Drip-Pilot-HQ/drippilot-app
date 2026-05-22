@@ -16,20 +16,17 @@ export function AssignEmailAliasSubmenu({
 }: AssignEmailAliasSubmenuProps) {
   const assignMutation = useAssignEmailAliasMutation();
 
-  const { handleAssign, isAssigning, assigningToId } = useAssignSubmenuState(
-    (userId) =>
-      assignMutation.mutateAsync({
-        id: alias.id,
-        dto: { assignedUserId: userId },
-      }),
-    (userId) => (userId ? "Email alias assigned" : "Email alias unassigned"),
+  const { handleAssign, isAssigning, assigningUserId } = useAssignSubmenuState(
+    (userIds) => assignMutation.mutateAsync({ id: alias.id, dto: { userIds } }),
+    (userIds) =>
+      userIds.length > 0 ? "Email alias assigned" : "Email alias unassigned",
   );
 
   return (
     <AssignSubmenu
-      currentAssignedUserId={alias.assignedUserId}
+      currentAssignedUserIds={alias.assignedUserIds ?? []}
       isAssigning={isAssigning}
-      assigningToId={assigningToId}
+      assigningUserId={assigningUserId}
       onAssign={handleAssign}
     />
   );

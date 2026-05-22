@@ -18,9 +18,11 @@ import { naturalSort } from "@/lib/utils/string";
 import { LayoutGrid, List } from "lucide-react";
 import { TemplateRow } from "./TemplateRow";
 import { FolderSelector } from "./FolderSelector";
+import { useViewMode } from "@/lib/hooks/use-view-mode";
 
 export function TemplatesClient() {
   const { isOwnerOrAdmin } = useWorkspaceRole();
+  const { isPersonal } = useViewMode();
   const [searchInput, setSearchInput] = useState("");
   const debouncedSearch = useDebounce(searchInput, 500);
   const [page, setPage] = useState(1);
@@ -265,7 +267,9 @@ export function TemplatesClient() {
             <p className="text-slate-500 max-w-sm mb-8 font-medium italic">
               {selectedFolderId
                 ? "Create a template and assign it to this folder, or move an existing template here."
-                : "Create reusable message templates to maintain consistent brand messaging across all automated campaigns."}
+                : isPersonal
+                  ? "No templates assigned to you yet."
+                  : "Create reusable message templates to maintain consistent brand messaging across all automated campaigns."}
             </p>
             <Button
               onClick={() => setIsCreateOpen(true)}

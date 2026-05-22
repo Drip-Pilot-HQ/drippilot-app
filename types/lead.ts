@@ -64,6 +64,7 @@ export interface SearchLeadsDto {
   limit?: number;
   includeCampaigns?: boolean;
   assignedUserId?: string;
+  viewMode?: "team" | "personal";
 }
 
 export interface AssignLeadDto {

@@ -14,20 +14,17 @@ interface AssignFolderSubmenuProps {
 export function AssignFolderSubmenu({ folder }: AssignFolderSubmenuProps) {
   const assignMutation = useAssignFolderMutation();
 
-  const { handleAssign, isAssigning, assigningToId } = useAssignSubmenuState(
-    (userId) =>
-      assignMutation.mutateAsync({
-        folderId: folder.id,
-        dto: { assignedUserId: userId },
-      }),
-    (userId) => (userId ? "Folder assigned" : "Folder unassigned"),
+  const { handleAssign, isAssigning, assigningUserId } = useAssignSubmenuState(
+    (userIds) =>
+      assignMutation.mutateAsync({ folderId: folder.id, dto: { userIds } }),
+    (userIds) => (userIds.length > 0 ? "Folder assigned" : "Folder unassigned"),
   );
 
   return (
     <AssignSubmenu
-      currentAssignedUserId={folder.assignedUserId}
+      currentAssignedUserIds={folder.assignedUserIds ?? []}
       isAssigning={isAssigning}
-      assigningToId={assigningToId}
+      assigningUserId={assigningUserId}
       onAssign={handleAssign}
     />
   );

@@ -102,7 +102,7 @@ export function TemplateRow({
       <div className="flex items-center gap-4 shrink-0">
         {isOwnerOrAdmin && (
           <AssigneeBadge
-            assignedUserId={template.assignedUserId}
+            assignedUserIds={template.assignedUserIds}
             className="hidden md:inline-flex"
           />
         )}

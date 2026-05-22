@@ -51,13 +51,13 @@ export interface Campaign {
   smsBased: boolean;
   emailAliasId?: string;
   phoneAliasId?: string;
-  assignedUserId?: string | null;
+  assignedUserIds?: string[];
   createdAt: string;
   updatedAt: string;
 }
 
 export interface AssignCampaignDto {
-  assignedUserId: string | null;
+  userIds: string[];
 }
 
 export interface CreateCampaignDto {
@@ -87,6 +87,7 @@ export interface SearchCampaignsDto {
   status?: CampaignStatus[];
   sortBy?: 'createdAt' | 'updatedAt' | 'name';
   sortOrder?: 'asc' | 'desc';
+  viewMode?: 'team' | 'personal';
 }
 
 export enum EnrollmentStatus {

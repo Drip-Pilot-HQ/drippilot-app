@@ -16,20 +16,18 @@ export function AssignPhoneNumberSubmenu({
 }: AssignPhoneNumberSubmenuProps) {
   const assignMutation = useAssignPhoneNumberMutation();
 
-  const { handleAssign, isAssigning, assigningToId } = useAssignSubmenuState(
-    (userId) =>
-      assignMutation.mutateAsync({
-        id: phoneNumber.id,
-        dto: { assignedUserId: userId },
-      }),
-    (userId) => (userId ? "Phone number assigned" : "Phone number unassigned"),
+  const { handleAssign, isAssigning, assigningUserId } = useAssignSubmenuState(
+    (userIds) =>
+      assignMutation.mutateAsync({ id: phoneNumber.id, dto: { userIds } }),
+    (userIds) =>
+      userIds.length > 0 ? "Phone number assigned" : "Phone number unassigned",
   );
 
   return (
     <AssignSubmenu
-      currentAssignedUserId={phoneNumber.assignedUserId}
+      currentAssignedUserIds={phoneNumber.assignedUserIds ?? []}
       isAssigning={isAssigning}
-      assigningToId={assigningToId}
+      assigningUserId={assigningUserId}
       onAssign={handleAssign}
     />
   );

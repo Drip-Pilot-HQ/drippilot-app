@@ -11,18 +11,21 @@ import {
   AssignTemplateDto,
 } from "@/types/template";
 import { toast } from "sonner";
+import { useViewMode } from "@/lib/hooks/use-view-mode";
 
 export const folderKeys = {
   all: ["template-folders"] as const,
-  list: ["template-folders", "list"] as const,
+  list: (viewMode: string) => ["template-folders", "list", viewMode] as const,
 };
 
 export function useFoldersQuery() {
+  const { viewMode } = useViewMode();
   return useQuery({
-    queryKey: folderKeys.list,
+    queryKey: folderKeys.list(viewMode),
     queryFn: async () => {
       const { data } = await apiClient.get<TemplateFolder[]>(
         "/templates/folders",
+        { params: { viewMode } },
       );
       return data;
     },
@@ -102,14 +105,14 @@ export const templateKeys = {
 };
 
 export function useTemplatesQuery(filters: SearchTemplatesDto = {}) {
+  const { viewMode } = useViewMode();
+  const params = { ...filters, viewMode };
   return useQuery({
-    queryKey: templateKeys.list(filters),
+    queryKey: templateKeys.list(params),
     queryFn: async () => {
       const { data } = await apiClient.get<PaginatedTemplatesResponse>(
         "/templates",
-        {
-          params: filters,
-        },
+        { params },
       );
       return data;
     },
@@ -191,7 +194,11 @@ export function useAssignFolderMutation() {
       );
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      queryClient.setQueriesData<TemplateFolder[]>(
+        { queryKey: folderKeys.all, exact: false },
+        (old) => old?.map((f) => f.id === data.id ? { ...f, assignedUserIds: data.assignedUserIds } : f),
+      );
       queryClient.invalidateQueries({ queryKey: folderKeys.all });
     },
   });
@@ -205,6 +212,13 @@ export function useAssignTemplateMutation() {
       return data;
     },
     onSuccess: (data) => {
+      queryClient.setQueriesData<PaginatedTemplatesResponse>(
+        { queryKey: templateKeys.all, exact: false },
+        (old) => old ? {
+          ...old,
+          data: old.data.map((t) => t.id === data.id ? { ...t, assignedUserIds: data.assignedUserIds } : t),
+        } : old,
+      );
       queryClient.invalidateQueries({ queryKey: templateKeys.all });
       queryClient.invalidateQueries({ queryKey: templateKeys.detail(data.id) });
     },

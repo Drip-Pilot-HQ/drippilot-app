@@ -25,10 +25,10 @@ export function ReferredUsersTable({ signups }: ReferredUsersTableProps) {
           <Users className="w-5 h-5 sm:w-6 sm:h-6 text-slate-300" />
         </div>
         <h4 className="font-heading font-bold text-slate-900 text-sm sm:text-base">
-          No referrals yet
+          No accounts yet
         </h4>
         <p className="text-slate-500 text-xs sm:text-sm font-semibold mt-1">
-          Share your link to start earning commissions.
+          New signups using your tracking link will appear here.
         </p>
       </div>
     );
@@ -40,7 +40,7 @@ export function ReferredUsersTable({ signups }: ReferredUsersTableProps) {
       <div className="px-5 sm:px-6 py-4 border-b border-slate-100 flex items-center gap-2">
         <Users className="w-4 h-4 text-primary shrink-0" />
         <h3 className="font-heading font-black text-slate-900 text-base sm:text-lg">
-          Referred Users
+          Managed Accounts
         </h3>
         <span className="ml-auto px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-wider shrink-0">
           {signups.length} total
@@ -50,7 +50,7 @@ export function ReferredUsersTable({ signups }: ReferredUsersTableProps) {
       {/* Desktop column headers */}
       <div className="hidden sm:grid grid-cols-[1fr_auto] px-6 py-2.5 bg-slate-50 border-b border-slate-100">
         <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-          User
+          Account
         </p>
         <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
           Joined

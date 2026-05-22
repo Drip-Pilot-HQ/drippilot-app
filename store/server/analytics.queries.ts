@@ -9,8 +9,13 @@ import type {
   BenchmarksResult,
   DaysFilter,
 } from "@/types/analytics";
+import { useViewMode } from "@/lib/hooks/use-view-mode";
+import { useAuthStore } from "@/store/client/useAuthStore";
 
-export const useDashboardStatsQuery = (viewAs?: string) => {
+export const useDashboardStatsQuery = (explicitViewAs?: string) => {
+  const { isPersonal } = useViewMode();
+  const userId = useAuthStore((s) => s.user?.id);
+  const viewAs = explicitViewAs ?? (isPersonal ? userId : undefined);
   return useQuery({
     queryKey: ["analytics", "dashboard", viewAs],
     queryFn: async () => {
@@ -25,8 +30,11 @@ export const useDashboardStatsQuery = (viewAs?: string) => {
 
 export const useActivityInsightsQuery = (
   days: DaysFilter = 30,
-  viewAs?: string,
+  explicitViewAs?: string,
 ) => {
+  const { isPersonal } = useViewMode();
+  const userId = useAuthStore((s) => s.user?.id);
+  const viewAs = explicitViewAs ?? (isPersonal ? userId : undefined);
   return useQuery({
     queryKey: ["analytics", "activity", days, viewAs],
     queryFn: async () => {
@@ -39,7 +47,10 @@ export const useActivityInsightsQuery = (
   });
 };
 
-export const useBenchmarksQuery = (viewAs?: string) => {
+export const useBenchmarksQuery = (explicitViewAs?: string) => {
+  const { isPersonal } = useViewMode();
+  const userId = useAuthStore((s) => s.user?.id);
+  const viewAs = explicitViewAs ?? (isPersonal ? userId : undefined);
   return useQuery({
     queryKey: ["analytics", "benchmarks", viewAs],
     queryFn: async () => {
@@ -54,8 +65,11 @@ export const useBenchmarksQuery = (viewAs?: string) => {
 
 export const useLifecycleMetricsQuery = (
   days: DaysFilter = 30,
-  viewAs?: string,
+  explicitViewAs?: string,
 ) => {
+  const { isPersonal } = useViewMode();
+  const userId = useAuthStore((s) => s.user?.id);
+  const viewAs = explicitViewAs ?? (isPersonal ? userId : undefined);
   return useQuery({
     queryKey: ["analytics", "lifecycle", days, viewAs],
     queryFn: async () => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Loader2, UserCheck, UserX } from "lucide-react";
+import { Search, Loader2, UserCheck, UserX, Check } from "lucide-react";
 import { useMembersQuery } from "@/store/server/workspace.queries";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 import { getMemberDisplayName, getMemberInitial } from "@/lib/utils/member";
@@ -14,17 +14,17 @@ import {
 } from "@/components/common/DropdownMenu";
 
 interface AssignSubmenuProps {
-  currentAssignedUserId: string | null | undefined;
+  currentAssignedUserIds: string[];
   isAssigning: boolean;
-  assigningToId: string | null | undefined;
-  onAssign: (userId: string | null) => void;
+  assigningUserId: string | null | undefined;
+  onAssign: (userIds: string[]) => void;
   label?: string;
 }
 
 export function AssignSubmenu({
-  currentAssignedUserId,
+  currentAssignedUserIds,
   isAssigning,
-  assigningToId,
+  assigningUserId,
   onAssign,
   label = "Assign to Member",
 }: AssignSubmenuProps) {
@@ -43,6 +43,13 @@ export function AssignSubmenu({
           .includes(debouncedSearch.toLowerCase()),
       )
     : activeMembers;
+
+  const handleToggle = (userId: string) => {
+    const next = currentAssignedUserIds.includes(userId)
+      ? currentAssignedUserIds.filter((id) => id !== userId)
+      : [...currentAssignedUserIds, userId];
+    onAssign(next);
+  };
 
   return (
     <DropdownMenuSub>
@@ -73,46 +80,46 @@ export function AssignSubmenu({
             </div>
           ) : (
             <>
-              {currentAssignedUserId && (
+              {currentAssignedUserIds.length > 0 && (
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    onAssign(null);
+                    onAssign([]);
                   }}
                   disabled={isAssigning}
                   className="w-full flex items-center gap-3 px-2 py-2 rounded-lg text-left hover:bg-rose-50 group transition-colors"
                 >
                   <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border bg-white border-slate-200 group-hover:border-rose-200 group-hover:bg-rose-50 transition-colors">
-                    {isAssigning && assigningToId === null ? (
+                    {isAssigning && assigningUserId === null ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin text-rose-400" />
                     ) : (
                       <UserX className="w-3.5 h-3.5 text-slate-400 group-hover:text-rose-500" />
                     )}
                   </div>
                   <p className="text-xs font-bold text-slate-500 group-hover:text-rose-600 transition-colors">
-                    Unassign
+                    Unassign all
                   </p>
                 </button>
               )}
 
               {filtered.length > 0 ? (
                 filtered.map((member) => {
-                  const isAssigned = member.userId === currentAssignedUserId;
+                  const isAssigned = currentAssignedUserIds.includes(
+                    member.userId!,
+                  );
                   const isPending =
-                    isAssigning && assigningToId === member.userId;
+                    isAssigning && assigningUserId === member.userId;
                   return (
                     <button
                       key={member.id}
-                      disabled={isAssigned || isAssigning}
+                      disabled={isAssigning}
                       onClick={(e) => {
                         e.stopPropagation();
-                        onAssign(member.userId);
+                        handleToggle(member.userId!);
                       }}
                       className={cn(
-                        "w-full flex items-center gap-3 px-2 py-2 rounded-lg text-left transition-colors",
-                        isAssigned
-                          ? "bg-primary/5 cursor-default"
-                          : "hover:bg-primary/5 group",
+                        "w-full flex items-center gap-3 px-2 py-2 rounded-lg text-left transition-colors group",
+                        isAssigned ? "bg-primary/5" : "hover:bg-primary/5",
                       )}
                     >
                       <div
@@ -145,7 +152,7 @@ export function AssignSubmenu({
                         </p>
                       </div>
                       {isAssigned && (
-                        <UserCheck className="w-3.5 h-3.5 text-primary shrink-0" />
+                        <Check className="w-3.5 h-3.5 text-primary shrink-0" />
                       )}
                     </button>
                   );
@@ -166,33 +173,35 @@ export function AssignSubmenu({
 }
 
 interface UseAssignSubmenuReturn {
-  handleAssign: (userId: string | null) => Promise<void>;
+  handleAssign: (userIds: string[]) => Promise<void>;
   isAssigning: boolean;
-  assigningToId: string | null | undefined;
+  assigningUserId: string | null | undefined;
 }
 
 export function useAssignSubmenuState(
-  mutateAsync: (userId: string | null) => Promise<unknown>,
-  successMessage: (userId: string | null) => string,
+  mutateAsync: (userIds: string[]) => Promise<unknown>,
+  successMessage: (userIds: string[]) => string,
 ): UseAssignSubmenuReturn {
-  const [assigningToId, setAssigningToId] = useState<string | null | undefined>(
-    undefined,
-  );
+  const [assigningUserId, setAssigningUserId] = useState<
+    string | null | undefined
+  >(undefined);
   const [isAssigning, setIsAssigning] = useState(false);
 
-  const handleAssign = async (userId: string | null) => {
-    setAssigningToId(userId);
+  const handleAssign = async (userIds: string[]) => {
+    setAssigningUserId(
+      userIds.length === 0 ? null : userIds[userIds.length - 1],
+    );
     setIsAssigning(true);
     try {
-      await mutateAsync(userId);
-      toast.success(successMessage(userId));
+      await mutateAsync(userIds);
+      toast.success(successMessage(userIds));
     } catch {
       toast.error("Failed to update assignment");
     } finally {
       setIsAssigning(false);
-      setAssigningToId(undefined);
+      setAssigningUserId(undefined);
     }
   };
 
-  return { handleAssign, isAssigning, assigningToId };
+  return { handleAssign, isAssigning, assigningUserId };
 }

@@ -16,6 +16,7 @@ import {
 } from "@/store/server/assets.queries";
 import { useConfirm } from "@/components/branding/ConfirmProvider";
 import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
+import { useViewMode } from "@/lib/hooks/use-view-mode";
 import { AssetListSkeleton } from "./AssetSkeleton";
 import { EmailAliasDialog } from "./EmailAliasDialog";
 import { EmailAlias } from "@/types/assets";
@@ -33,6 +34,7 @@ import { AssigneeBadge } from "@/components/common/AssigneeBadge";
 
 export function EmailAssets() {
   const { isOwnerOrAdmin } = useWorkspaceRole();
+  const { isPersonal } = useViewMode();
   const { data: aliases, isLoading } = useEmailAliasesQuery();
   const deleteMutation = useDeleteEmailAliasMutation();
   const confirm = useConfirm();
@@ -75,8 +77,9 @@ export function EmailAssets() {
             No email aliases
           </h2>
           <p className="text-slate-500 max-w-sm mb-8 font-medium">
-            Create your first professional sending identity to start running
-            email campaigns.
+            {isPersonal
+              ? "No email aliases assigned to you yet."
+              : "Create your first professional sending identity to start running email campaigns."}
           </p>
           <Button
             onClick={() => setIsDialogOpen(true)}
@@ -167,7 +170,7 @@ export function EmailAssets() {
               </div>
 
               {isOwnerOrAdmin && (
-                <AssigneeBadge assignedUserId={alias.assignedUserId} />
+                <AssigneeBadge assignedUserIds={alias.assignedUserIds} />
               )}
             </div>
           </div>

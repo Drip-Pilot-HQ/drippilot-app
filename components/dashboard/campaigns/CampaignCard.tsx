@@ -203,7 +203,7 @@ export function CampaignCard({
         </div>
 
         {isOwnerOrAdmin && (
-          <AssigneeBadge assignedUserId={campaign.assignedUserId} />
+          <AssigneeBadge assignedUserIds={campaign.assignedUserIds} />
         )}
       </div>
     </div>

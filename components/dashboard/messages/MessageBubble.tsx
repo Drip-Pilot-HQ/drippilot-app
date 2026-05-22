@@ -16,12 +16,65 @@ export const MessageBubble = memo(function MessageBubble({
   const isInbound = message.direction === "inbound";
   const isAi = message.senderType === "ai";
   const isSystem = message.senderType === "system";
+  const isLead = message.senderType === "lead";
+  const isUser = message.senderType === "user";
+
+  const bubbleColor = isSystem
+    ? "bg-amber-100 text-slate-900 border border-amber-200"
+    : isAi
+      ? "bg-violet-600 text-white"
+      : isUser
+        ? "bg-[#007AFF] text-white"
+        : isLead
+          ? "bg-white text-slate-900 border border-slate-200"
+          : "bg-slate-100 text-slate-900 border border-slate-200";
+
+  const avatarColor = isSystem
+    ? "bg-amber-100"
+    : isAi
+      ? "bg-violet-100"
+      : isUser
+        ? "bg-blue-100"
+        : "bg-slate-100";
+
+  const avatarIcon = isSystem ? (
+    <Zap className="w-3.5 h-3.5 text-amber-600" />
+  ) : isAi ? (
+    <Bot className="w-3.5 h-3.5 text-violet-600" />
+  ) : (
+    <User
+      className={cn("w-3.5 h-3.5", isUser ? "text-blue-600" : "text-slate-500")}
+    />
+  );
+
+  const label = (
+    <span
+      className={cn(
+        "text-[9px] font-semibold uppercase tracking-wider flex items-center gap-1.5",
+        isSystem
+          ? "text-amber-600"
+          : isAi
+            ? "text-violet-400"
+            : isUser
+              ? "text-blue-300"
+              : "text-slate-400",
+      )}
+    >
+      {isSystem && <Zap className="w-2.5 h-2.5" />}
+      {message.channel.toUpperCase()}
+    </span>
+  );
 
   if (isInbound) {
     return (
       <div className="flex items-end gap-2 justify-start">
-        <div className="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center shrink-0 mb-1">
-          <User className="w-3.5 h-3.5 text-slate-400" />
+        <div
+          className={cn(
+            "w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mb-1",
+            avatarColor,
+          )}
+        >
+          {avatarIcon}
         </div>
         <div className="max-w-[75%]">
           {message.subject && (
@@ -29,15 +82,19 @@ export const MessageBubble = memo(function MessageBubble({
               {message.subject}
             </p>
           )}
-          <div className="bg-slate-50 border border-slate-200 rounded-2xl rounded-bl-sm px-4 py-2.5">
-            <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap wrap-break-word font-medium">
+          <div
+            className={cn(
+              "rounded-3xl px-4 py-3 shadow-sm",
+              bubbleColor,
+              isLead ? "rounded-tl-none" : "rounded-tl-3xl",
+            )}
+          >
+            <p className="text-sm leading-relaxed whitespace-pre-wrap wrap-break-word font-medium">
               {message.body}
             </p>
           </div>
           <div className="flex items-center gap-1.5 mt-1 ml-1">
-            <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-400">
-              {message.channel}
-            </span>
+            {label}
             <span className="w-0.5 h-0.5 rounded-full bg-slate-200" />
             <p className="text-[10px] text-slate-400 font-medium">
               {format(new Date(message.createdAt), "h:mm a")}
@@ -47,37 +104,6 @@ export const MessageBubble = memo(function MessageBubble({
       </div>
     );
   }
-
-  const bubbleColor = isSystem
-    ? "bg-orange-400 text-white"
-    : isAi
-      ? "bg-gradient-to-br from-violet-500 to-indigo-500 text-white"
-      : "bg-[#007AFF] text-white";
-
-  const avatarColor = isSystem
-    ? "bg-orange-100"
-    : isAi
-      ? "bg-violet-100"
-      : "bg-blue-100";
-
-  const avatarIcon = isSystem ? (
-    <Zap className="w-3.5 h-3.5 text-orange-500" />
-  ) : isAi ? (
-    <Bot className="w-3.5 h-3.5 text-violet-500" />
-  ) : (
-    <User className="w-3.5 h-3.5 text-[#007AFF]" />
-  );
-
-  const label = isSystem ? (
-    <span className="text-[10px] text-orange-500 font-semibold uppercase tracking-wider flex items-center gap-1.5">
-      <Zap className="w-2.5 h-2.5" />
-      Drip · {message.channel}
-    </span>
-  ) : (
-    <span className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">
-      {message.channel}
-    </span>
-  );
 
   return (
     <div className="flex items-end gap-2 justify-end">
@@ -89,8 +115,9 @@ export const MessageBubble = memo(function MessageBubble({
         )}
         <div
           className={cn(
-            "rounded-2xl rounded-br-sm px-4 py-2.5 shadow-sm",
+            "rounded-3xl px-4 py-3 shadow-sm",
             bubbleColor,
+            "rounded-br-none",
           )}
         >
           <p className="text-sm leading-relaxed whitespace-pre-wrap wrap-break-word font-medium">

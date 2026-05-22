@@ -18,7 +18,7 @@ export function ReferralStatsGrid({
   return (
     <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
       <StatCard
-        label="Referred Users"
+        label="Closed Accounts"
         value={String(signups.length)}
         icon={Users}
         iconColor="text-primary"

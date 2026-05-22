@@ -22,6 +22,8 @@ import { WorkspaceContextSwitcher } from "./workspace-switcher";
 import type { NavGroup, NavItem, UserProfile } from "@/types/layout";
 import { WorkspaceRole } from "@/types/account";
 import { OnboardingController } from "@/components/onboarding";
+import { ViewModeProvider } from "@/components/providers/ViewModeProvider";
+import { ViewModeToggle } from "@/components/layout/ViewModeToggle";
 
 const ADMIN_ONLY = [WorkspaceRole.OWNER, WorkspaceRole.ADMIN];
 
@@ -92,18 +94,23 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AppLayout
-      navGroups={navGroups}
-      user={activeUser}
-      sidebarContextSlot={(isCollapsed) => (
-        <WorkspaceContextSwitcher collapsed={isCollapsed} />
-      )}
-      collapseMode="icon-only"
-      mainMaxWidth="max-w-[1600px]"
-      showNotifications
-    >
-      {children}
-      <OnboardingController />
-    </AppLayout>
+    <ViewModeProvider>
+      <AppLayout
+        navGroups={navGroups}
+        user={activeUser}
+        sidebarContextSlot={(isCollapsed) => (
+          <>
+            <WorkspaceContextSwitcher collapsed={isCollapsed} />
+            <ViewModeToggle collapsed={isCollapsed} />
+          </>
+        )}
+        collapseMode="icon-only"
+        mainMaxWidth="max-w-[1600px]"
+        showNotifications
+      >
+        {children}
+        <OnboardingController />
+      </AppLayout>
+    </ViewModeProvider>
   );
 }

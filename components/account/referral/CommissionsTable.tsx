@@ -7,18 +7,26 @@ interface CommissionsTableProps {
   commissions: ReferralCommission[];
 }
 
+function CommissionAmount({ cents }: { cents: number }) {
+  return (
+    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-green-50 border border-green-100 text-green-700 text-xs font-black w-fit">
+      + {formatCents(cents)}
+    </span>
+  );
+}
+
 export function CommissionsTable({ commissions }: CommissionsTableProps) {
   if (commissions.length === 0) {
     return (
-      <div className="bg-white border border-slate-200 rounded-3xl p-8 sm:p-12 text-center shadow-sm">
-        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center mx-auto mb-4">
-          <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-slate-300" />
+      <div className="bg-white border border-slate-200 rounded-3xl p-10 sm:p-14 text-center shadow-sm">
+        <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center mx-auto mb-4">
+          <DollarSign className="w-6 h-6 text-slate-300" />
         </div>
-        <h4 className="font-heading font-bold text-slate-900 text-sm sm:text-base">
+        <h4 className="font-heading font-bold text-slate-900 text-sm sm:text-base mb-1">
           No commissions yet
         </h4>
-        <p className="text-slate-500 text-xs sm:text-sm font-semibold mt-1">
-          Commissions are generated when referred users pay their invoices.
+        <p className="text-slate-400 text-xs sm:text-sm font-semibold max-w-xs mx-auto">
+          Commissions are generated when accounts pay their invoices.
         </p>
       </div>
     );
@@ -27,19 +35,24 @@ export function CommissionsTable({ commissions }: CommissionsTableProps) {
   return (
     <div className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
       {/* Card header */}
-      <div className="px-5 sm:px-6 py-4 border-b border-slate-100 flex items-center gap-2">
-        <DollarSign className="w-4 h-4 text-primary shrink-0" />
-        <h3 className="font-heading font-black text-slate-900 text-base sm:text-lg">
-          Commission History
-        </h3>
-        <span className="ml-auto px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-wider shrink-0">
-          {commissions.length} records
-        </span>
+      <div className="px-5 sm:px-6 py-4 sm:py-5 border-b border-slate-100 flex items-center gap-3">
+        <div className="w-8 h-8 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0">
+          <DollarSign className="w-4 h-4 text-primary" />
+        </div>
+        <div>
+          <h3 className="font-heading font-black text-slate-900 text-base sm:text-lg leading-none">
+            Commission History
+          </h3>
+          <p className="text-[11px] font-semibold text-slate-400 mt-0.5">
+            {commissions.length}{" "}
+            {commissions.length === 1 ? "record" : "records"}
+          </p>
+        </div>
       </div>
 
       {/* Desktop column headers */}
-      <div className="hidden sm:grid sm:grid-cols-4 px-6 py-2.5 bg-slate-50 border-b border-slate-100">
-        {["Invoice Amount", "Commission", "Rate", "Status"].map((h) => (
+      <div className="hidden sm:grid sm:grid-cols-[2fr_1.5fr_1fr] px-6 py-3 bg-slate-50/80 border-b border-slate-100 gap-4">
+        {["Invoice", "Earned", "Status"].map((h) => (
           <p
             key={h}
             className="text-[10px] font-black uppercase tracking-widest text-slate-400"
@@ -53,45 +66,35 @@ export function CommissionsTable({ commissions }: CommissionsTableProps) {
         {commissions.map((c) => (
           <div
             key={c.id}
-            className="px-5 sm:px-6 py-4 hover:bg-slate-50/60 transition-colors"
+            className="px-5 sm:px-6 py-4 sm:py-5 hover:bg-slate-50/60 transition-colors"
           >
-            {/* Mobile: stacked card layout */}
-            <div className="sm:hidden flex items-start justify-between gap-3">
-              <div className="space-y-1 min-w-0">
-                <p className="text-xs font-semibold text-slate-400">
-                  {formatDate(c.createdAt)}
-                </p>
-                <p className="text-sm font-bold text-slate-900">
-                  {formatCents(c.invoiceAmountCents)}
-                </p>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-sm font-black text-primary">
-                    +{formatCents(c.commissionAmountCents)}
+            {/* Mobile */}
+            <div className="sm:hidden space-y-3">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-sm font-bold text-slate-900">
+                    {formatCents(c.invoiceAmountCents)}
                   </p>
-                  <span className="text-xs font-black text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded-md">
-                    {c.commissionRate}%
-                  </span>
+                  <p className="text-[11px] font-semibold text-slate-400 mt-0.5">
+                    {formatDate(c.createdAt)}
+                  </p>
                 </div>
+                <CommissionBadge status={c.status} />
               </div>
-              <CommissionBadge status={c.status} />
+              <CommissionAmount cents={c.commissionAmountCents} />
             </div>
 
-            {/* Desktop: grid row */}
-            <div className="hidden sm:grid sm:grid-cols-4 items-center gap-0">
+            {/* Desktop */}
+            <div className="hidden sm:grid sm:grid-cols-[2fr_1.5fr_1fr] items-center gap-4">
               <div>
                 <p className="text-sm font-bold text-slate-900">
                   {formatCents(c.invoiceAmountCents)}
                 </p>
-                <p className="text-[10px] font-semibold text-slate-400 mt-0.5">
+                <p className="text-[11px] font-semibold text-slate-400 mt-0.5">
                   {formatDate(c.createdAt)}
                 </p>
               </div>
-              <p className="text-sm font-black text-primary">
-                +{formatCents(c.commissionAmountCents)}
-              </p>
-              <span className="text-xs font-black text-slate-700 bg-slate-100 px-2 py-0.5 rounded-lg w-fit">
-                {c.commissionRate}%
-              </span>
+              <CommissionAmount cents={c.commissionAmountCents} />
               <CommissionBadge status={c.status} />
             </div>
           </div>

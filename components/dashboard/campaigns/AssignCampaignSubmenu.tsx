@@ -16,20 +16,18 @@ export function AssignCampaignSubmenu({
 }: AssignCampaignSubmenuProps) {
   const assignMutation = useAssignCampaignMutation();
 
-  const { handleAssign, isAssigning, assigningToId } = useAssignSubmenuState(
-    (userId) =>
-      assignMutation.mutateAsync({
-        id: campaign.id,
-        dto: { assignedUserId: userId },
-      }),
-    (userId) => (userId ? "Campaign assigned" : "Campaign unassigned"),
+  const { handleAssign, isAssigning, assigningUserId } = useAssignSubmenuState(
+    (userIds) =>
+      assignMutation.mutateAsync({ id: campaign.id, dto: { userIds } }),
+    (userIds) =>
+      userIds.length > 0 ? "Campaign assigned" : "Campaign unassigned",
   );
 
   return (
     <AssignSubmenu
-      currentAssignedUserId={campaign.assignedUserId}
+      currentAssignedUserIds={campaign.assignedUserIds ?? []}
       isAssigning={isAssigning}
-      assigningToId={assigningToId}
+      assigningUserId={assigningUserId}
       onAssign={handleAssign}
     />
   );

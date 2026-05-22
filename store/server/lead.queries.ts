@@ -10,9 +10,11 @@ import {
   AssignLeadDto,
   BulkAssignLeadsDto,
 } from "@/types/lead";
+import { useViewMode } from "@/lib/hooks/use-view-mode";
 
 export const useLeadsQuery = (query: SearchLeadsDto = {}) => {
-  const params = { ...query, includeCampaigns: true };
+  const { viewMode } = useViewMode();
+  const params = { ...query, includeCampaigns: true, viewMode };
   return useQuery({
     queryKey: ["leads", params],
     queryFn: async () => {

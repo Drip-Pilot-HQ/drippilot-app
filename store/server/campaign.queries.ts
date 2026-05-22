@@ -18,13 +18,16 @@ import {
   GetExecutionLogsDto,
   PaginatedExecutionLogsResponse,
 } from '@/types/campaign'
+import { useViewMode } from '@/lib/hooks/use-view-mode'
 
 export const useCampaignsQuery = (query: SearchCampaignsDto = {}) => {
+  const { viewMode } = useViewMode()
+  const params = { ...query, viewMode }
   return useQuery({
-    queryKey: ['campaigns', query],
+    queryKey: ['campaigns', params],
     queryFn: async () => {
       const { data } = await apiClient.get<Campaign[]>('/campaigns', {
-        params: query
+        params
       })
       return data
     },
@@ -212,6 +215,10 @@ export const useAssignCampaignMutation = () => {
       return data
     },
     onSuccess: (data) => {
+      queryClient.setQueriesData<Campaign[]>(
+        { queryKey: ['campaigns'], exact: false },
+        (old) => old?.map((c) => c.id === data.id ? { ...c, assignedUserIds: data.assignedUserIds } : c),
+      )
       queryClient.invalidateQueries({ queryKey: ['campaigns'] })
       queryClient.invalidateQueries({ queryKey: ['campaign', data.id] })
     },

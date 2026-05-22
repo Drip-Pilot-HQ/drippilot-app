@@ -137,7 +137,7 @@ export function TemplateCard({
         </div>
 
         {isOwnerOrAdmin && (
-          <AssigneeBadge assignedUserId={template.assignedUserId} />
+          <AssigneeBadge assignedUserIds={template.assignedUserIds} />
         )}
       </div>
     </div>

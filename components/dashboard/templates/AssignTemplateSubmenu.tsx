@@ -16,20 +16,18 @@ export function AssignTemplateSubmenu({
 }: AssignTemplateSubmenuProps) {
   const assignMutation = useAssignTemplateMutation();
 
-  const { handleAssign, isAssigning, assigningToId } = useAssignSubmenuState(
-    (userId) =>
-      assignMutation.mutateAsync({
-        id: template.id,
-        dto: { assignedUserId: userId },
-      }),
-    (userId) => (userId ? "Template assigned" : "Template unassigned"),
+  const { handleAssign, isAssigning, assigningUserId } = useAssignSubmenuState(
+    (userIds) =>
+      assignMutation.mutateAsync({ id: template.id, dto: { userIds } }),
+    (userIds) =>
+      userIds.length > 0 ? "Template assigned" : "Template unassigned",
   );
 
   return (
     <AssignSubmenu
-      currentAssignedUserId={template.assignedUserId}
+      currentAssignedUserIds={template.assignedUserIds ?? []}
       isAssigning={isAssigning}
-      assigningToId={assigningToId}
+      assigningUserId={assigningUserId}
       onAssign={handleAssign}
     />
   );

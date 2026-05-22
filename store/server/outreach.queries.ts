@@ -7,12 +7,14 @@ import {
   SendReplyDto,
   ToggleAiResponseDto,
 } from '@/types/outreach'
+import { useViewMode } from '@/lib/hooks/use-view-mode'
 
 export const useOutreachThreadsQuery = () => {
+  const { viewMode } = useViewMode()
   return useQuery({
-    queryKey: ['outreach-threads'],
+    queryKey: ['outreach-threads', viewMode],
     queryFn: async () => {
-      const { data } = await apiClient.get<OutreachThread[]>('/outreach/threads')
+      const { data } = await apiClient.get<OutreachThread[]>('/outreach/threads', { params: { viewMode } })
       return data
     },
   })

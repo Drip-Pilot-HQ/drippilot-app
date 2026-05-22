@@ -15,6 +15,7 @@ import {
 } from "@/store/server/assets.queries";
 import { useConfirm } from "@/components/branding/ConfirmProvider";
 import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
+import { useViewMode } from "@/lib/hooks/use-view-mode";
 import { AssetListSkeleton } from "./AssetSkeleton";
 import { BuyNumberDialog } from "./BuyNumberDialog";
 import { PhoneNumber } from "@/types/assets";
@@ -33,6 +34,7 @@ import { AssigneeBadge } from "@/components/common/AssigneeBadge";
 
 export function PhoneAssets() {
   const { isOwnerOrAdmin } = useWorkspaceRole();
+  const { isPersonal } = useViewMode();
   const { data: numbers, isLoading } = usePhoneNumbersQuery();
   const releaseMutation = useReleasePhoneNumberMutation();
   const confirm = useConfirm();
@@ -64,8 +66,9 @@ export function PhoneAssets() {
             No phone numbers
           </h2>
           <p className="text-slate-500 max-w-sm mb-8 font-medium">
-            Create your first dedicated phone number to start reaching leads via
-            SMS.
+            {isPersonal
+              ? "No phone numbers assigned to you yet."
+              : "Create your first dedicated phone number to start reaching leads via SMS."}
           </p>
           <Button
             onClick={() => setIsDialogOpen(true)}
@@ -150,7 +153,7 @@ export function PhoneAssets() {
               </div>
 
               {isOwnerOrAdmin ? (
-                <AssigneeBadge assignedUserId={number.assignedUserId} />
+                <AssigneeBadge assignedUserIds={number.assignedUserIds} />
               ) : (
                 <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                   {number.provider}

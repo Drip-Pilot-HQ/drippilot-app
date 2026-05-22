@@ -7,7 +7,7 @@ export interface TemplateFolder {
   id: string;
   workspaceId: string;
   name: string;
-  assignedUserId?: string | null;
+  assignedUserIds?: string[];
   createdAt: string;
   updatedAt: string;
 }
@@ -20,17 +20,17 @@ export interface Template {
   subject?: string;
   content: string;
   templateChannel: TemplateChannel;
-  assignedUserId?: string | null;
+  assignedUserIds?: string[];
   createdAt: string;
   updatedAt: string;
 }
 
 export interface AssignTemplateFolderDto {
-  assignedUserId: string | null;
+  userIds: string[];
 }
 
 export interface AssignTemplateDto {
-  assignedUserId: string | null;
+  userIds: string[];
 }
 
 export interface CreateTemplateDto {
@@ -57,6 +57,7 @@ export interface SearchTemplatesDto {
   sortOrder?: "asc" | "desc";
   page?: number;
   limit?: number;
+  viewMode?: "team" | "personal";
 }
 
 export interface PaginatedTemplatesResponse {

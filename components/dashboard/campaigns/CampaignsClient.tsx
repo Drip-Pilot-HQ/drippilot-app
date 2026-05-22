@@ -13,9 +13,11 @@ import { CampaignsFilters } from "./CampaignsFilters";
 import { Campaign, CampaignStatus } from "@/types/campaign";
 import { Button } from "@/components/branding/Button";
 import { useDebounce } from "@/lib/hooks/use-debounce";
+import { useViewMode } from "@/lib/hooks/use-view-mode";
 
 export function CampaignsClient() {
   const { isOwnerOrAdmin } = useWorkspaceRole();
+  const { isPersonal } = useViewMode();
   const [searchInput, setSearchInput] = useState("");
   const debouncedSearch = useDebounce(searchInput, 500);
   const [selectedStatuses, setSelectedStatuses] = useState<CampaignStatus[]>(
@@ -131,9 +133,9 @@ export function CampaignsClient() {
               No campaigns found
             </h2>
             <p className="text-slate-500 max-w-sm mb-8 font-medium">
-              {isOwnerOrAdmin
-                ? "You haven't created any campaigns yet. Launch your first one to start driving results."
-                : "No campaigns have been assigned to you yet. Create your own or ask an admin to assign one."}
+              {isPersonal
+                ? "No campaigns assigned to you yet. Create your own or ask an admin to assign one."
+                : "You haven't created any campaigns yet. Launch your first one to start driving results."}
             </p>
             <Button
               onClick={() => setIsCreateOpen(true)}

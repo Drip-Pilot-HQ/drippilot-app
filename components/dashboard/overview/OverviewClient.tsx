@@ -16,6 +16,7 @@ import {
 } from "@/store/server/analytics.queries";
 import { useMembersQuery } from "@/store/server/workspace.queries";
 import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
+import { useViewMode } from "@/lib/hooks/use-view-mode";
 import type { DaysFilter } from "@/types/analytics";
 import { OverviewHeader } from "./OverviewHeader";
 import { ViewAsMemberSelector } from "./ViewAsMemberSelector";
@@ -35,6 +36,7 @@ export function OverviewClient() {
   const [viewAsMemberId, setViewAsMemberId] = useState<string | undefined>();
 
   const { isOwnerOrAdmin, isMember } = useWorkspaceRole();
+  const { isPersonal } = useViewMode();
   const { data: membersData } = useMembersQuery(isOwnerOrAdmin);
   const members = useMemo(() => membersData ?? [], [membersData]);
 
@@ -51,22 +53,23 @@ export function OverviewClient() {
     [members],
   );
 
-  const { data: stats, isLoading: statsLoading } = useDashboardStatsQuery(
-    isOwnerOrAdmin ? viewAsMemberId : undefined,
-  );
+  const explicitViewAs =
+    !isPersonal && isOwnerOrAdmin ? viewAsMemberId : undefined;
+
+  const { data: stats, isLoading: statsLoading } =
+    useDashboardStatsQuery(explicitViewAs);
   const { data: activity, isLoading: activityLoading } =
-    useActivityInsightsQuery(days, isOwnerOrAdmin ? viewAsMemberId : undefined);
-  const { data: benchmarks, isLoading: benchmarksLoading } = useBenchmarksQuery(
-    isOwnerOrAdmin ? viewAsMemberId : undefined,
-  );
+    useActivityInsightsQuery(days, explicitViewAs);
+  const { data: benchmarks, isLoading: benchmarksLoading } =
+    useBenchmarksQuery(explicitViewAs);
   const { data: lifecycle, isLoading: lifecycleLoading } =
-    useLifecycleMetricsQuery(days, isOwnerOrAdmin ? viewAsMemberId : undefined);
+    useLifecycleMetricsQuery(days, explicitViewAs);
 
   const isLoading =
     statsLoading || activityLoading || benchmarksLoading || lifecycleLoading;
 
   const scopeLabel = (() => {
-    if (isOwnerOrAdmin && viewAsMemberId) {
+    if (isOwnerOrAdmin && !isPersonal && viewAsMemberId) {
       const name = memberMap.get(viewAsMemberId);
       return (
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-bold">
@@ -74,17 +77,17 @@ export function OverviewClient() {
         </span>
       );
     }
+    if (isPersonal || isMember) {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-bold">
+          Your metrics
+        </span>
+      );
+    }
     if (isOwnerOrAdmin) {
       return (
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-bold">
           Team metrics
-        </span>
-      );
-    }
-    if (isMember) {
-      return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-bold">
-          Your metrics
         </span>
       );
     }
@@ -101,7 +104,7 @@ export function OverviewClient() {
         }
         scopeLabel={scopeLabel}
         viewAsSelectorSlot={
-          isOwnerOrAdmin ? (
+          isOwnerOrAdmin && !isPersonal ? (
             <ViewAsMemberSelector
               members={members}
               value={viewAsMemberId}
