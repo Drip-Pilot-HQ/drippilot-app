@@ -1,25 +1,29 @@
-import { Users } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import { Users, ChevronDown, DollarSign } from "lucide-react";
 import { formatDate, formatCents } from "./config";
-import { ReferralSignup } from "@/types/account";
+import { ReferralSignup, ReferralCommission } from "@/types/account";
+import { CommissionBadge } from "./CommissionBadge";
+import { cn } from "@/lib/utils";
 
 interface ReferredUsersTableProps {
   signups: ReferralSignup[];
+  commissions: ReferralCommission[];
 }
 
 function UserAvatar({ name, email }: { name: string; email: string }) {
   const initial = (name || email)?.[0]?.toUpperCase() ?? "?";
   return (
-    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-linear-to-br from-primary/20 to-pink-400/20 flex items-center justify-center shrink-0">
-      <span className="text-xs sm:text-sm font-black text-primary">
-        {initial}
-      </span>
+    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+      <span className="text-sm font-bold text-primary">{initial}</span>
     </div>
   );
 }
 
 function PlanBadge({ planId }: { planId: string | null }) {
   if (!planId || planId === "none") {
-    return <span className="text-slate-400 font-bold text-[11px]">—</span>;
+    return <span className="text-slate-300 text-sm">—</span>;
   }
   return (
     <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-wider">
@@ -28,145 +32,287 @@ function PlanBadge({ planId }: { planId: string | null }) {
   );
 }
 
-function StatusBadge({ status }: { status: string | null }) {
-  if (!status)
-    return <span className="text-slate-400 font-bold text-[11px]">—</span>;
+function AccountStatusBadge({ status }: { status: string | null }) {
+  if (!status) return <span className="text-slate-300 text-sm">—</span>;
 
   const styles: Record<string, string> = {
-    active: "bg-green-50 text-green-600 border border-green-100",
-    past_due: "bg-amber-50 text-amber-600 border border-amber-100",
-    suspended_dunning: "bg-amber-50 text-amber-600 border border-amber-100",
-    canceled_pending: "bg-red-50 text-red-500 border border-red-100",
-    terminated: "bg-red-50 text-red-500 border border-red-100",
+    active: "bg-emerald-50 text-emerald-700",
+    past_due: "bg-amber-50 text-amber-700",
+    suspended_dunning: "bg-amber-50 text-amber-700",
+    canceled_pending: "bg-red-50 text-red-600",
+    terminated: "bg-red-50 text-red-600",
   };
-
-  const className =
-    styles[status] ?? "bg-slate-50 text-slate-500 border border-slate-100";
-
-  const label = status.replace(/_/g, " ");
+  const cls = styles[status] ?? "bg-slate-100 text-slate-600";
 
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${className}`}
+      className={cn(
+        "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider whitespace-nowrap",
+        cls,
+      )}
     >
-      {label}
+      {status.replace(/_/g, " ")}
     </span>
   );
 }
 
-export function ReferredUsersTable({ signups }: ReferredUsersTableProps) {
+function CommissionSubRow({ commission }: { commission: ReferralCommission }) {
+  return (
+    <tr className="hover:bg-slate-50/60 transition-colors">
+      <td className="pl-14 pr-3 py-2.5">
+        <p className="text-xs font-semibold text-slate-700">
+          Invoice · {formatCents(commission.invoiceAmountCents)}
+        </p>
+        <p className="text-[11px] text-slate-400 mt-0.5">
+          {formatDate(commission.createdAt)}
+        </p>
+      </td>
+      <td className="px-3 py-2.5" />
+      <td className="px-3 py-2.5" />
+      <td className="px-3 py-2.5">
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold">
+          +{formatCents(commission.commissionAmountCents)}
+        </span>
+      </td>
+      <td className="px-3 py-2.5">
+        <CommissionBadge status={commission.status} />
+      </td>
+      <td className="px-3 py-2.5" />
+    </tr>
+  );
+}
+
+function UserRow({
+  signup,
+  userCommissions,
+  colCount,
+}: {
+  signup: ReferralSignup;
+  userCommissions: ReferralCommission[];
+  colCount: number;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const hasCommissions = userCommissions.length > 0;
+  const totalEarned = userCommissions.reduce(
+    (s, c) => s + c.commissionAmountCents,
+    0,
+  );
+
+  return (
+    <>
+      <tr
+        onClick={() => setExpanded((v) => !v)}
+        className={cn(
+          "border-b border-slate-100 cursor-pointer transition-colors",
+          expanded ? "bg-slate-50" : "hover:bg-slate-50",
+        )}
+      >
+        {/* Account */}
+        <td className="px-4 py-3">
+          <div className="flex items-center gap-2.5">
+            <UserAvatar
+              name={signup.referredName}
+              email={signup.referredEmail}
+            />
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-slate-900 truncate max-w-45">
+                {signup.referredName || "—"}
+              </p>
+              <p className="text-xs text-slate-400 truncate max-w-45">
+                {signup.referredEmail}
+              </p>
+            </div>
+          </div>
+        </td>
+
+        {/* Plan */}
+        <td className="px-3 py-3">
+          <PlanBadge planId={signup.planId} />
+        </td>
+
+        {/* MRR */}
+        <td className="px-3 py-3">
+          <span className="text-sm font-semibold text-slate-700">
+            {signup.mrrCents != null ? formatCents(signup.mrrCents) : "—"}
+          </span>
+        </td>
+
+        {/* Commissions earned */}
+        <td className="px-3 py-3">
+          {hasCommissions ? (
+            <span className="text-sm font-semibold text-emerald-600">
+              {formatCents(totalEarned)}
+            </span>
+          ) : (
+            <span className="text-slate-300 text-sm">—</span>
+          )}
+        </td>
+
+        {/* Status */}
+        <td className="px-3 py-3">
+          <AccountStatusBadge status={signup.accountStatus} />
+        </td>
+
+        {/* Joined + chevron */}
+        <td className="px-3 py-3 text-right">
+          <div className="flex items-center justify-end gap-3">
+            <span className="text-xs text-slate-400 font-medium whitespace-nowrap">
+              {formatDate(signup.createdAt)}
+            </span>
+            <ChevronDown
+              className={cn(
+                "w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0",
+                expanded && "rotate-180",
+              )}
+            />
+          </div>
+        </td>
+      </tr>
+
+      {/* Commission expansion — animated via grid trick inside colSpan td */}
+      <tr>
+        <td colSpan={colCount} className="p-0 border-0">
+          <div
+            className={cn(
+              "grid transition-[grid-template-rows] duration-200 ease-in-out",
+              expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+            )}
+          >
+            <div className="overflow-hidden">
+              <table className="w-full">
+                <tbody>
+                  {/* Sub-header */}
+                  <tr className="bg-slate-50/80 border-b border-slate-100">
+                    <td colSpan={colCount} className="pl-14 pr-4 py-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <DollarSign className="w-3 h-3 text-slate-400" />
+                          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                            Commission History
+                          </span>
+                          {hasCommissions && (
+                            <span className="px-1.5 py-0.5 rounded-full bg-slate-200 text-slate-500 text-[9px] font-black">
+                              {userCommissions.length}
+                            </span>
+                          )}
+                        </div>
+                        {hasCommissions && (
+                          <span className="text-xs font-semibold text-slate-500">
+                            Total:{" "}
+                            <span className="text-emerald-600 font-bold">
+                              {formatCents(totalEarned)}
+                            </span>
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+
+                  {hasCommissions ? (
+                    userCommissions.map((c) => (
+                      <CommissionSubRow key={c.id} commission={c} />
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={colCount} className="pl-14 pr-4 py-4">
+                        <p className="text-xs text-slate-400 font-medium">
+                          No commissions yet for this account.
+                        </p>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </>
+  );
+}
+
+export function ReferredUsersTable({
+  signups,
+  commissions,
+}: ReferredUsersTableProps) {
+  const commissionsByUser = commissions.reduce<
+    Record<string, ReferralCommission[]>
+  >((acc, c) => {
+    (acc[c.referralSignupId] ??= []).push(c);
+    return acc;
+  }, {});
+
+  const COL_COUNT = 6;
+
   if (signups.length === 0) {
     return (
-      <div className="bg-white border border-slate-200 rounded-3xl p-8 sm:p-12 text-center shadow-sm">
-        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center mx-auto mb-4">
-          <Users className="w-5 h-5 sm:w-6 sm:h-6 text-slate-300" />
+      <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center shadow-sm">
+        <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center mx-auto mb-3">
+          <Users className="w-5 h-5 text-slate-300" />
         </div>
-        <h4 className="font-heading font-bold text-slate-900 text-sm sm:text-base">
+        <p className="font-semibold text-slate-900 text-sm mb-1">
           No accounts yet
-        </h4>
-        <p className="text-slate-500 text-xs sm:text-sm font-semibold mt-1">
+        </p>
+        <p className="text-slate-400 text-xs max-w-xs mx-auto">
           New signups using your tracking link will appear here.
         </p>
       </div>
     );
   }
 
+  const totalCommissions = commissions.length;
+
   return (
-    <div className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
-      <div className="px-5 sm:px-6 py-4 border-b border-slate-100 flex items-center gap-2">
-        <Users className="w-4 h-4 text-primary shrink-0" />
-        <h3 className="font-heading font-black text-slate-900 text-base sm:text-lg">
-          Managed Accounts
-        </h3>
-        <span className="ml-auto px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-wider shrink-0">
-          {signups.length} total
+    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+      {/* Header */}
+      <div className="px-4 py-3.5 border-b border-slate-100 flex items-center gap-3">
+        <p className="font-bold text-slate-900 text-sm">Managed Accounts</p>
+        <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-black uppercase tracking-wider">
+          {signups.length}
         </span>
+        {totalCommissions > 0 && (
+          <span className="text-xs text-slate-400 font-medium">
+            · {totalCommissions} commissions — click row to expand
+          </span>
+        )}
       </div>
 
-      {/* Desktop column headers */}
-      <div className="hidden sm:grid grid-cols-[1fr_auto_auto_auto_auto] px-6 py-2.5 bg-slate-50 border-b border-slate-100 gap-6">
-        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-          Account
-        </p>
-        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 w-20 text-center">
-          Plan
-        </p>
-        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 w-20 text-right">
-          MRR
-        </p>
-        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 w-28 text-center">
-          Status
-        </p>
-        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 w-20 text-right">
-          Date Joined
-        </p>
-      </div>
-
-      <div className="divide-y divide-slate-100">
-        {signups.map((signup) => (
-          <div
-            key={signup.referredUserId}
-            className="px-5 sm:px-6 py-3.5 sm:py-4 hover:bg-slate-50/60 transition-colors"
-          >
-            {/* Desktop row */}
-            <div className="hidden sm:grid grid-cols-[1fr_auto_auto_auto_auto] items-center gap-6">
-              <div className="flex items-center gap-3 min-w-0">
-                <UserAvatar
-                  name={signup.referredName}
-                  email={signup.referredEmail}
-                />
-                <div className="min-w-0">
-                  <p className="text-sm font-bold text-slate-900 truncate">
-                    {signup.referredName || "—"}
-                  </p>
-                  <p className="text-xs font-semibold text-slate-400 truncate">
-                    {signup.referredEmail}
-                  </p>
-                </div>
-              </div>
-              <div className="w-20 flex justify-center">
-                <PlanBadge planId={signup.planId} />
-              </div>
-              <p className="w-20 text-right text-[11px] font-bold text-slate-700">
-                {signup.mrrCents != null ? formatCents(signup.mrrCents) : "—"}
-              </p>
-              <div className="w-28 flex justify-center">
-                <StatusBadge status={signup.accountStatus} />
-              </div>
-              <p className="w-20 text-right text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                {formatDate(signup.createdAt)}
-              </p>
-            </div>
-
-            {/* Mobile row */}
-            <div className="flex sm:hidden items-center gap-3">
-              <UserAvatar
-                name={signup.referredName}
-                email={signup.referredEmail}
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full text-left min-w-160">
+          <thead className="bg-slate-50 border-b border-slate-200">
+            <tr>
+              <th className="px-4 py-2.5 text-[11px] font-black uppercase tracking-wider text-slate-500">
+                Account
+              </th>
+              <th className="px-3 py-2.5 text-[11px] font-black uppercase tracking-wider text-slate-500">
+                Plan
+              </th>
+              <th className="px-3 py-2.5 text-[11px] font-black uppercase tracking-wider text-slate-500">
+                MRR
+              </th>
+              <th className="px-3 py-2.5 text-[11px] font-black uppercase tracking-wider text-slate-500">
+                Earned
+              </th>
+              <th className="px-3 py-2.5 text-[11px] font-black uppercase tracking-wider text-slate-500">
+                Status
+              </th>
+              <th className="px-3 py-2.5 text-[11px] font-black uppercase tracking-wider text-slate-500 text-right">
+                Joined
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {signups.map((signup) => (
+              <UserRow
+                key={signup.referredUserId}
+                signup={signup}
+                userCommissions={commissionsByUser[signup.id] ?? []}
+                colCount={COL_COUNT}
               />
-              <div className="min-w-0 flex-1">
-                <p className="text-xs font-bold text-slate-900 truncate">
-                  {signup.referredName || "—"}
-                </p>
-                <p className="text-[11px] font-semibold text-slate-400 truncate">
-                  {signup.referredEmail}
-                </p>
-                <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                  <PlanBadge planId={signup.planId} />
-                  <StatusBadge status={signup.accountStatus} />
-                </div>
-              </div>
-              <div className="shrink-0 text-right">
-                <p className="text-[11px] font-bold text-slate-700">
-                  {signup.mrrCents != null ? formatCents(signup.mrrCents) : "—"}
-                </p>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mt-0.5">
-                  {formatDate(signup.createdAt)}
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

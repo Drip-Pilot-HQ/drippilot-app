@@ -1,6 +1,5 @@
 "use client";
 
-import { Briefcase } from "lucide-react";
 import { toast } from "sonner";
 import {
   useReferralCodeQuery,
@@ -16,12 +15,12 @@ import {
   ReferralStatsGridSkeleton,
 } from "./ReferralStatsGrid";
 import { ReferredUsersTable } from "./ReferredUsersTable";
-import { CommissionsTable } from "./CommissionsTable";
+import { Briefcase } from "lucide-react";
 
 function PageSkeleton() {
   return (
-    <div className="space-y-6 animate-pulse">
-      <div className="h-44 sm:h-52 bg-slate-100 rounded-3xl" />
+    <div className="space-y-4 animate-pulse">
+      <div className="h-28 bg-slate-100 rounded-2xl" />
       <ReferralStatsGridSkeleton />
       <div className="h-32 bg-slate-100 rounded-3xl" />
     </div>
@@ -75,21 +74,19 @@ export function ReferralPage() {
   };
 
   return (
-    <div className="w-full space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      {/* Page header */}
+    <div className="w-full space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+      {/* Header */}
       <div>
-        <h1 className="text-3xl lg:text-4xl font-heading font-black text-slate-900 mb-2">
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-1">
           Sales Dashboard
         </h1>
-        <p className="text-slate-500 font-semibold text-base lg:text-lg">
+        <p className="text-slate-500 font-medium">
           Track your accounts, pipeline activity, and commission earnings.
         </p>
       </div>
 
-      {/* Initial load skeleton */}
       {codeLoading && <PageSkeleton />}
 
-      {/* Not enrolled */}
       {!codeLoading && !isEnrolled && (
         <EnrollCard
           onEnroll={handleEnroll}
@@ -97,7 +94,6 @@ export function ReferralPage() {
         />
       )}
 
-      {/* Enrolled */}
       {!codeLoading && isEnrolled && referralCode && (
         <>
           <ReferralCodeCard code={referralCode.code} />
@@ -110,8 +106,7 @@ export function ReferralPage() {
 
           {!dataLoading && (
             <div className="space-y-5 sm:space-y-6">
-              <ReferredUsersTable signups={signups} />
-              <CommissionsTable commissions={commissions} />
+              <ReferredUsersTable signups={signups} commissions={commissions} />
               <HowItWorksBox />
             </div>
           )}

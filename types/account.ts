@@ -85,6 +85,7 @@ export interface ReferralCode {
 }
 
 export interface ReferralSignup {
+  id: string;
   referredUserId: string;
   referredEmail: string;
   referredName: string;
