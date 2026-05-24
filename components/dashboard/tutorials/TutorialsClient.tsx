@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  Workflow,
-  Settings,
-  Bell,
-  PlayCircle,
-  Clock,
-  Clapperboard,
-} from "lucide-react";
+import { Workflow, Settings, Bell, Clock, Clapperboard } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface TutorialSection {
@@ -17,22 +10,11 @@ interface TutorialSection {
   iconBg: string;
   title: string;
   description: string;
-  videoId: string; // Replace with your YouTube video ID
+  videoId: string;
   duration?: string;
 }
 
 const SECTIONS: TutorialSection[] = [
-  {
-    id: "campaign",
-    icon: Workflow,
-    iconColor: "text-primary",
-    iconBg: "bg-primary/10",
-    title: "Creating a Campaign",
-    description:
-      "Learn how to build and launch your first automated outreach campaign — from setting up sequences to enrolling your first leads.",
-    videoId: "Fm3JTPxlkyM",
-    duration: "5 min",
-  },
   {
     id: "account",
     icon: Settings,
@@ -43,6 +25,17 @@ const SECTIONS: TutorialSection[] = [
       "Walk through workspace configuration, connecting your phone numbers, importing contacts, and getting your team ready to go.",
     videoId: "H7GBtVgMs2I",
     duration: "10 min",
+  },
+  {
+    id: "campaign",
+    icon: Workflow,
+    iconColor: "text-primary",
+    iconBg: "bg-primary/10",
+    title: "Creating a Campaign",
+    description:
+      "Learn how to build and launch your first automated outreach campaign — from setting up sequences to enrolling your first leads.",
+    videoId: "Fm3JTPxlkyM",
+    duration: "5 min",
   },
   {
     id: "notifications",
@@ -58,24 +51,6 @@ const SECTIONS: TutorialSection[] = [
 ];
 
 function VideoEmbed({ videoId, title }: { videoId: string; title: string }) {
-  const isPlaceholder = videoId === "REPLACE_WITH_VIDEO_ID";
-
-  if (isPlaceholder) {
-    return (
-      <div className="aspect-video w-full bg-slate-100 rounded-xl flex flex-col items-center justify-center gap-3 border border-dashed border-slate-300">
-        <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center shadow-sm">
-          <PlayCircle className="w-6 h-6 text-slate-400" />
-        </div>
-        <div className="text-center">
-          <p className="text-sm font-bold text-slate-500">Video coming soon</p>
-          <p className="text-[11px] text-slate-400 mt-0.5">
-            Replace videoId in TutorialsClient.tsx
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="aspect-video w-full rounded-xl overflow-hidden bg-black">
       <iframe
@@ -160,7 +135,7 @@ export function TutorialsClient() {
           </span>
           <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 shadow-sm">
             <Clock className="w-3 h-3 text-cyan-500" />
-            ~18 Min Total
+            ~19 Min Total
           </span>
         </div>
       </div>

@@ -44,7 +44,7 @@ export const useAccountStore = create<AccountState>()(
     }),
     {
       name: 'account-storage',
-      partialize: (state) => ({ activeWorkspaceId: state.activeWorkspaceId }),
+      partialize: (state) => ({ activeWorkspaceId: state.activeWorkspaceId, workspaces: state.workspaces }),
     },
   ),
 )

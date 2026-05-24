@@ -36,11 +36,13 @@ export function OverviewClient() {
   const [days, setDays] = useState<DaysFilter>(30);
   const [configOpen, setConfigOpen] = useState(false);
   const [viewAsMemberId, setViewAsMemberId] = useState<string | undefined>();
-  const [memberViewEntry, setMemberViewEntry] = useState<string | undefined>();
+  const [memberChoseTeam, setMemberChoseTeam] = useState(false);
 
   const { isOwnerOrAdmin, isMember } = useWorkspaceRole();
   const { viewMode } = useViewMode();
   const currentUser = useAuthStore((s) => s.user);
+  const memberViewEntry =
+    isMember && !memberChoseTeam ? currentUser?.id : undefined;
 
   const { data: membersData } = useMembersQuery(isOwnerOrAdmin);
   const members = useMemo(() => membersData ?? [], [membersData]);
@@ -128,7 +130,7 @@ export function OverviewClient() {
         <ViewAsMemberSelector
           members={[]}
           value={memberViewEntry}
-          onChange={setMemberViewEntry}
+          onChange={(id) => setMemberChoseTeam(id === undefined)}
           selfEntry={selfEntry}
         />
       );
