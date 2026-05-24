@@ -20,17 +20,17 @@ export const MessageBubble = memo(function MessageBubble({
   const isUser = message.senderType === "user";
 
   const bubbleColor = isSystem
-    ? "bg-amber-100 text-slate-900 border border-amber-200"
+    ? "bg-[#F6E7B0] text-slate-900 border border-[#DCCB82]"
     : isAi
-      ? "bg-violet-600 text-white"
+      ? "bg-[#7C3AED] text-white"
       : isUser
-        ? "bg-[#007AFF] text-white"
+        ? "bg-[#2563EB] text-white"
         : isLead
           ? "bg-white text-slate-900 border border-slate-200"
           : "bg-slate-100 text-slate-900 border border-slate-200";
 
   const avatarColor = isSystem
-    ? "bg-amber-100"
+    ? "bg-[#F6E7B0]"
     : isAi
       ? "bg-violet-100"
       : isUser

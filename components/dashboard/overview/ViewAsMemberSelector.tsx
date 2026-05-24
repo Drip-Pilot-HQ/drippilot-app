@@ -6,21 +6,33 @@ import { WorkspaceMember } from "@/types/account";
 import { getMemberDisplayName } from "@/lib/utils/member";
 import { cn } from "@/lib/utils";
 
+interface SelfEntry {
+  userId: string;
+  name: string;
+}
+
 interface ViewAsMemberSelectorProps {
   members: WorkspaceMember[];
   value: string | undefined;
   onChange: (userId: string | undefined) => void;
+  /** When provided, renders member mode: only "Team metrics" + self entry (no full member list) */
+  selfEntry?: SelfEntry;
 }
 
 export function ViewAsMemberSelector({
   members,
   value,
   onChange,
+  selfEntry,
 }: ViewAsMemberSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const activeMembers = members.filter((m) => m.userId !== null);
-  const selected = activeMembers.find((m) => m.userId === value);
+  const activeMembers = selfEntry
+    ? []
+    : members.filter((m) => m.userId !== null);
+  const selected = selfEntry
+    ? undefined
+    : activeMembers.find((m) => m.userId === value);
 
   return (
     <div className="relative">
@@ -39,7 +51,11 @@ export function ViewAsMemberSelector({
           <Users className="w-3.5 h-3.5 shrink-0" />
         )}
         <span className="max-w-[140px] truncate">
-          {selected ? getMemberDisplayName(selected) : "Team metrics"}
+          {selfEntry && value === selfEntry.userId
+            ? selfEntry.name
+            : selected
+              ? getMemberDisplayName(selected)
+              : "Team metrics"}
         </span>
         {value ? (
           <X
@@ -87,38 +103,55 @@ export function ViewAsMemberSelector({
               )}
             </button>
 
-            {activeMembers.length > 0 && (
-              <div className="my-1 border-t border-slate-50" />
-            )}
+            <div className="my-1 border-t border-slate-50" />
 
-            {activeMembers.map((member) => (
+            {selfEntry ? (
               <button
-                key={member.id}
                 onClick={() => {
-                  onChange(member.userId ?? undefined);
+                  onChange(selfEntry.userId);
                   setIsOpen(false);
                 }}
                 className={cn(
                   "w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all text-left",
-                  value === member.userId
+                  value === selfEntry.userId
                     ? "bg-primary/10 text-primary"
                     : "text-slate-600 hover:bg-slate-50",
                 )}
               >
                 <div className="w-6 h-6 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-[11px] font-black shrink-0">
-                  {getMemberDisplayName(member)[0]?.toUpperCase()}
+                  {selfEntry.name[0]?.toUpperCase()}
                 </div>
-                <span className="truncate">{getMemberDisplayName(member)}</span>
-                {value === member.userId && (
+                <span className="truncate">{selfEntry.name}</span>
+                {value === selfEntry.userId && (
                   <div className="w-1.5 h-1.5 rounded-full bg-primary ml-auto shrink-0" />
                 )}
               </button>
-            ))}
-
-            {activeMembers.length === 0 && (
-              <p className="text-center text-xs text-slate-400 py-3 font-medium">
-                No members to preview
-              </p>
+            ) : (
+              activeMembers.map((member) => (
+                <button
+                  key={member.id}
+                  onClick={() => {
+                    onChange(member.userId ?? undefined);
+                    setIsOpen(false);
+                  }}
+                  className={cn(
+                    "w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all text-left",
+                    value === member.userId
+                      ? "bg-primary/10 text-primary"
+                      : "text-slate-600 hover:bg-slate-50",
+                  )}
+                >
+                  <div className="w-6 h-6 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-[11px] font-black shrink-0">
+                    {getMemberDisplayName(member)[0]?.toUpperCase()}
+                  </div>
+                  <span className="truncate">
+                    {getMemberDisplayName(member)}
+                  </span>
+                  {value === member.userId && (
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary ml-auto shrink-0" />
+                  )}
+                </button>
+              ))
             )}
           </div>
         </>

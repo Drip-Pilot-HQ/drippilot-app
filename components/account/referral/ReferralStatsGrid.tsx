@@ -1,4 +1,11 @@
-import { Users, Clock, BadgeCheck, TrendingUp } from "lucide-react";
+import {
+  Users,
+  Clock,
+  BadgeCheck,
+  TrendingUp,
+  CheckCircle,
+  DollarSign,
+} from "lucide-react";
 import { StatCard } from "./StatCard";
 import { formatCents } from "./config";
 import { CommissionSummary, ReferralSignup } from "@/types/account";
@@ -14,9 +21,11 @@ export function ReferralStatsGrid({
 }: ReferralStatsGridProps) {
   const pending = summary?.pendingCents ?? 0;
   const paid = summary?.paidCents ?? 0;
+  const activeAccounts = summary?.activeAccounts ?? 0;
+  const totalMrr = summary?.totalMrrCents ?? 0;
 
   return (
-    <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
+    <div className="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6 gap-3 sm:gap-4">
       <StatCard
         label="Closed Accounts"
         value={String(signups.length)}
@@ -24,6 +33,22 @@ export function ReferralStatsGrid({
         iconColor="text-primary"
         iconBg="bg-orange-50 border border-orange-100"
         sub="all time"
+      />
+      <StatCard
+        label="Active Accounts"
+        value={String(activeAccounts)}
+        icon={CheckCircle}
+        iconColor="text-green-500"
+        iconBg="bg-green-50 border border-green-100"
+        sub="currently active"
+      />
+      <StatCard
+        label="Monthly Revenue"
+        value={formatCents(totalMrr)}
+        icon={DollarSign}
+        iconColor="text-cyan-500"
+        iconBg="bg-cyan-50 border border-cyan-100"
+        sub="combined MRR"
       />
       <StatCard
         label="Pending"
@@ -55,8 +80,8 @@ export function ReferralStatsGrid({
 
 export function ReferralStatsGridSkeleton() {
   return (
-    <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 animate-pulse">
-      {[1, 2, 3, 4].map((i) => (
+    <div className="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6 gap-3 sm:gap-4 animate-pulse">
+      {[1, 2, 3, 4, 5, 6].map((i) => (
         <div
           key={i}
           className="h-24 sm:h-28 bg-slate-100 rounded-2xl sm:rounded-3xl"

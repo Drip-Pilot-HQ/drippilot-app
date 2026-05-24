@@ -89,6 +89,9 @@ export interface ReferralSignup {
   referredEmail: string;
   referredName: string;
   createdAt: string;
+  planId: string | null;
+  accountStatus: string | null;
+  mrrCents: number | null;
 }
 
 export type CommissionStatus = 'pending' | 'paid';
@@ -109,4 +112,6 @@ export interface ReferralCommission {
 export interface CommissionSummary {
   pendingCents: number;
   paidCents: number;
+  activeAccounts: number;
+  totalMrrCents: number;
 }

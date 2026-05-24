@@ -9,19 +9,21 @@ import type {
   BenchmarksResult,
   DaysFilter,
 } from "@/types/analytics";
-import { useViewMode } from "@/lib/hooks/use-view-mode";
-import { useAuthStore } from "@/store/client/useAuthStore";
 
-export const useDashboardStatsQuery = (explicitViewAs?: string) => {
-  const { isPersonal } = useViewMode();
-  const userId = useAuthStore((s) => s.user?.id);
-  const viewAs = explicitViewAs ?? (isPersonal ? userId : undefined);
+export type AnalyticsScope = "personal" | "team";
+
+export const useDashboardStatsQuery = (
+  scope: AnalyticsScope,
+  explicitViewAs?: string,
+) => {
   return useQuery({
-    queryKey: ["analytics", "dashboard", viewAs],
+    queryKey: ["analytics", "dashboard", scope, explicitViewAs],
     queryFn: async () => {
+      const params: Record<string, string> = { scope };
+      if (explicitViewAs) params.viewAs = explicitViewAs;
       const { data } = await apiClient.get<DashboardStats>(
         "/analytics/dashboard",
-        { params: viewAs ? { viewAs } : undefined },
+        { params },
       );
       return data;
     },
@@ -30,33 +32,35 @@ export const useDashboardStatsQuery = (explicitViewAs?: string) => {
 
 export const useActivityInsightsQuery = (
   days: DaysFilter = 30,
+  scope: AnalyticsScope,
   explicitViewAs?: string,
 ) => {
-  const { isPersonal } = useViewMode();
-  const userId = useAuthStore((s) => s.user?.id);
-  const viewAs = explicitViewAs ?? (isPersonal ? userId : undefined);
   return useQuery({
-    queryKey: ["analytics", "activity", days, viewAs],
+    queryKey: ["analytics", "activity", days, scope, explicitViewAs],
     queryFn: async () => {
+      const params: Record<string, string | number> = { days, scope };
+      if (explicitViewAs) params.viewAs = explicitViewAs;
       const { data } = await apiClient.get<ActivityInsights>(
         "/analytics/activity",
-        { params: { days, ...(viewAs ? { viewAs } : {}) } },
+        { params },
       );
       return data;
     },
   });
 };
 
-export const useBenchmarksQuery = (explicitViewAs?: string) => {
-  const { isPersonal } = useViewMode();
-  const userId = useAuthStore((s) => s.user?.id);
-  const viewAs = explicitViewAs ?? (isPersonal ? userId : undefined);
+export const useBenchmarksQuery = (
+  scope: AnalyticsScope,
+  explicitViewAs?: string,
+) => {
   return useQuery({
-    queryKey: ["analytics", "benchmarks", viewAs],
+    queryKey: ["analytics", "benchmarks", scope, explicitViewAs],
     queryFn: async () => {
+      const params: Record<string, string> = { scope };
+      if (explicitViewAs) params.viewAs = explicitViewAs;
       const { data } = await apiClient.get<BenchmarksResult>(
         "/analytics/benchmarks",
-        { params: viewAs ? { viewAs } : undefined },
+        { params },
       );
       return data;
     },
@@ -65,17 +69,17 @@ export const useBenchmarksQuery = (explicitViewAs?: string) => {
 
 export const useLifecycleMetricsQuery = (
   days: DaysFilter = 30,
+  scope: AnalyticsScope,
   explicitViewAs?: string,
 ) => {
-  const { isPersonal } = useViewMode();
-  const userId = useAuthStore((s) => s.user?.id);
-  const viewAs = explicitViewAs ?? (isPersonal ? userId : undefined);
   return useQuery({
-    queryKey: ["analytics", "lifecycle", days, viewAs],
+    queryKey: ["analytics", "lifecycle", days, scope, explicitViewAs],
     queryFn: async () => {
+      const params: Record<string, string | number> = { days, scope };
+      if (explicitViewAs) params.viewAs = explicitViewAs;
       const { data } = await apiClient.get<LifecycleMetricsResult>(
         "/analytics/response-times",
-        { params: { days, ...(viewAs ? { viewAs } : {}) } },
+        { params },
       );
       return data;
     },

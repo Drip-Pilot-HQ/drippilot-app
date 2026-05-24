@@ -39,9 +39,8 @@ function HowItWorksBox() {
           How commissions work
         </h4>
         <p className="text-slate-600 text-xs sm:text-[13px] font-semibold leading-relaxed">
-          You earn commission on every invoice paid by accounts you bring on.
-          Commissions are recorded automatically when invoices are settled and
-          paid out on a monthly basis. There is no cap on how much you can earn.
+          Earn recurring commissions on active accounts you bring to Drip Pilot.
+          Commissions are tracked automatically and paid out monthly.
         </p>
       </div>
     </div>

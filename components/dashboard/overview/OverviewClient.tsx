@@ -14,9 +14,11 @@ import {
   useBenchmarksQuery,
   useLifecycleMetricsQuery,
 } from "@/store/server/analytics.queries";
+import type { AnalyticsScope } from "@/store/server/analytics.queries";
 import { useMembersQuery } from "@/store/server/workspace.queries";
 import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
 import { useViewMode } from "@/lib/hooks/use-view-mode";
+import { useAuthStore } from "@/store/client/useAuthStore";
 import type { DaysFilter } from "@/types/analytics";
 import { OverviewHeader } from "./OverviewHeader";
 import { ViewAsMemberSelector } from "./ViewAsMemberSelector";
@@ -34,9 +36,12 @@ export function OverviewClient() {
   const [days, setDays] = useState<DaysFilter>(30);
   const [configOpen, setConfigOpen] = useState(false);
   const [viewAsMemberId, setViewAsMemberId] = useState<string | undefined>();
+  const [memberViewEntry, setMemberViewEntry] = useState<string | undefined>();
 
   const { isOwnerOrAdmin, isMember } = useWorkspaceRole();
-  const { isPersonal } = useViewMode();
+  const { viewMode } = useViewMode();
+  const currentUser = useAuthStore((s) => s.user);
+
   const { data: membersData } = useMembersQuery(isOwnerOrAdmin);
   const members = useMemo(() => membersData ?? [], [membersData]);
 
@@ -53,23 +58,51 @@ export function OverviewClient() {
     [members],
   );
 
-  const explicitViewAs =
-    !isPersonal && isOwnerOrAdmin ? viewAsMemberId : undefined;
+  // Owner/Admin: scope follows sidebar viewMode
+  // Member: scope follows their selector (undefined=team, userId=personal)
+  const scope: AnalyticsScope = isOwnerOrAdmin
+    ? viewMode === "personal"
+      ? "personal"
+      : "team"
+    : memberViewEntry
+      ? "personal"
+      : "team";
 
-  const { data: stats, isLoading: statsLoading } =
-    useDashboardStatsQuery(explicitViewAs);
+  // viewAs only applies to owner/admin viewing a specific member in team scope
+  const explicitViewAs =
+    isOwnerOrAdmin && scope === "team" ? viewAsMemberId : undefined;
+
+  // Self entry shown to members in the selector
+  const selfEntry =
+    isMember && currentUser
+      ? {
+          userId: currentUser.id,
+          name:
+            (currentUser.user_metadata?.full_name as string | undefined) ||
+            (currentUser.user_metadata?.name as string | undefined) ||
+            currentUser.email ||
+            "Me",
+        }
+      : undefined;
+
+  const { data: stats, isLoading: statsLoading } = useDashboardStatsQuery(
+    scope,
+    explicitViewAs,
+  );
   const { data: activity, isLoading: activityLoading } =
-    useActivityInsightsQuery(days, explicitViewAs);
-  const { data: benchmarks, isLoading: benchmarksLoading } =
-    useBenchmarksQuery(explicitViewAs);
+    useActivityInsightsQuery(days, scope, explicitViewAs);
+  const { data: benchmarks, isLoading: benchmarksLoading } = useBenchmarksQuery(
+    scope,
+    explicitViewAs,
+  );
   const { data: lifecycle, isLoading: lifecycleLoading } =
-    useLifecycleMetricsQuery(days, explicitViewAs);
+    useLifecycleMetricsQuery(days, scope, explicitViewAs);
 
   const isLoading =
     statsLoading || activityLoading || benchmarksLoading || lifecycleLoading;
 
   const scopeLabel = (() => {
-    if (isOwnerOrAdmin && !isPersonal && viewAsMemberId) {
+    if (isOwnerOrAdmin && scope === "team" && viewAsMemberId) {
       const name = memberMap.get(viewAsMemberId);
       return (
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-bold">
@@ -77,21 +110,30 @@ export function OverviewClient() {
         </span>
       );
     }
-    if (isPersonal || isMember) {
-      return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-bold">
-          Your metrics
-        </span>
-      );
-    }
-    if (isOwnerOrAdmin) {
-      return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-bold">
-          Team metrics
-        </span>
-      );
-    }
     return null;
+  })();
+
+  const viewAsSelectorSlot = (() => {
+    if (isOwnerOrAdmin && scope === "team") {
+      return (
+        <ViewAsMemberSelector
+          members={members}
+          value={viewAsMemberId}
+          onChange={setViewAsMemberId}
+        />
+      );
+    }
+    if (isMember && selfEntry) {
+      return (
+        <ViewAsMemberSelector
+          members={[]}
+          value={memberViewEntry}
+          onChange={setMemberViewEntry}
+          selfEntry={selfEntry}
+        />
+      );
+    }
+    return undefined;
   })();
 
   return (
@@ -103,15 +145,7 @@ export function OverviewClient() {
           isOwnerOrAdmin ? () => setConfigOpen(true) : undefined
         }
         scopeLabel={scopeLabel}
-        viewAsSelectorSlot={
-          isOwnerOrAdmin && !isPersonal ? (
-            <ViewAsMemberSelector
-              members={members}
-              value={viewAsMemberId}
-              onChange={setViewAsMemberId}
-            />
-          ) : undefined
-        }
+        viewAsSelectorSlot={viewAsSelectorSlot}
       />
 
       {isOwnerOrAdmin && (
