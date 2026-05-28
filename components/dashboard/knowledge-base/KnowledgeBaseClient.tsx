@@ -9,12 +9,10 @@ import { KnowledgeBaseCard } from "./KnowledgeBaseCard";
 import { CreateKbEntryDialog } from "./CreateKbEntryDialog";
 import { DripBotChat } from "./DripBotChat";
 import { KnowledgeBaseSearch } from "./KnowledgeBaseSearch";
-import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 import { KnowledgeBaseListSkeleton } from "./KnowledgeBaseSkeleton";
 
 export function KnowledgeBaseClient() {
-  const { isOwnerOrAdmin } = useWorkspaceRole();
   const [searchInput, setSearchInput] = useState("");
   const debouncedSearch = useDebounce(searchInput, 500);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -54,17 +52,15 @@ export function KnowledgeBaseClient() {
           </p>
         </div>
 
-        {isOwnerOrAdmin && (
-          <Button
-            onClick={() => setIsDialogOpen(true)}
-            className="rounded-xl h-10 px-5 shadow-md shadow-primary/10 text-sm w-full md:w-auto"
-          >
-            <div className="flex items-center gap-2 justify-center">
-              <Plus className="w-4 h-4" />
-              <span className="font-bold whitespace-nowrap">New Entry</span>
-            </div>
-          </Button>
-        )}
+        <Button
+          onClick={() => setIsDialogOpen(true)}
+          className="rounded-xl h-10 px-5 shadow-md shadow-primary/10 text-sm w-full md:w-auto"
+        >
+          <div className="flex items-center gap-2 justify-center">
+            <Plus className="w-4 h-4" />
+            <span className="font-bold whitespace-nowrap">New Entry</span>
+          </div>
+        </Button>
       </div>
 
       {/* Toolbar */}
@@ -94,7 +90,6 @@ export function KnowledgeBaseClient() {
                   key={entry.id}
                   entry={entry}
                   onEdit={handleEdit}
-                  isOwnerOrAdmin={isOwnerOrAdmin}
                 />
               ))}
             </div>
@@ -111,15 +106,13 @@ export function KnowledgeBaseClient() {
               Knowledge is the fuel for AI. Add documentation to help Drip Pilot
               represent your brand accurately.
             </p>
-            {isOwnerOrAdmin && (
-              <Button
-                onClick={() => setIsDialogOpen(true)}
-                className="rounded-xl px-10 h-12 shadow-lg shadow-primary/20"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                Create Insight
-              </Button>
-            )}
+            <Button
+              onClick={() => setIsDialogOpen(true)}
+              className="rounded-xl px-10 h-12 shadow-lg shadow-primary/20"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              Create Insight
+            </Button>
           </div>
         )}
       </div>
@@ -127,14 +120,12 @@ export function KnowledgeBaseClient() {
       {/* Floating Chat Component */}
       <DripBotChat />
 
-      {isOwnerOrAdmin && (
-        <CreateKbEntryDialog
-          key={isDialogOpen ? editingEntry?.id || "new" : "closed"}
-          isOpen={isDialogOpen}
-          onClose={closeDialog}
-          editEntry={editingEntry}
-        />
-      )}
+      <CreateKbEntryDialog
+        key={isDialogOpen ? editingEntry?.id || "new" : "closed"}
+        isOpen={isDialogOpen}
+        onClose={closeDialog}
+        editEntry={editingEntry}
+      />
     </div>
   );
 }

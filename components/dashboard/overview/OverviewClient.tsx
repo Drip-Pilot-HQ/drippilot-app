@@ -32,6 +32,37 @@ import { LeadBreakdown } from "./LeadBreakdown";
 import { AnalyticsConfigPanel } from "./AnalyticsConfigPanel";
 import { OverviewSkeleton } from "./OverviewSkeleton";
 
+interface SectionHeaderProps {
+  title: string;
+  subtitle?: string;
+  accent?: string;
+}
+
+function SectionHeader({
+  title,
+  subtitle,
+  accent = "from-primary to-orange-300",
+}: SectionHeaderProps) {
+  return (
+    <div className="flex items-center gap-3 pb-1">
+      <div
+        className={`w-1 h-7 rounded-full bg-linear-to-b ${accent}`}
+        aria-hidden
+      />
+      <div>
+        <h2 className="text-[11px] font-black text-slate-900 uppercase tracking-[0.15em]">
+          {title}
+        </h2>
+        {subtitle && (
+          <p className="text-xs text-slate-400 font-medium mt-0.5">
+            {subtitle}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export function OverviewClient() {
   const [days, setDays] = useState<DaysFilter>(30);
   const [configOpen, setConfigOpen] = useState(false);
@@ -60,8 +91,6 @@ export function OverviewClient() {
     [members],
   );
 
-  // Owner/Admin: scope follows sidebar viewMode
-  // Member: scope follows their selector (undefined=team, userId=personal)
   const scope: AnalyticsScope = isOwnerOrAdmin
     ? viewMode === "personal"
       ? "personal"
@@ -70,11 +99,9 @@ export function OverviewClient() {
       ? "personal"
       : "team";
 
-  // viewAs only applies to owner/admin viewing a specific member in team scope
   const explicitViewAs =
     isOwnerOrAdmin && scope === "team" ? viewAsMemberId : undefined;
 
-  // Self entry shown to members in the selector
   const selfEntry =
     isMember && currentUser
       ? {
@@ -139,7 +166,7 @@ export function OverviewClient() {
   })();
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-10 animate-in fade-in duration-500">
       <OverviewHeader
         days={days}
         onDaysChange={setDays}
@@ -169,77 +196,111 @@ export function OverviewClient() {
           </p>
         </div>
       ) : (
-        <>
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
-            <StatCard
-              label="Total Leads"
-              value={stats.leads.total.toLocaleString()}
-              subValue={`${stats.leads.hot} hot · ${stats.leads.warm} warm`}
-              icon={Users}
-              iconColor="text-blue-500"
-              iconBg="bg-blue-50"
-              tooltip="All leads in your workspace, including active, converted, and unsubscribed contacts."
+        <div className="space-y-12">
+          {/* ── At a Glance ── */}
+          <section className="space-y-5">
+            <SectionHeader
+              title="At a Glance"
+              subtitle="Headline metrics for the selected scope"
             />
-            <StatCard
-              label="Active Campaigns"
-              value={stats.campaigns.active}
-              subValue={`${stats.campaigns.total} total`}
-              icon={Workflow}
-              iconColor="text-primary"
-              iconBg="bg-primary/10"
-              tooltip="Campaigns currently running and actively sending messages to leads."
-            />
-            <StatCard
-              label="Messages Today"
-              value={stats.messages.today.toLocaleString()}
-              subValue={`${stats.messages.outbound.toLocaleString()} outbound total`}
-              icon={MessageSquare}
-              iconColor="text-secondary"
-              iconBg="bg-cyan-50"
-              tooltip="Total outbound messages sent today across all active campaigns."
-            />
-            <StatCard
-              label="Response Rate"
-              value={`${stats.responseRate.toFixed(1)}%`}
-              subValue={`${stats.messages.inbound.toLocaleString()} inbound`}
-              icon={ArrowLeftRight}
-              iconColor="text-violet-500"
-              iconBg="bg-violet-50"
-              trend={stats.responseRate >= 2.5 ? "up" : "down"}
-              trendLabel={stats.responseRate >= 2.5 ? "above avg" : "below avg"}
-              tooltip="Percentage of outbound messages that received any reply, including opt-outs and negative responses. Industry average is ~2.5%."
-            />
-            <StatCard
-              label="Conversion Rate"
-              value={`${stats.conversionRate.toFixed(1)}%`}
-              subValue={`${stats.leads.converted} converted`}
-              icon={TrendingUp}
-              iconColor="text-emerald-500"
-              iconBg="bg-emerald-50"
-              tooltip="Percentage of total leads that have been marked as converted across your workspace."
-            />
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {lifecycle && <LifecycleMetrics data={lifecycle} />}
-            <FinancialPanel data={stats.financialMetrics} />
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
-              {activity && <ActivityChart data={activity} />}
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
+              <StatCard
+                label="Total Leads"
+                value={stats.leads.total.toLocaleString()}
+                subValue={`${stats.leads.hot} hot · ${stats.leads.warm} warm`}
+                icon={Users}
+                iconColor="text-blue-500"
+                iconBg="bg-blue-50"
+                tooltip="All leads in your workspace, including active, converted, and unsubscribed contacts."
+              />
+              <StatCard
+                label="Active Campaigns"
+                value={stats.campaigns.active}
+                subValue={`${stats.campaigns.total} total`}
+                icon={Workflow}
+                iconColor="text-primary"
+                iconBg="bg-primary/10"
+                tooltip="Campaigns currently running and actively sending messages to leads."
+              />
+              <StatCard
+                label="Messages Today"
+                value={stats.messages.today.toLocaleString()}
+                subValue={`${stats.messages.outbound.toLocaleString()} outbound total`}
+                icon={MessageSquare}
+                iconColor="text-secondary"
+                iconBg="bg-cyan-50"
+                tooltip="Total outbound messages sent today across all active campaigns."
+              />
+              <StatCard
+                label="Response Rate"
+                value={`${stats.responseRate.toFixed(1)}%`}
+                subValue={`${stats.messages.inbound.toLocaleString()} inbound`}
+                icon={ArrowLeftRight}
+                iconColor="text-violet-500"
+                iconBg="bg-violet-50"
+                trend={stats.responseRate >= 2.5 ? "up" : "down"}
+                trendLabel={
+                  stats.responseRate >= 2.5 ? "above avg" : "below avg"
+                }
+                tooltip="Percentage of outbound messages that received any reply, including opt-outs and negative responses. Industry average is ~2.5%."
+              />
+              <StatCard
+                label="Conversion Rate"
+                value={`${stats.conversionRate.toFixed(1)}%`}
+                subValue={`${stats.leads.converted} of ${(stats.enrolledLeads ?? 0).toLocaleString()} enrolled`}
+                icon={TrendingUp}
+                iconColor="text-emerald-500"
+                iconBg="bg-emerald-50"
+                tooltip="Percentage of campaign-enrolled leads that have converted. Matches the Converted stage in the Campaign Funnel below."
+                variant="accent"
+              />
             </div>
-            <LeadBreakdown leads={stats.leads} />
-          </div>
+          </section>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <ConversionFunnel
-              funnel={stats.conversionFunnel}
-              converted={stats.leads.converted}
+          {/* ── Lifecycle & Revenue ── */}
+          <section className="space-y-5">
+            <SectionHeader
+              title="Lifecycle & Revenue"
+              subtitle="Lead timing averages and financial projections"
+              accent="from-violet-500 to-emerald-400"
             />
-            {benchmarks && <BenchmarksPanel data={benchmarks} />}
-          </div>
-        </>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {lifecycle && <LifecycleMetrics data={lifecycle} />}
+              <FinancialPanel data={stats.financialMetrics} />
+            </div>
+          </section>
+
+          {/* ── Activity & Distribution ── */}
+          <section className="space-y-5">
+            <SectionHeader
+              title="Activity & Distribution"
+              subtitle="Daily message volume and lead status breakdown"
+              accent="from-cyan-500 to-cyan-300"
+            />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                {activity && <ActivityChart data={activity} />}
+              </div>
+              <LeadBreakdown leads={stats.leads} />
+            </div>
+          </section>
+
+          {/* ── Pipeline Performance ── */}
+          <section className="space-y-5">
+            <SectionHeader
+              title="Pipeline Performance"
+              subtitle="Funnel progression and industry benchmarks"
+              accent="from-blue-500 to-cyan-400"
+            />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <ConversionFunnel
+                funnel={stats.conversionFunnel}
+                converted={stats.leads.converted}
+              />
+              {benchmarks && <BenchmarksPanel data={benchmarks} />}
+            </div>
+          </section>
+        </div>
       )}
     </div>
   );

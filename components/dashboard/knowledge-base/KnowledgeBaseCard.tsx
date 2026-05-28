@@ -23,14 +23,9 @@ import {
 interface KnowledgeBaseCardProps {
   entry: KbEntry;
   onEdit: (entry: KbEntry) => void;
-  isOwnerOrAdmin: boolean;
 }
 
-export function KnowledgeBaseCard({
-  entry,
-  onEdit,
-  isOwnerOrAdmin,
-}: KnowledgeBaseCardProps) {
+export function KnowledgeBaseCard({ entry, onEdit }: KnowledgeBaseCardProps) {
   const deleteMutation = useDeleteKbEntryMutation();
   const confirm = useConfirm();
 
@@ -61,26 +56,24 @@ export function KnowledgeBaseCard({
             {wordCount} Words
           </div>
 
-          {isOwnerOrAdmin && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none outline-none">
-                  <MoreVertical className="w-4 h-4" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-44">
-                <DropdownMenuItem onClick={() => onEdit(entry)}>
-                  <Edit2 className="w-3.5 h-3.5" />
-                  Edit Insight
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleDelete} variant="danger">
-                  <Trash2 className="w-3.5 h-3.5" />
-                  Delete Entry
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none outline-none">
+                <MoreVertical className="w-4 h-4" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-44">
+              <DropdownMenuItem onClick={() => onEdit(entry)}>
+                <Edit2 className="w-3.5 h-3.5" />
+                Edit Insight
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleDelete} variant="danger">
+                <Trash2 className="w-3.5 h-3.5" />
+                Delete Entry
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
@@ -88,7 +81,7 @@ export function KnowledgeBaseCard({
         <h3 className="text-base font-black text-slate-900 group-hover:text-primary transition-colors truncate mb-1">
           {entry.title}
         </h3>
-        <p className="text-xs text-slate-500 line-clamp-2 min-h-[32px] font-medium leading-relaxed italic border-l-2 border-slate-100 pl-3">
+        <p className="text-xs text-slate-500 line-clamp-2 min-h-8 font-medium leading-relaxed italic border-l-2 border-slate-100 pl-3">
           &quot;{entry.content}&quot;
         </p>
       </div>

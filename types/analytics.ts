@@ -20,6 +20,7 @@ export interface CampaignCounts {
 
 export interface ConversionFunnel {
   totalLeads: number;
+  enrolledLeads: number;
   respondingLeads: number;
   engagedLeads: number;
   qualifiedLeads: number;
@@ -56,6 +57,7 @@ export interface FinancialMetrics {
 
 export interface DashboardStats {
   leads: LeadStatusCounts;
+  enrolledLeads: number;
   campaigns: CampaignCounts;
   messages: MessageCounts;
   responseRate: number;
