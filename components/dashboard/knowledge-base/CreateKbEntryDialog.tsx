@@ -21,24 +21,23 @@ interface CreateKbEntryDialogProps {
   isOpen: boolean;
   onClose: () => void;
   editEntry?: KbEntry | null;
+  prefill?: { title: string; content: string };
 }
 
 export function CreateKbEntryDialog({
   isOpen,
   onClose,
   editEntry,
+  prefill,
 }: CreateKbEntryDialogProps) {
   const [formData, setFormData] = useState<CreateKbEntryDto>(() => {
     if (editEntry) {
-      return {
-        title: editEntry.title,
-        content: editEntry.content,
-      };
+      return { title: editEntry.title, content: editEntry.content };
     }
-    return {
-      title: "",
-      content: "",
-    };
+    if (prefill) {
+      return { title: prefill.title, content: prefill.content };
+    }
+    return { title: "", content: "" };
   });
 
   const createMutation = useCreateKbEntryMutation();

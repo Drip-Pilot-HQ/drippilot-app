@@ -1,6 +1,7 @@
 export interface KbEntry {
   id: string;
   workspaceId: string;
+  ownerUserId: string | null;
   title: string;
   content: string;
   createdAt: string;

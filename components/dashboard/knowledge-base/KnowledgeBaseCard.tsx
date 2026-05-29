@@ -7,6 +7,7 @@ import {
   Edit2,
   Calendar,
   Layers,
+  User,
 } from "lucide-react";
 import { KbEntry } from "@/types/knowledge-base";
 import { formatDistanceToNow } from "date-fns";
@@ -23,9 +24,15 @@ import {
 interface KnowledgeBaseCardProps {
   entry: KbEntry;
   onEdit: (entry: KbEntry) => void;
+  /** Non-null when admin/owner is in team view — shows owner badge on card */
+  ownerName?: string | null;
 }
 
-export function KnowledgeBaseCard({ entry, onEdit }: KnowledgeBaseCardProps) {
+export function KnowledgeBaseCard({
+  entry,
+  onEdit,
+  ownerName,
+}: KnowledgeBaseCardProps) {
   const deleteMutation = useDeleteKbEntryMutation();
   const confirm = useConfirm();
 
@@ -86,17 +93,26 @@ export function KnowledgeBaseCard({ entry, onEdit }: KnowledgeBaseCardProps) {
         </p>
       </div>
 
-      <div className="pt-5 border-t border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-          <Calendar className="w-3.5 h-3.5" />
-          {formatDistanceToNow(new Date(entry.updatedAt), {
-            addSuffix: true,
-          })}
+      <div className="pt-5 border-t border-slate-100 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider min-w-0">
+          <Calendar className="w-3.5 h-3.5 shrink-0" />
+          <span className="truncate">
+            {formatDistanceToNow(new Date(entry.updatedAt), {
+              addSuffix: true,
+            })}
+          </span>
         </div>
-        <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-          <Layers className="w-3.5 h-3.5" />
-          Synchronized
-        </div>
+        {ownerName ? (
+          <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/8 border border-primary/15 text-[10px] font-black text-primary shrink-0 max-w-[120px]">
+            <User className="w-3 h-3 shrink-0" />
+            <span className="truncate">{ownerName}</span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0">
+            <Layers className="w-3.5 h-3.5" />
+            Synced
+          </div>
+        )}
       </div>
     </div>
   );
