@@ -137,7 +137,7 @@ export function KnowledgeBaseClient() {
             {scopeLabel}
           </div>
           <p className="text-slate-500 font-medium">
-            Train and test your bot with business context
+            Train your AI with your business knowledge and workflows
           </p>
         </div>
 

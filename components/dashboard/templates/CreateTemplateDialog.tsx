@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   X,
   Mail,
@@ -35,6 +35,14 @@ interface CreateTemplateDialogProps {
   defaultFolderId?: string | null;
 }
 
+function normalizeOptOut(content: string): string {
+  const stripped = content
+    .replace(/\n*Reply STOP to unsubscribe/gi, "")
+    .trimEnd();
+  if (stripped.includes("STOP to Opt Out")) return stripped;
+  return stripped ? `${stripped}\n\nSTOP to Opt Out` : "STOP to Opt Out";
+}
+
 export function CreateTemplateDialog({
   isOpen,
   onClose,
@@ -48,7 +56,10 @@ export function CreateTemplateDialog({
       return {
         name: editTemplate.name,
         subject: editTemplate.subject || "",
-        content: editTemplate.content,
+        content:
+          editTemplate.templateChannel === TemplateChannel.SMS
+            ? normalizeOptOut(editTemplate.content)
+            : editTemplate.content,
         templateChannel: editTemplate.templateChannel,
         folderId: editTemplate.folderId ?? undefined,
       };
@@ -62,38 +73,11 @@ export function CreateTemplateDialog({
     };
   });
 
-  const [validation, setValidation] = useState<{
-    isValid: boolean;
-    invalidPlaceholders: string[];
-    errorMessages: string[];
-  }>({
-    isValid: true,
-    invalidPlaceholders: [],
-    errorMessages: [],
-  });
+  const validation = validateTemplatePlaceholders(formData.content);
 
   const createMutation = useCreateTemplateMutation();
   const updateMutation = useUpdateTemplateMutation();
   const isLoading = createMutation.isPending || updateMutation.isPending;
-
-  useEffect(() => {
-    setValidation(validateTemplatePlaceholders(formData.content));
-  }, [formData.content]);
-
-  useEffect(() => {
-    if (
-      formData.templateChannel === TemplateChannel.SMS &&
-      !formData.content.includes("Reply STOP to unsubscribe")
-    ) {
-      setFormData((prev) => ({
-        ...prev,
-        content: prev.content
-          ? `${prev.content}\n\nReply STOP to unsubscribe`
-          : "Reply STOP to unsubscribe",
-      }));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData.templateChannel]);
 
   if (!isOpen) return null;
 
@@ -102,9 +86,9 @@ export function CreateTemplateDialog({
     if (!validation.isValid) return;
 
     if (formData.templateChannel === TemplateChannel.SMS) {
-      if (!formData.content.includes("Reply STOP to unsubscribe")) {
+      if (!formData.content.includes("STOP to Opt Out")) {
         toast.error(
-          'Compliance Error: SMS templates must include "Reply STOP to unsubscribe" for TCPA compliance.',
+          'Compliance Error: SMS templates must include "STOP to Opt Out" for TCPA compliance.',
         );
         return;
       }
@@ -221,6 +205,7 @@ export function CreateTemplateDialog({
                   setFormData((prev) => ({
                     ...prev,
                     templateChannel: TemplateChannel.SMS,
+                    content: normalizeOptOut(prev.content),
                   }))
                 }
                 className={cn(
@@ -378,14 +363,12 @@ export function CreateTemplateDialog({
                     <div
                       className={cn(
                         "mt-2 p-3 rounded-xl border flex items-start gap-3 transition-all",
-                        formData.content.includes("Reply STOP to unsubscribe")
+                        formData.content.includes("STOP to Opt Out")
                           ? "bg-emerald-50/50 border-emerald-100 text-emerald-600"
                           : "bg-rose-50 border-rose-100 text-rose-600",
                       )}
                     >
-                      {formData.content.includes(
-                        "Reply STOP to unsubscribe",
-                      ) ? (
+                      {formData.content.includes("STOP to Opt Out") ? (
                         <CheckCircle2 className="w-4 h-4 mt-0.5 shrink-0" />
                       ) : (
                         <ShieldAlert className="w-4 h-4 mt-0.5 shrink-0" />
@@ -395,11 +378,9 @@ export function CreateTemplateDialog({
                           TCPA Compliance
                         </p>
                         <p className="text-[10px] font-medium leading-relaxed">
-                          {formData.content.includes(
-                            "Reply STOP to unsubscribe",
-                          )
+                          {formData.content.includes("STOP to Opt Out")
                             ? "Compliance phrase detected. We recommend placing it at the very end of your message."
-                            : 'Required: You must include "Reply STOP to unsubscribe" at the end of your SMS to comply with messaging regulations.'}
+                            : 'Required: You must include "STOP to Opt Out" at the end of your SMS to comply with messaging regulations.'}
                         </p>
                       </div>
                     </div>
@@ -411,9 +392,9 @@ export function CreateTemplateDialog({
                           Email Formatting
                         </p>
                         <p className="text-[10px] font-medium leading-relaxed">
-                          &quot;Reply STOP to unsubscribe&quot; is automatically
-                          added to email template while sending, so you
-                          don&apos;t have to add here.
+                          &quot;STOP to Opt Out&quot; is automatically added to
+                          email template while sending, so you don&apos;t have
+                          to add here.
                         </p>
                       </div>
                     </div>
@@ -455,7 +436,7 @@ export function CreateTemplateDialog({
                 !formData.name ||
                 !validation.isValid ||
                 (formData.templateChannel === TemplateChannel.SMS &&
-                  !formData.content.includes("Reply STOP to unsubscribe"))
+                  !formData.content.includes("STOP to Opt Out"))
               }
               className="flex-2 rounded-xl h-12"
             >

@@ -20,10 +20,9 @@ export interface CampaignCounts {
 
 export interface ConversionFunnel {
   totalLeads: number;
-  enrolledLeads: number;
-  respondingLeads: number;
-  engagedLeads: number;
-  qualifiedLeads: number;
+  historicallyEnrolledLeads: number;
+  genuineReplies: number;
+  warmLeads: number;
   hotLeads: number;
 }
 
@@ -138,6 +137,25 @@ export interface BenchmarksResult {
 }
 
 export type DaysFilter = 7 | 30 | 60 | 90;
+
+// ─── Cross-Workspace Analytics ─────────────────────────────────────────────
+
+export interface WorkspaceSummary {
+  workspaceId: string;
+  workspaceName: string;
+  memberCount: number;
+  totalLeads: number;
+  hotLeads: number;
+  warmLeads: number;
+  convertedLeads: number;
+  activeCampaigns: number;
+  totalCampaigns: number;
+  outboundMessages: number;
+  inboundMessages: number;
+  enrolledLeads: number;
+  responseRate: number;
+  conversionRate: number;
+}
 
 // ─── Analytics Config ──────────────────────────────────────────────────────
 

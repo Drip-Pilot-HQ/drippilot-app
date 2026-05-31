@@ -3,8 +3,8 @@
 import { useState, useMemo } from "react";
 import {
   Users,
-  Workflow,
-  MessageSquare,
+  Flame,
+  CheckCircle2,
   ArrowLeftRight,
   TrendingUp,
 } from "lucide-react";
@@ -207,29 +207,29 @@ export function OverviewClient() {
               <StatCard
                 label="Total Leads"
                 value={stats.leads.total.toLocaleString()}
-                subValue={`${stats.leads.hot} hot · ${stats.leads.warm} warm`}
+                subValue={`${stats.leads.converted.toLocaleString()} converted`}
                 icon={Users}
                 iconColor="text-blue-500"
                 iconBg="bg-blue-50"
                 tooltip="All leads in your workspace, including active, converted, and unsubscribed contacts."
               />
               <StatCard
-                label="Active Campaigns"
-                value={stats.campaigns.active}
-                subValue={`${stats.campaigns.total} total`}
-                icon={Workflow}
-                iconColor="text-primary"
-                iconBg="bg-primary/10"
-                tooltip="Campaigns currently running and actively sending messages to leads."
+                label="Hot Leads"
+                value={stats.leads.hot.toLocaleString()}
+                subValue={`${stats.leads.warm.toLocaleString()} warm`}
+                icon={Flame}
+                iconColor="text-orange-500"
+                iconBg="bg-orange-50"
+                tooltip="Leads marked as hot — ready for immediate follow-up. Warm leads are showing interest but need nurturing."
               />
               <StatCard
-                label="Messages Today"
-                value={stats.messages.today.toLocaleString()}
-                subValue={`${stats.messages.outbound.toLocaleString()} outbound total`}
-                icon={MessageSquare}
-                iconColor="text-secondary"
-                iconBg="bg-cyan-50"
-                tooltip="Total outbound messages sent today across all active campaigns."
+                label="Conversions"
+                value={stats.leads.converted.toLocaleString()}
+                subValue={`of ${stats.leads.total.toLocaleString()} total leads`}
+                icon={CheckCircle2}
+                iconColor="text-emerald-500"
+                iconBg="bg-emerald-50"
+                tooltip="Total leads that have been marked as converted across all campaigns."
               />
               <StatCard
                 label="Response Rate"
@@ -242,16 +242,16 @@ export function OverviewClient() {
                 trendLabel={
                   stats.responseRate >= 2.5 ? "above avg" : "below avg"
                 }
-                tooltip="Percentage of outbound messages that received any reply, including opt-outs and negative responses. Industry average is ~2.5%."
+                tooltip="Percentage of outbound messages that received a genuine reply (excluding opt-outs). Industry average is ~2.5%."
               />
               <StatCard
                 label="Conversion Rate"
                 value={`${stats.conversionRate.toFixed(1)}%`}
-                subValue={`${stats.leads.converted} of ${(stats.enrolledLeads ?? 0).toLocaleString()} enrolled`}
+                subValue={`${stats.leads.converted.toLocaleString()} of ${stats.leads.total.toLocaleString()} leads`}
                 icon={TrendingUp}
                 iconColor="text-emerald-500"
                 iconBg="bg-emerald-50"
-                tooltip="Percentage of campaign-enrolled leads that have converted. Matches the Converted stage in the Campaign Funnel below."
+                tooltip="Overall workspace conversion rate: converted leads divided by all leads processed. See Campaign Funnel below for campaign-specific rates."
                 variant="accent"
               />
             </div>

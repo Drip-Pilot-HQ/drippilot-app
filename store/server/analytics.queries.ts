@@ -8,6 +8,7 @@ import type {
   LifecycleMetricsResult,
   BenchmarksResult,
   DaysFilter,
+  WorkspaceSummary,
 } from "@/types/analytics";
 
 export type AnalyticsScope = "personal" | "team";
@@ -108,6 +109,18 @@ export const useUpsertAnalyticsConfigMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["analytics"] });
+    },
+  });
+};
+
+export const useOwnedWorkspacesAnalyticsQuery = () => {
+  return useQuery({
+    queryKey: ["analytics", "owned-workspaces"],
+    queryFn: async () => {
+      const { data } = await apiClient.get<WorkspaceSummary[]>(
+        "/analytics/workspaces",
+      );
+      return data;
     },
   });
 };

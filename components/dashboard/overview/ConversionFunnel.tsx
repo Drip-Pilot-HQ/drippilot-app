@@ -19,52 +19,52 @@ interface FunnelStep {
 }
 
 export function ConversionFunnel({ funnel, converted }: ConversionFunnelProps) {
-  const base = Math.max(funnel.enrolledLeads ?? funnel.totalLeads ?? 0, 1);
-  const enrolledDisplay = funnel.enrolledLeads ?? funnel.totalLeads ?? 0;
+  const base = Math.max(funnel.historicallyEnrolledLeads ?? 1, 1);
   const pctOfBase = (v: number) => Math.round((v / base) * 100);
-  const pctOf = (n: number, d: number) =>
-    d > 0 ? Math.round((n / d) * 100) : 0;
   const barWidth = (v: number) => Math.max(8, Math.round((v / base) * 100));
+
+  const convertedCount = converted ?? 0;
+  const campaignConversionRate = pctOfBase(convertedCount);
 
   const steps: FunnelStep[] = [
     {
       key: "enrolled",
       label: "Enrolled",
-      value: enrolledDisplay,
+      value: funnel.historicallyEnrolledLeads,
       dotColor: "bg-slate-400",
       barColor: "bg-gradient-to-r from-slate-300 to-slate-400",
       rate: null,
     },
     {
-      key: "responded",
-      label: "Responded",
-      value: funnel.respondingLeads,
+      key: "genuine-replies",
+      label: "Genuine Replies",
+      value: funnel.genuineReplies,
       dotColor: "bg-blue-500",
       barColor: "bg-gradient-to-r from-blue-400 to-blue-500",
       rate: {
-        label: `${pctOfBase(funnel.respondingLeads)}% response rate`,
+        label: `${pctOfBase(funnel.genuineReplies)}% response rate`,
         className: "bg-blue-50 text-blue-600 ring-1 ring-blue-100",
       },
     },
     {
-      key: "engaged",
-      label: "Engaged",
-      value: funnel.engagedLeads,
+      key: "warm",
+      label: "Warm",
+      value: funnel.warmLeads,
       dotColor: "bg-cyan-500",
       barColor: "bg-gradient-to-r from-cyan-400 to-cyan-500",
       rate: {
-        label: `${pctOf(funnel.engagedLeads, funnel.respondingLeads)}% genuine replies`,
+        label: `${pctOfBase(funnel.warmLeads)}% warm rate`,
         className: "bg-cyan-50 text-cyan-600 ring-1 ring-cyan-100",
       },
     },
     {
-      key: "qualified",
-      label: "Warm / Hot",
-      value: funnel.qualifiedLeads,
-      dotColor: "bg-primary",
+      key: "hot",
+      label: "Hot",
+      value: funnel.hotLeads,
+      dotColor: "bg-orange-500",
       barColor: "bg-gradient-to-r from-orange-400 to-primary",
       rate: {
-        label: `${pctOfBase(funnel.qualifiedLeads)}% warm/hot rate`,
+        label: `${pctOfBase(funnel.hotLeads)}% hot rate`,
         className: "bg-orange-50 text-orange-600 ring-1 ring-orange-100",
       },
     },
@@ -73,11 +73,11 @@ export function ConversionFunnel({ funnel, converted }: ConversionFunnelProps) {
           {
             key: "converted",
             label: "Converted",
-            value: converted,
+            value: convertedCount,
             dotColor: "bg-emerald-500",
             barColor: "bg-gradient-to-r from-emerald-400 to-emerald-500",
             rate: {
-              label: `${pctOfBase(converted)}% conversion rate`,
+              label: `${campaignConversionRate}% campaign conversion rate`,
               className:
                 "bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100",
             },
@@ -97,7 +97,7 @@ export function ConversionFunnel({ funnel, converted }: ConversionFunnelProps) {
             <h3 className="text-lg font-black text-slate-900 tracking-tight">
               Campaign Funnel
             </h3>
-            <InfoTooltip text="Shows how enrolled leads progress through your active campaign pipeline. All rates are calculated against leads enrolled in campaigns (not total workspace leads)." />
+            <InfoTooltip text="Shows how leads progress through your campaign pipeline. Enrolled = all leads that have ever entered any campaign (including completed ones). Campaign Conversion Rate = converted ÷ historically enrolled." />
           </div>
           <p className="text-xs text-slate-400 font-medium mt-0.5">
             Pipeline progression from campaign enrollment

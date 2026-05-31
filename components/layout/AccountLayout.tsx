@@ -2,13 +2,14 @@
 
 import { AppLayout } from "./AppLayout";
 import { useAuthStore } from "@/store/client/useAuthStore";
-import { Settings, Layers, BarChart2 } from "lucide-react";
+import { Settings, Layers, BarChart2, LayoutDashboard } from "lucide-react";
 import type { NavGroup, UserProfile } from "@/types/layout";
 
 const navGroups: NavGroup[] = [
   {
     items: [
       { name: "Workspaces", href: "/account/workspaces", icon: Layers },
+      { name: "Analytics", href: "/account/analytics", icon: LayoutDashboard },
       { name: "Profile", href: "/account/profile", icon: Settings },
       // { name: "API Tokens", href: "/account/tokens", icon: Key },
       { name: "Sales Dashboard", href: "/account/referral", icon: BarChart2 },
