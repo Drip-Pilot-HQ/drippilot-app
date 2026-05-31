@@ -391,18 +391,17 @@ export function WorkspaceAnalyticsClient() {
     );
   }
 
-  if (!workspaces || workspaces.length < 2) {
+  if (!workspaces || workspaces.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-24 px-6 text-center bg-white border border-slate-100 rounded-[40px] shadow-sm">
         <div className="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center mb-6 text-slate-300">
           <BrainCircuit className="w-10 h-10" />
         </div>
         <h2 className="text-2xl font-black text-slate-900 mb-2">
-          Multi-Workspace View
+          No Workspaces Yet
         </h2>
         <p className="text-slate-500 max-w-sm font-medium">
-          Create more workspaces to compare performance across teams. This view
-          shows aggregate analytics for all workspaces you own.
+          Create a workspace to start tracking analytics here.
         </p>
       </div>
     );
