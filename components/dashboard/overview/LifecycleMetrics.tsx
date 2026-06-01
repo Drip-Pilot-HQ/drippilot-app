@@ -26,7 +26,7 @@ function TimingCard({
   return (
     <div className="flex items-center gap-3 py-3.5 border-b border-slate-100 last:border-0">
       <div
-        className={`w-9 h-9 rounded-2xl ${iconBg} flex items-center justify-center flex-shrink-0`}
+        className={`w-9 h-9 rounded-2xl ${iconBg} flex items-center justify-center shrink-0`}
       >
         {icon}
       </div>
@@ -38,7 +38,7 @@ function TimingCard({
           {description}
         </p>
       </div>
-      <div className="text-right flex-shrink-0">
+      <div className="text-right shrink-0">
         {formatted ? (
           <p className="text-sm font-black text-slate-900 tabular-nums">
             {formatted}
@@ -76,9 +76,9 @@ export function LifecycleMetrics({ data }: LifecycleMetricsProps) {
   const { metrics, totals } = data;
 
   return (
-    <div className="bg-white border border-slate-100 rounded-[28px] p-6 shadow-sm h-full flex flex-col">
+    <div className="bg-white border border-slate-100 rounded-[28px] p-4 sm:p-6 shadow-sm h-full flex flex-col">
       <div className="flex items-start gap-3 mb-4">
-        <div className="w-10 h-10 rounded-2xl bg-violet-50 flex items-center justify-center flex-shrink-0">
+        <div className="w-10 h-10 rounded-2xl bg-violet-50 flex items-center justify-center shrink-0">
           <Clock className="w-5 h-5 text-violet-500" />
         </div>
         <div className="flex-1 min-w-0">
@@ -94,7 +94,7 @@ export function LifecycleMetrics({ data }: LifecycleMetricsProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 mb-3 bg-gradient-to-br from-slate-50 via-slate-50 to-violet-50/30 rounded-2xl p-4 border border-slate-100">
+      <div className="grid grid-cols-3 gap-3 mb-3 bg-linear-to-br from-slate-50 via-slate-50 to-violet-50/30 rounded-2xl p-4 border border-slate-100">
         <SummaryStat label="Messaged" value={totals.leadsWithFirstMessage} />
         <SummaryStat label="Replied" value={totals.leadsReplied} divider />
         <SummaryStat label="Converted" value={totals.convertedLeads} />

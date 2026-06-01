@@ -13,9 +13,9 @@ interface ViewModeContextValue {
 }
 
 const ViewModeContext = createContext<ViewModeContextValue>({
-  viewMode: "team",
+  viewMode: "personal",
   setViewMode: () => {},
-  isPersonal: false,
+  isPersonal: true,
 });
 
 const STORAGE_KEY = "drippilot_view_mode";
@@ -30,15 +30,17 @@ export function ViewModeProvider({ children }: { children: React.ReactNode }) {
   }>(() => {
     const mode =
       typeof window !== "undefined" &&
-      localStorage.getItem(STORAGE_KEY) === "personal"
-        ? "personal"
-        : "team";
+      localStorage.getItem(STORAGE_KEY) === "team"
+        ? "team"
+        : "personal";
     return { workspaceId: activeWorkspaceId, mode };
   });
 
-  // When workspace changes, derive "team" until user explicitly picks a mode
+  // When workspace changes, default to personal until user explicitly picks a mode
   const viewMode =
-    storedState.workspaceId !== activeWorkspaceId ? "team" : storedState.mode;
+    storedState.workspaceId !== activeWorkspaceId
+      ? "personal"
+      : storedState.mode;
 
   const setViewMode = useCallback(
     (mode: ViewMode) => {

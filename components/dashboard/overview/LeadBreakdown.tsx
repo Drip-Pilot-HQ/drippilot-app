@@ -31,7 +31,7 @@ export function LeadBreakdown({ leads }: LeadBreakdownProps) {
   })).filter((d) => d.value > 0);
 
   return (
-    <div className="flex flex-col h-full bg-white border border-slate-100 rounded-[28px] p-6 shadow-sm">
+    <div className="flex flex-col h-full bg-white border border-slate-100 rounded-[28px] p-4 sm:p-6 shadow-sm">
       <div className="mb-4 shrink-0">
         <div className="flex items-center gap-1.5">
           <h3 className="text-lg font-black text-slate-900">Lead Breakdown</h3>

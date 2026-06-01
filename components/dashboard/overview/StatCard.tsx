@@ -33,9 +33,9 @@ export function StatCard({
 
   return (
     <div
-      className={`group relative overflow-hidden rounded-[28px] p-4 sm:p-6 shadow-sm flex flex-col gap-3 sm:gap-4 hover:shadow-md transition-all duration-200 ${
+      className={`group relative overflow-hidden rounded-[28px] p-4 sm:p-5 shadow-sm flex flex-col gap-3 hover:shadow-md transition-all duration-200 ${
         isAccent
-          ? "bg-gradient-to-br from-white via-white to-emerald-50/40 border border-emerald-100/70 hover:border-emerald-200"
+          ? "bg-linear-to-br from-white via-white to-emerald-50/40 border border-emerald-100/70 hover:border-emerald-200"
           : "bg-white border border-slate-100 hover:border-slate-200"
       }`}
     >
@@ -49,13 +49,13 @@ export function StatCard({
 
       <div className="relative flex items-start justify-between">
         <div
-          className={`w-11 h-11 rounded-2xl ${iconBg} flex items-center justify-center flex-shrink-0`}
+          className={`w-9 h-9 sm:w-11 sm:h-11 rounded-2xl ${iconBg} flex items-center justify-center shrink-0`}
         >
-          <Icon className={`w-5 h-5 ${iconColor}`} />
+          <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${iconColor}`} />
         </div>
         {trend && trendLabel && (
           <div
-            className={`flex items-center gap-1 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full ${
+            className={`flex items-center gap-0.5 sm:gap-1 text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full whitespace-nowrap ${
               trend === "up"
                 ? "bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100"
                 : trend === "down"
@@ -64,11 +64,11 @@ export function StatCard({
             }`}
           >
             {trend === "up" ? (
-              <TrendingUp className="w-3 h-3" />
+              <TrendingUp className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
             ) : trend === "down" ? (
-              <TrendingDown className="w-3 h-3" />
+              <TrendingDown className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
             ) : (
-              <Minus className="w-3 h-3" />
+              <Minus className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
             )}
             {trendLabel}
           </div>
@@ -76,14 +76,16 @@ export function StatCard({
       </div>
 
       <div className="relative">
-        <p className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-none">
+        <p className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-none">
           {value}
         </p>
         {subValue && (
-          <p className="text-xs text-slate-400 font-medium mt-2">{subValue}</p>
+          <p className="text-[11px] sm:text-xs text-slate-400 font-medium mt-1.5 sm:mt-2 line-clamp-2">
+            {subValue}
+          </p>
         )}
-        <div className="flex items-center gap-1 mt-3">
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">
+        <div className="flex items-center gap-1 mt-2 sm:mt-3">
+          <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] sm:tracking-[0.15em]">
             {label}
           </p>
           {tooltip && <InfoTooltip text={tooltip} />}

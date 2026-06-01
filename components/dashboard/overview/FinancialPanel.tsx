@@ -17,20 +17,20 @@ interface MetricItemProps {
 function MetricItem({ label, value, accent }: MetricItemProps) {
   return (
     <div
-      className={`rounded-2xl p-3.5 transition-all ${
+      className={`rounded-2xl p-2.5 sm:p-3.5 transition-all ${
         accent
-          ? "bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/15"
+          ? "bg-linear-to-br from-primary/10 via-primary/5 to-transparent border border-primary/15"
           : "bg-slate-50/70 border border-slate-100 hover:border-slate-200"
       }`}
     >
       <p
-        className={`text-lg font-black tracking-tight tabular-nums ${
+        className={`text-sm sm:text-lg font-black tracking-tight tabular-nums truncate ${
           accent ? "text-primary" : "text-slate-900"
         }`}
       >
         {value}
       </p>
-      <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] mt-1">
+      <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] sm:tracking-[0.15em] mt-1 leading-tight">
         {label}
       </p>
     </div>
@@ -41,9 +41,9 @@ export function FinancialPanel({ data }: FinancialPanelProps) {
   const roiPositive = data.roi >= 0;
 
   return (
-    <div className="bg-white border border-slate-100 rounded-[28px] p-6 shadow-sm h-full flex flex-col">
+    <div className="bg-white border border-slate-100 rounded-[28px] p-4 sm:p-6 shadow-sm h-full flex flex-col">
       <div className="flex items-start gap-3 mb-5">
-        <div className="w-10 h-10 rounded-2xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
+        <div className="w-10 h-10 rounded-2xl bg-emerald-50 flex items-center justify-center shrink-0">
           <DollarSign className="w-5 h-5 text-emerald-500" />
         </div>
         <div className="flex-1 min-w-0">
@@ -59,7 +59,7 @@ export function FinancialPanel({ data }: FinancialPanelProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2.5 mb-2.5">
+      <div className="grid grid-cols-2 gap-1.5 sm:gap-2.5 mb-1.5 sm:mb-2.5">
         <MetricItem
           label="Projected Revenue"
           value={`$${Math.round(data.projectedRevenue).toLocaleString()}`}
@@ -79,7 +79,7 @@ export function FinancialPanel({ data }: FinancialPanelProps) {
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-2.5 mb-4">
+      <div className="grid grid-cols-3 gap-1.5 sm:gap-2.5 mb-4">
         <MetricItem
           label="Lead Acq. Cost"
           value={`$${Math.round(data.costPerLead).toLocaleString()}`}
@@ -97,12 +97,12 @@ export function FinancialPanel({ data }: FinancialPanelProps) {
       <div
         className={`mt-auto flex items-center gap-3 rounded-2xl p-4 ${
           roiPositive
-            ? "bg-gradient-to-r from-emerald-50 via-emerald-50 to-emerald-100/40 border border-emerald-100"
-            : "bg-gradient-to-r from-red-50 to-red-100/40 border border-red-100"
+            ? "bg-linear-to-r from-emerald-50 via-emerald-50 to-emerald-100/40 border border-emerald-100"
+            : "bg-linear-to-r from-red-50 to-red-100/40 border border-red-100"
         }`}
       >
         <div
-          className={`w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 ${
+          className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${
             roiPositive ? "bg-emerald-100" : "bg-red-100"
           }`}
         >

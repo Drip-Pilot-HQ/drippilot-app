@@ -61,7 +61,7 @@ export function ActivityChart({ data }: ActivityChartProps) {
   const growthPrefix = formattedGrowth > 0 ? "+" : "";
 
   return (
-    <div className="bg-white border border-slate-100 rounded-[28px] p-6 shadow-sm">
+    <div className="bg-white border border-slate-100 rounded-[28px] p-4 sm:p-6 shadow-sm">
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-6">
         <div className="flex items-start justify-between sm:block gap-2 min-w-0">
           <div className="min-w-0">

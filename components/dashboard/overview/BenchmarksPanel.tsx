@@ -30,38 +30,38 @@ function BenchmarkRow({
   const sign = isGood ? "+" : "-";
 
   return (
-    <div className="flex items-center justify-between gap-3 py-4 border-b border-slate-100 last:border-0">
+    <div className="flex items-center justify-between gap-2 sm:gap-3 py-3 sm:py-4 border-b border-slate-100 last:border-0">
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-black text-slate-800 truncate tracking-tight">
+        <p className="text-xs sm:text-sm font-black text-slate-800 truncate tracking-tight">
           {label}
         </p>
-        <p className="text-[11px] text-slate-400 font-medium mt-0.5">
-          Industry avg{" "}
+        <p className="text-[10px] sm:text-[11px] text-slate-400 font-medium mt-0.5">
+          Avg{" "}
           <span className="text-slate-500 font-bold tabular-nums">
             {format(industry)}
           </span>
         </p>
       </div>
-      <div className="flex items-center gap-3 shrink-0">
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         <div className="text-right">
-          <p className="text-base font-black text-slate-900 tracking-tight tabular-nums">
+          <p className="text-sm sm:text-base font-black text-slate-900 tracking-tight tabular-nums">
             {format(yours)}
           </p>
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
+          <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-wider">
             yours
           </p>
         </div>
         <div
-          className={`flex items-center gap-1 text-[10px] font-black uppercase tracking-wider px-2.5 py-1.5 rounded-full min-w-[60px] justify-center whitespace-nowrap ring-1 ${
+          className={`flex items-center gap-0.5 sm:gap-1 text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-full min-w-13 sm:min-w-15 justify-center whitespace-nowrap ring-1 ${
             isGood
               ? "bg-emerald-50 text-emerald-600 ring-emerald-100"
               : "bg-red-50 text-red-500 ring-red-100"
           }`}
         >
           {isGood ? (
-            <TrendingUp className="w-3 h-3" />
+            <TrendingUp className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
           ) : (
-            <TrendingDown className="w-3 h-3" />
+            <TrendingDown className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
           )}
           {pct > 0 ? `${sign}${pct}%` : "avg"}
         </div>
@@ -74,9 +74,9 @@ export function BenchmarksPanel({ data }: BenchmarksPanelProps) {
   const { current, industry, comparison } = data;
 
   return (
-    <div className="bg-white border border-slate-100 rounded-[28px] p-6 shadow-sm h-full">
+    <div className="bg-white border border-slate-100 rounded-[28px] p-4 sm:p-6 shadow-sm h-full">
       <div className="flex items-start gap-3 mb-3">
-        <div className="w-10 h-10 rounded-2xl bg-amber-50 flex items-center justify-center flex-shrink-0">
+        <div className="w-10 h-10 rounded-2xl bg-amber-50 flex items-center justify-center shrink-0">
           <Award className="w-5 h-5 text-amber-500" />
         </div>
         <div className="flex-1 min-w-0">

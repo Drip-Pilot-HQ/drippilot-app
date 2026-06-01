@@ -203,7 +203,7 @@ export function OverviewClient() {
               title="At a Glance"
               subtitle="Headline metrics for the selected scope"
             />
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
               <StatCard
                 label="Total Leads"
                 value={stats.leads.total.toLocaleString()}
@@ -247,11 +247,11 @@ export function OverviewClient() {
               <StatCard
                 label="Conversion Rate"
                 value={`${stats.conversionRate.toFixed(1)}%`}
-                subValue={`${stats.leads.converted.toLocaleString()} of ${stats.leads.total.toLocaleString()} leads`}
+                subValue={`${stats.leads.converted.toLocaleString()} of ${stats.conversionFunnel.historicallyEnrolledLeads.toLocaleString()} enrolled`}
                 icon={TrendingUp}
                 iconColor="text-emerald-500"
                 iconBg="bg-emerald-50"
-                tooltip="Overall workspace conversion rate: converted leads divided by all leads processed. See Campaign Funnel below for campaign-specific rates."
+                tooltip="Campaign conversion rate: converted leads divided by all leads ever enrolled in a campaign."
                 variant="accent"
               />
             </div>

@@ -20,7 +20,7 @@ interface FunnelStep {
 
 export function ConversionFunnel({ funnel, converted }: ConversionFunnelProps) {
   const base = Math.max(funnel.historicallyEnrolledLeads ?? 1, 1);
-  const pctOfBase = (v: number) => Math.round((v / base) * 100);
+  const pctOfBase = (v: number) => ((v / base) * 100).toFixed(1);
   const barWidth = (v: number) => Math.max(8, Math.round((v / base) * 100));
 
   const convertedCount = converted ?? 0;
@@ -32,7 +32,7 @@ export function ConversionFunnel({ funnel, converted }: ConversionFunnelProps) {
       label: "Enrolled",
       value: funnel.historicallyEnrolledLeads,
       dotColor: "bg-slate-400",
-      barColor: "bg-gradient-to-r from-slate-300 to-slate-400",
+      barColor: "bg-linear-to-r from-slate-300 to-slate-400",
       rate: null,
     },
     {
@@ -40,7 +40,7 @@ export function ConversionFunnel({ funnel, converted }: ConversionFunnelProps) {
       label: "Genuine Replies",
       value: funnel.genuineReplies,
       dotColor: "bg-blue-500",
-      barColor: "bg-gradient-to-r from-blue-400 to-blue-500",
+      barColor: "bg-linear-to-r from-blue-400 to-blue-500",
       rate: {
         label: `${pctOfBase(funnel.genuineReplies)}% response rate`,
         className: "bg-blue-50 text-blue-600 ring-1 ring-blue-100",
@@ -51,7 +51,7 @@ export function ConversionFunnel({ funnel, converted }: ConversionFunnelProps) {
       label: "Warm",
       value: funnel.warmLeads,
       dotColor: "bg-cyan-500",
-      barColor: "bg-gradient-to-r from-cyan-400 to-cyan-500",
+      barColor: "bg-linear-to-r from-cyan-400 to-cyan-500",
       rate: {
         label: `${pctOfBase(funnel.warmLeads)}% warm rate`,
         className: "bg-cyan-50 text-cyan-600 ring-1 ring-cyan-100",
@@ -62,7 +62,7 @@ export function ConversionFunnel({ funnel, converted }: ConversionFunnelProps) {
       label: "Hot",
       value: funnel.hotLeads,
       dotColor: "bg-orange-500",
-      barColor: "bg-gradient-to-r from-orange-400 to-primary",
+      barColor: "bg-linear-to-r from-orange-400 to-primary",
       rate: {
         label: `${pctOfBase(funnel.hotLeads)}% hot rate`,
         className: "bg-orange-50 text-orange-600 ring-1 ring-orange-100",
@@ -75,7 +75,7 @@ export function ConversionFunnel({ funnel, converted }: ConversionFunnelProps) {
             label: "Converted",
             value: convertedCount,
             dotColor: "bg-emerald-500",
-            barColor: "bg-gradient-to-r from-emerald-400 to-emerald-500",
+            barColor: "bg-linear-to-r from-emerald-400 to-emerald-500",
             rate: {
               label: `${campaignConversionRate}% campaign conversion rate`,
               className:
@@ -87,9 +87,9 @@ export function ConversionFunnel({ funnel, converted }: ConversionFunnelProps) {
   ];
 
   return (
-    <div className="bg-white border border-slate-100 rounded-[28px] p-6 shadow-sm h-full">
+    <div className="bg-white border border-slate-100 rounded-[28px] p-4 sm:p-6 shadow-sm h-full">
       <div className="flex items-start gap-3 mb-6">
-        <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+        <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
           <GitBranch className="w-5 h-5 text-primary" />
         </div>
         <div className="flex-1 min-w-0">

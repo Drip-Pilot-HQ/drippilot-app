@@ -2,6 +2,7 @@
 
 import { Clock, Settings2 } from "lucide-react";
 import type { DaysFilter } from "@/types/analytics";
+import { cn } from "@/lib/utils";
 
 const DAY_OPTIONS: { label: string; value: DaysFilter }[] = [
   { label: "7d", value: 7 },
@@ -26,46 +27,51 @@ export function OverviewHeader({
   viewAsSelectorSlot,
 }: OverviewHeaderProps) {
   return (
-    <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
-      <div>
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-1">
-          Overview
-        </h1>
-        <div className="flex flex-wrap items-center gap-2">
-          <p className="text-slate-500 font-medium">
-            Your workspace performance at a glance
-          </p>
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+      {/* Title */}
+      <div className="min-w-0">
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            Overview
+          </h1>
           {scopeLabel}
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 text-slate-400 text-xs font-medium">
-            <Clock className="w-3 h-3" />
-            Updates every 10 min
+        </div>
+        <div className="flex items-center gap-1.5 mt-1">
+          <p className="text-sm text-slate-500 font-medium">
+            Workspace performance at a glance
+          </p>
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 text-slate-400 text-[11px] font-medium whitespace-nowrap">
+            <Clock className="w-2.5 h-2.5" />
+            10 min
           </span>
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
+      {/* Controls — all in one flat row that wraps cleanly */}
+      <div className="flex items-center gap-2 flex-wrap shrink-0">
         {viewAsSelectorSlot}
 
         {onConfigureClick && (
           <button
             onClick={onConfigureClick}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-slate-700 hover:border-slate-300 transition-all text-sm font-bold"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all text-xs font-bold whitespace-nowrap"
           >
-            <Settings2 className="w-4 h-4" />
+            <Settings2 className="w-3.5 h-3.5" />
             Configure
           </button>
         )}
 
-        <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1">
+        <div className="flex items-center bg-slate-100/80 border border-slate-200/60 rounded-xl p-1 gap-0.5">
           {DAY_OPTIONS.map((opt) => (
             <button
               key={opt.value}
               onClick={() => onDaysChange(opt.value)}
-              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+              className={cn(
+                "px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
                 days === opt.value
-                  ? "bg-white text-slate-900 shadow-sm"
-                  : "text-slate-500 hover:text-slate-700"
-              }`}
+                  ? "bg-white text-slate-900 shadow-sm border border-slate-200/80"
+                  : "text-slate-500 hover:text-slate-700 hover:bg-white/60",
+              )}
             >
               {opt.label}
             </button>
