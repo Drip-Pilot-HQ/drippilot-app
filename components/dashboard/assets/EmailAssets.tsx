@@ -156,8 +156,8 @@ export function EmailAssets() {
               <h3 className="text-base font-black text-slate-900 truncate mb-1">
                 {alias.emailAlias}
               </h3>
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-                Custom Sender Identity
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider truncate">
+                {alias.senderName ?? "Custom Sender Identity"}
               </p>
             </div>
 

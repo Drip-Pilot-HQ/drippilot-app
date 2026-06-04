@@ -16,14 +16,15 @@ import {
   ADDON_CONFIGS,
   ADDON_TYPES,
   getAddonTieredCost,
-  type AddonType,
   type BillingInterval,
+  type QuantityAddonType,
 } from "@/config/billing.config";
 import {
   useAddAddonMutation,
   useRemoveAddonMutation,
 } from "@/store/server/billing.queries";
 import type { SubscriptionStatus, Addon } from "@/types/billings";
+import { CreditsAddonRow } from "./CreditsAddonRow";
 import { toast } from "sonner";
 import axios, { AxiosError } from "axios";
 
@@ -32,14 +33,14 @@ interface AddonsListProps {
   addons: Addon[];
 }
 
-const ADDON_ICONS: Record<AddonType, React.ElementType> = {
+const ADDON_ICONS: Record<QuantityAddonType, React.ElementType> = {
   seat: Users,
   phone_alias: Phone,
   email_alias: Mail,
   knowledge_base: BookOpen,
 };
 
-const ADDON_ORDER: AddonType[] = [
+const ADDON_ORDER: QuantityAddonType[] = [
   ADDON_TYPES.SEAT,
   ADDON_TYPES.PHONE_ALIAS,
   ADDON_TYPES.EMAIL_ALIAS,
@@ -47,14 +48,14 @@ const ADDON_ORDER: AddonType[] = [
 ];
 
 interface AddonRowProps {
-  type: AddonType;
+  type: QuantityAddonType;
   currentQty: number;
   interval: BillingInterval;
   anyRowSaving: boolean;
   onSaveStart: () => void;
   onSaveEnd: () => void;
-  onSaved: (type: AddonType, newQty: number) => void;
-  onQtyChange: (type: AddonType, qty: number) => void;
+  onSaved: (type: QuantityAddonType, newQty: number) => void;
+  onQtyChange: (type: QuantityAddonType, qty: number) => void;
 }
 
 function AddonRow({
@@ -86,9 +87,12 @@ function AddonRow({
   const delta = qty - currentQty;
   const isActive = currentQty > 0 || hasChanged;
 
-  const cost = getAddonTieredCost(type, interval, qty);
+  const isYearly = interval === "yearly";
+  const intervalSuffix = isYearly ? "yr" : "mo";
+  const costPerPeriod =
+    getAddonTieredCost(type, interval, qty) * (isYearly ? 12 : 1);
   const basePrice =
-    interval === "yearly" ? config.yearlyPrice : config.monthlyPrice;
+    (isYearly ? config.yearlyPrice : config.monthlyPrice) * (isYearly ? 12 : 1);
   const hasTiers = !!config.tiers && config.tiers.length > 1;
 
   const isDisabled = anyRowSaving && !isSaving;
@@ -97,14 +101,16 @@ function AddonRow({
   const handleReset = () => setQty(currentQty);
 
   const buildDescription = () => {
-    const intervalLabel = interval === "yearly" ? "annually" : "monthly";
-    const newTotal = getAddonTieredCost(type, interval, qty);
-    const oldTotal = getAddonTieredCost(type, interval, currentQty);
+    const intervalLabel = isYearly ? "annually" : "monthly";
+    const newTotal =
+      getAddonTieredCost(type, interval, qty) * (isYearly ? 12 : 1);
+    const oldTotal =
+      getAddonTieredCost(type, interval, currentQty) * (isYearly ? 12 : 1);
     const diff = Math.abs(newTotal - oldTotal).toFixed(2);
     if (delta > 0) {
-      return `You're adding ${delta} × ${config.displayName}. Drip Pilot will charge your active payment method an additional $${diff}/mo billed ${intervalLabel}. The charge is prorated for the current billing period.`;
+      return `You're adding ${delta} × ${config.displayName}. Drip Pilot will charge your active payment method an additional $${diff}/${intervalSuffix} billed ${intervalLabel}. The charge is prorated for the current billing period.`;
     }
-    return `You're removing ${Math.abs(delta)} × ${config.displayName}. This will reduce your bill by $${diff}/mo starting next cycle.`;
+    return `You're removing ${Math.abs(delta)} × ${config.displayName}. This will reduce your bill by $${diff}/${intervalSuffix} starting next cycle.`;
   };
 
   const handleConfirm = async () => {
@@ -177,7 +183,8 @@ function AddonRow({
                 <span className="font-bold text-slate-700">
                   {hasTiers ? `Starts at $${basePrice}` : `$${basePrice}`}
                 </span>
-                <span className="opacity-60">/mo</span> · {config.description}
+                <span className="opacity-60">/{intervalSuffix}</span> ·{" "}
+                {config.description}
               </p>
             </div>
           </div>
@@ -210,11 +217,11 @@ function AddonRow({
             {/* Cost text */}
             <div className="w-[84px] text-right shrink-0 flex flex-row sm:flex-col items-center sm:items-end justify-end gap-1 sm:gap-0">
               <p className="text-sm sm:text-base font-black text-slate-900 tabular-nums">
-                {qty > 0 ? `$${cost.toFixed(2)}` : "—"}
+                {qty > 0 ? `$${costPerPeriod.toFixed(2)}` : "—"}
               </p>
               {qty > 0 && (
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest sm:mt-0.5">
-                  / mo
+                  / {intervalSuffix}
                 </p>
               )}
             </div>
@@ -230,8 +237,10 @@ function AddonRow({
               </span>
               <span className="hidden sm:inline">·</span>
               <span>
-                <span className="font-black">${cost.toFixed(2)}/mo</span> new
-                total
+                <span className="font-black">
+                  ${costPerPeriod.toFixed(2)}/{intervalSuffix}
+                </span>{" "}
+                new total
               </span>
             </p>
             <div className="flex items-center gap-2 self-end sm:self-auto shrink-0 w-full sm:w-auto">
@@ -286,35 +295,46 @@ function AddonRow({
 export function AddonsList({ subscription, addons }: AddonsListProps) {
   const interval = (subscription.billingInterval ??
     "monthly") as BillingInterval;
-  const [savingType, setSavingType] = useState<AddonType | null>(null);
+  const [savingType, setSavingType] = useState<
+    QuantityAddonType | "credits" | null
+  >(null);
 
-  const currentQuantities: Record<AddonType, number> = {
+  const currentQuantities: Record<QuantityAddonType, number> = {
     seat: 0,
     phone_alias: 0,
     email_alias: 0,
     knowledge_base: 0,
   };
   for (const addon of addons) {
-    currentQuantities[addon.addonType] = addon.quantity;
+    if (addon.addonType !== "credits") {
+      currentQuantities[addon.addonType as QuantityAddonType] = addon.quantity;
+    }
   }
 
+  const creditsAddon = addons.find((a) => a.addonType === "credits");
+
   const [liveTotals, setLiveTotals] =
-    useState<Record<AddonType, number>>(currentQuantities);
+    useState<Record<QuantityAddonType, number>>(currentQuantities);
   useEffect(() => {
     setLiveTotals(currentQuantities);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addons]);
 
-  const handleSaved = (type: AddonType, newQty: number) => {
+  const handleSaved = (type: QuantityAddonType, newQty: number) => {
     setLiveTotals((prev) => ({ ...prev, [type]: newQty }));
   };
 
-  const handleQtyChange = (type: AddonType, qty: number) => {
+  const handleQtyChange = (type: QuantityAddonType, qty: number) => {
     setLiveTotals((prev) => ({ ...prev, [type]: qty }));
   };
 
-  const totalMonthly = ADDON_ORDER.reduce(
-    (acc, type) => acc + getAddonTieredCost(type, interval, liveTotals[type]),
+  const isYearly = interval === "yearly";
+  const intervalSuffix = isYearly ? "yr" : "mo";
+  const addonTotal = ADDON_ORDER.reduce(
+    (acc, type) =>
+      acc +
+      getAddonTieredCost(type, interval, liveTotals[type]) *
+        (isYearly ? 12 : 1),
     0,
   );
 
@@ -347,6 +367,14 @@ export function AddonsList({ subscription, addons }: AddonsListProps) {
             onQtyChange={handleQtyChange}
           />
         ))}
+
+        <CreditsAddonRow
+          activeAddon={creditsAddon}
+          interval={interval}
+          disabled={savingType !== null && savingType !== "credits"}
+          onSaveStart={() => setSavingType("credits")}
+          onSaveEnd={() => setSavingType(null)}
+        />
       </div>
 
       <div className="mt-6 pt-5 border-t border-slate-100 flex items-end justify-between">
@@ -355,8 +383,10 @@ export function AddonsList({ subscription, addons }: AddonsListProps) {
             Add-on Total ({interval})
           </p>
           <p className="text-3xl font-black text-slate-900 tabular-nums">
-            ${totalMonthly.toFixed(2)}
-            <span className="text-base font-bold text-slate-400">/mo</span>
+            ${addonTotal.toFixed(2)}
+            <span className="text-base font-bold text-slate-400">
+              /{intervalSuffix}
+            </span>
           </p>
         </div>
       </div>

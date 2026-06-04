@@ -88,6 +88,61 @@ A: Our initial offer is non-binding. You're never obligated to accept. We only p
 Q: What types of properties do you buy?
 A: We buy single-family homes, multi-family properties, condos, land, and commercial properties in [target markets].`,
   },
+  {
+    category: "B2B / Services",
+    categoryColor: "bg-indigo-50 text-indigo-600",
+    title: "Company Overview",
+    content: `We are [Company Name], a [type of business — e.g. marketing agency, consulting firm, software company, staffing agency] based in [City, State / Remote].
+
+We help [target customer — e.g. small business owners, B2B companies, startups] with [core service or outcome — e.g. generating more leads, automating their operations, hiring top talent, growing revenue].
+
+Our team has [X] years of experience working with clients across [industries or regions]. We typically work with businesses doing [revenue range or size — optional].
+
+We offer [free consultation / free demo / free audit / no-commitment quote] to get started — no pressure, no long-term contracts required.
+
+Business hours: Monday–Friday, [9am–6pm Timezone].
+Website: [yourwebsite.com] | Phone: [555-000-0000] | Email: [hello@yourcompany.com]`,
+  },
+  {
+    category: "B2B / Services",
+    categoryColor: "bg-indigo-50 text-indigo-600",
+    title: "AI Communication Rules",
+    content: `Tone: Be professional, friendly, and helpful. Never be pushy or use high-pressure tactics. Leads are busy professionals — keep messages concise and value-focused.
+
+Always:
+- Lead with the benefit or outcome, not the feature
+- Ask questions to understand the lead's goals and timeline
+- Offer a low-commitment next step (call, demo, free audit)
+- Use plain, conversational language — no jargon
+
+Never:
+- Promise specific results before understanding their situation
+- Send follow-up messages that feel copy-paste or robotic
+- Pressure a lead to make a quick decision
+
+If a lead asks about pricing: "Pricing depends on your specific needs — happy to give you a clear number on a quick call. Want to find 15 minutes this week?"
+
+Escalate to a human team member if: lead is ready to buy, expresses frustration, or requests to speak with someone directly.`,
+  },
+  {
+    category: "B2B / Services",
+    categoryColor: "bg-indigo-50 text-indigo-600",
+    title: "Common Client Questions",
+    content: `Q: How does the process work?
+A: It starts with a quick [call / demo / consultation] where we learn about your goals. From there we put together a custom [proposal / plan / quote] and walk you through exactly how we can help.
+
+Q: How long does it take to see results?
+A: Most clients see [early results / first outcomes] within [X weeks / X days]. Full results depend on your goals and starting point — we'll set clear expectations upfront.
+
+Q: What does it cost?
+A: Pricing varies based on scope and needs. We offer options starting at [$X / month] — no hidden fees. We'll give you a clear quote after a short discovery conversation.
+
+Q: Is there a contract?
+A: We offer [month-to-month / flexible] agreements. We believe in earning your business every month, not locking you in.
+
+Q: What makes you different?
+A: [Your honest differentiator — e.g. "We specialize in your industry," "You'll always work directly with a senior team member," "We guarantee X or we'll work for free until we hit it."]`,
+  },
 ];
 
 interface KnowledgeBaseExampleDrawerProps {

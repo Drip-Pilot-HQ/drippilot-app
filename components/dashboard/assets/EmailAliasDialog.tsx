@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Mail, Loader2 } from "lucide-react";
+import { X, Mail, User, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { EmailAlias } from "@/types/assets";
 import {
@@ -25,10 +25,16 @@ export function EmailAliasDialog({
   const [aliasInput, setAliasInput] = useState(() =>
     editAlias ? editAlias.emailAlias.split("@")[0] : "",
   );
+  const [senderNameInput, setSenderNameInput] = useState(
+    () => editAlias?.senderName ?? "",
+  );
 
   const createMutation = useCreateEmailAliasMutation();
   const updateMutation = useUpdateEmailAliasMutation();
   const isLoading = createMutation.isPending || updateMutation.isPending;
+
+  const isFormValid =
+    aliasInput.trim().length > 0 && senderNameInput.trim().length > 0;
 
   if (!isOpen) return null;
 
@@ -43,14 +49,19 @@ export function EmailAliasDialog({
       }
     }
 
+    const senderName = senderNameInput.trim() || null;
+
     try {
       if (editAlias) {
         await updateMutation.mutateAsync({
           id: editAlias.id,
-          dto: { emailAlias: finalAlias },
+          dto: { emailAlias: finalAlias, senderName },
         });
       } else {
-        await createMutation.mutateAsync({ emailAlias: finalAlias });
+        await createMutation.mutateAsync({
+          emailAlias: finalAlias,
+          senderName,
+        });
       }
       onClose();
     } catch (error) {
@@ -91,7 +102,39 @@ export function EmailAliasDialog({
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Sender Name */}
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
+                Display Name
+              </label>
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-300">
+                  <User className="w-4 h-4" />
+                </div>
+                <input
+                  required
+                  value={senderNameInput}
+                  onChange={(e) => setSenderNameInput(e.target.value)}
+                  placeholder="e.g. Support Team"
+                  maxLength={50}
+                  className="w-full pl-10 pr-6 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-bold text-slate-900 text-base placeholder:font-normal placeholder:text-slate-400"
+                />
+              </div>
+              <p className="text-[10px] text-slate-400 font-medium px-1">
+                Shown in email From header:{" "}
+                <span className="font-bold text-slate-600">
+                  &ldquo;
+                  {senderNameInput.trim() ||
+                    aliasInput.split("@")[0] ||
+                    "hello"}
+                  &rdquo; &lt;{aliasInput.split("@")[0] || "hello"}
+                  @drippilot.com&gt;
+                </span>
+              </p>
+            </div>
+
+            {/* Email Username */}
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
                 Email Username
@@ -116,12 +159,11 @@ export function EmailAliasDialog({
                 )}
               </div>
               <p className="text-[10px] text-slate-400 font-medium px-1">
-                This will be your sender address for all campaigns associated
-                with this alias.
+                Sender address for all campaigns using this alias.
               </p>
             </div>
 
-            <div className="pt-4 flex items-center gap-3">
+            <div className="pt-2 flex items-center gap-3">
               <Button
                 type="button"
                 variant="outline"
@@ -132,7 +174,7 @@ export function EmailAliasDialog({
               </Button>
               <Button
                 type="submit"
-                disabled={isLoading || !aliasInput}
+                disabled={isLoading || !isFormValid}
                 className="flex-2 rounded-xl h-12 text-sm"
               >
                 {isLoading ? (

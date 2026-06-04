@@ -1,4 +1,4 @@
-import type { PlanId, BillingInterval, AddonType, AccountStatus } from '@/config/billing.config';
+import type { PlanId, BillingInterval, AddonType, AccountStatus, CreditsBundle } from '@/config/billing.config';
 
 export interface SubscriptionStatus {
   id: string;
@@ -29,6 +29,7 @@ export interface Addon {
   stripeSubscriptionItemId: string;
   stripePriceId: string;
   quantity: number;
+  bundleSize?: CreditsBundle;
 }
 
 export interface EffectiveLimits {
@@ -67,6 +68,7 @@ export interface ChangePlanDto {
 export interface AddAddonDto {
   addonType: AddonType;
   quantity: number;
+  bundleSize?: CreditsBundle;
 }
 
 export interface RemoveAddonDto {

@@ -22,7 +22,7 @@ export const MessageBubble = memo(function MessageBubble({
   const bubbleColor = isSystem
     ? "bg-[#F6E7B0] text-slate-900 border border-[#DCCB82]"
     : isAi
-      ? "bg-[#7C3AED] text-white"
+      ? "bg-[#34C759] text-white"
       : isUser
         ? "bg-[#2563EB] text-white"
         : isLead
@@ -32,7 +32,7 @@ export const MessageBubble = memo(function MessageBubble({
   const avatarColor = isSystem
     ? "bg-[#F6E7B0]"
     : isAi
-      ? "bg-violet-100"
+      ? "bg-green-100"
       : isUser
         ? "bg-blue-100"
         : "bg-slate-100";
@@ -40,7 +40,7 @@ export const MessageBubble = memo(function MessageBubble({
   const avatarIcon = isSystem ? (
     <Zap className="w-3.5 h-3.5 text-amber-600" />
   ) : isAi ? (
-    <Bot className="w-3.5 h-3.5 text-violet-600" />
+    <Bot className="w-3.5 h-3.5 text-green-600" />
   ) : (
     <User
       className={cn("w-3.5 h-3.5", isUser ? "text-blue-600" : "text-slate-500")}
@@ -54,7 +54,7 @@ export const MessageBubble = memo(function MessageBubble({
         isSystem
           ? "text-amber-600"
           : isAi
-            ? "text-violet-400"
+            ? "text-green-600"
             : isUser
               ? "text-blue-300"
               : "text-slate-400",

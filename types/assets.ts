@@ -2,6 +2,7 @@ export interface EmailAlias {
   id: string;
   workspaceId: string;
   emailAlias: string;
+  senderName: string | null;
   assignedUserIds?: string[];
   createdAt: string;
   updatedAt: string;
@@ -28,10 +29,12 @@ export interface AssignPhoneNumberDto {
 
 export interface CreateEmailAliasDto {
   emailAlias: string;
+  senderName?: string | null;
 }
 
 export interface UpdateEmailAliasDto {
   emailAlias: string;
+  senderName?: string | null;
 }
 
 export interface SearchPhoneNumbersDto {

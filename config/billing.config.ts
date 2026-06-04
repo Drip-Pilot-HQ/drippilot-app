@@ -19,9 +19,30 @@ export const ADDON_TYPES = {
   PHONE_ALIAS: 'phone_alias',
   EMAIL_ALIAS: 'email_alias',
   KNOWLEDGE_BASE: 'knowledge_base',
+  CREDITS: 'credits',
 } as const;
 
 export type AddonType = (typeof ADDON_TYPES)[keyof typeof ADDON_TYPES];
+export type QuantityAddonType = Exclude<AddonType, 'credits'>;
+
+export type CreditsBundle = 2500 | 5000 | 10000 | 25000 | 50000;
+export const VALID_CREDITS_BUNDLES: CreditsBundle[] = [2500, 5000, 10000, 25000, 50000];
+
+export interface CreditsBundleDisplayConfig {
+  bundle: CreditsBundle;
+  monthlyCredits: number;
+  yearlyCredits: number;
+  monthlyPrice: number;
+  yearlyPrice: number;
+}
+
+export const CREDITS_BUNDLE_DISPLAY_CONFIGS: Record<CreditsBundle, CreditsBundleDisplayConfig> = {
+  2500:  { bundle: 2500,  monthlyCredits: 2500,   yearlyCredits: 30000,  monthlyPrice: 150,  yearlyPrice: 1800  },
+  5000:  { bundle: 5000,  monthlyCredits: 5000,   yearlyCredits: 60000,  monthlyPrice: 300,  yearlyPrice: 3600  },
+  10000: { bundle: 10000, monthlyCredits: 10000,  yearlyCredits: 120000, monthlyPrice: 600,  yearlyPrice: 7200  },
+  25000: { bundle: 25000, monthlyCredits: 25000,  yearlyCredits: 300000, monthlyPrice: 1375, yearlyPrice: 16500 },
+  50000: { bundle: 50000, monthlyCredits: 50000,  yearlyCredits: 600000, monthlyPrice: 2500, yearlyPrice: 30000 },
+};
 
 export const PLAN_TIER: Record<PlanId, number> = {
   starter: 1,
@@ -137,7 +158,7 @@ export interface AddonDisplayConfig {
   tiers?: AddonPriceTier[];
 }
 
-export const ADDON_CONFIGS: Record<AddonType, AddonDisplayConfig> = {
+export const ADDON_CONFIGS: Record<QuantityAddonType, AddonDisplayConfig> = {
   seat: {
     type: 'seat',
     displayName: 'Additional Seat',
@@ -223,7 +244,7 @@ export function getPlanPrice(planId: PlanId, interval: BillingInterval): number 
  * respecting volume tiers if defined.
  */
 export function getAddonTieredCost(
-  type: AddonType,
+  type: QuantityAddonType,
   interval: BillingInterval,
   qty: number,
 ): number {
@@ -255,7 +276,7 @@ export function getAddonTieredCost(
  * e.g. ["10 × $49 = $490", "1 × $45 = $45"]
  */
 export function getAddonTierBreakdown(
-  type: AddonType,
+  type: QuantityAddonType,
   interval: BillingInterval,
   qty: number,
 ): string[] {
