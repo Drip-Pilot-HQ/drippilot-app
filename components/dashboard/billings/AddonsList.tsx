@@ -15,8 +15,10 @@ import { ConfirmDialog } from "@/components/branding/ConfirmDialog";
 import {
   ADDON_CONFIGS,
   ADDON_TYPES,
+  CREDITS_BUNDLE_DISPLAY_CONFIGS,
   getAddonTieredCost,
   type BillingInterval,
+  type CreditsBundle,
   type QuantityAddonType,
 } from "@/config/billing.config";
 import {
@@ -320,6 +322,12 @@ export function AddonsList({ subscription, addons }: AddonsListProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addons]);
 
+  const [selectedCreditsBundle, setSelectedCreditsBundle] =
+    useState<CreditsBundle | null>(creditsAddon?.bundleSize ?? null);
+  useEffect(() => {
+    setSelectedCreditsBundle(creditsAddon?.bundleSize ?? null);
+  }, [creditsAddon]);
+
   const handleSaved = (type: QuantityAddonType, newQty: number) => {
     setLiveTotals((prev) => ({ ...prev, [type]: newQty }));
   };
@@ -330,13 +338,21 @@ export function AddonsList({ subscription, addons }: AddonsListProps) {
 
   const isYearly = interval === "yearly";
   const intervalSuffix = isYearly ? "yr" : "mo";
-  const addonTotal = ADDON_ORDER.reduce(
-    (acc, type) =>
-      acc +
-      getAddonTieredCost(type, interval, liveTotals[type]) *
-        (isYearly ? 12 : 1),
-    0,
-  );
+
+  const creditsCost = selectedCreditsBundle
+    ? isYearly
+      ? CREDITS_BUNDLE_DISPLAY_CONFIGS[selectedCreditsBundle].yearlyPrice
+      : CREDITS_BUNDLE_DISPLAY_CONFIGS[selectedCreditsBundle].monthlyPrice
+    : 0;
+
+  const addonTotal =
+    ADDON_ORDER.reduce(
+      (acc, type) =>
+        acc +
+        getAddonTieredCost(type, interval, liveTotals[type]) *
+          (isYearly ? 12 : 1),
+      0,
+    ) + creditsCost;
 
   return (
     <div className="bg-white border border-slate-100 rounded-[32px] p-5 sm:p-8 shadow-sm">
@@ -374,6 +390,7 @@ export function AddonsList({ subscription, addons }: AddonsListProps) {
           disabled={savingType !== null && savingType !== "credits"}
           onSaveStart={() => setSavingType("credits")}
           onSaveEnd={() => setSavingType(null)}
+          onBundleChange={setSelectedCreditsBundle}
         />
       </div>
 

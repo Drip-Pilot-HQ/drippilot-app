@@ -23,6 +23,7 @@ interface CreditsAddonRowProps {
   disabled: boolean;
   onSaveStart: () => void;
   onSaveEnd: () => void;
+  onBundleChange?: (bundle: CreditsBundle | null) => void;
 }
 
 type DialogAction =
@@ -41,12 +42,18 @@ export function CreditsAddonRow({
   disabled,
   onSaveStart,
   onSaveEnd,
+  onBundleChange,
 }: CreditsAddonRowProps) {
   const activeBundle = activeAddon?.bundleSize ?? null;
   const [selectedBundle, setSelectedBundle] = useState<CreditsBundle | null>(
     activeBundle,
   );
   const [dialog, setDialog] = useState<DialogAction | null>(null);
+
+  const updateSelectedBundle = (bundle: CreditsBundle | null) => {
+    updateSelectedBundle(bundle);
+    onBundleChange?.(bundle);
+  };
 
   const addMutation = useAddAddonMutation();
   const removeMutation = useRemoveAddonMutation();
@@ -73,7 +80,7 @@ export function CreditsAddonRow({
     if (isSaving || disabled) return;
     // clicking active bundle when nothing changed → deselect to allow cancel flow
     if (bundle === selectedBundle && !hasChanged) return;
-    setSelectedBundle(bundle);
+    updateSelectedBundle(bundle);
   };
 
   const handleSave = () => {
@@ -82,7 +89,7 @@ export function CreditsAddonRow({
     else setDialog({ type: "switch", bundle: selectedBundle });
   };
 
-  const handleReset = () => setSelectedBundle(activeBundle);
+  const handleReset = () => updateSelectedBundle(activeBundle);
 
   const buildDialogContent = (): {
     title: string;
@@ -131,7 +138,7 @@ export function CreditsAddonRow({
     try {
       if (dialog.type === "cancel") {
         await removeMutation.mutateAsync({ addonType: "credits", quantity: 1 });
-        setSelectedBundle(null);
+        updateSelectedBundle(null);
         toast.success("Credit bundle cancelled.");
       } else {
         await addMutation.mutateAsync({
@@ -150,7 +157,7 @@ export function CreditsAddonRow({
         ? (err as AxiosError<{ message: string }>)?.response?.data?.message
         : "Failed to update credit bundle.";
       toast.error(message ?? "Failed to update credit bundle.");
-      setSelectedBundle(activeBundle);
+      updateSelectedBundle(activeBundle);
     } finally {
       setDialog(null);
       onSaveEnd();
@@ -328,7 +335,7 @@ export function CreditsAddonRow({
           isOpen={!!dialog}
           onClose={() => {
             setDialog(null);
-            if (dialog?.type === "cancel") setSelectedBundle(activeBundle);
+            if (dialog?.type === "cancel") updateSelectedBundle(activeBundle);
           }}
           onConfirm={handleConfirm}
           isLoading={isSaving}
