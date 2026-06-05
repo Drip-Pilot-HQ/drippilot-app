@@ -51,7 +51,7 @@ export function CreditsAddonRow({
   const [dialog, setDialog] = useState<DialogAction | null>(null);
 
   const updateSelectedBundle = (bundle: CreditsBundle | null) => {
-    updateSelectedBundle(bundle);
+    setSelectedBundle(bundle);
     onBundleChange?.(bundle);
   };
 
