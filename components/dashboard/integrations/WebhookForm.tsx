@@ -1,13 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { SourceRule } from "@/types/lead-source";
 import { Campaign } from "@/types/campaign";
 import { Button } from "@/components/branding/Button";
+import { CustomSelect } from "@/components/common/CustomSelect";
 import { useMembersQuery } from "@/store/server/workspace.queries";
 import { getMemberDisplayName } from "@/lib/utils/member";
 import { RulesBuilder } from "./RulesBuilder";
+
+const TEAM_WIDE = "__team__";
 
 function makeEmptyRule(): SourceRule {
   return {
@@ -52,9 +55,15 @@ export function WebhookForm({
   );
 
   const { data: members = [] } = useMembersQuery();
-  const activeMembers = members.filter(
-    (m) => m.userId !== null && m.status === "active",
-  );
+  const assigneeOptions = [
+    { value: TEAM_WIDE, label: "Team-wide (unassigned)" },
+    ...members
+      .filter((m) => m.userId !== null && m.status === "active")
+      .map((m) => ({
+        value: m.userId as string,
+        label: getMemberDisplayName(m),
+      })),
+  ];
 
   const validRules = rules.filter(
     (r) => (r.condition.tags?.length ?? 0) > 0 || !!r.condition.leadStatus,
@@ -67,64 +76,51 @@ export function WebhookForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Name */}
-      <div className="space-y-2">
-        <label className="text-sm font-semibold text-slate-700">
-          Webhook Name <span className="text-rose-500">*</span>
-        </label>
-        <input
-          required
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="e.g. Meta Ads Leads, Google Ads, HubSpot CRM…"
-          className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm text-slate-900 placeholder:text-slate-400"
-        />
-      </div>
+      {/* Name + Assignee */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="space-y-1.5">
+          <label className="text-sm font-medium text-slate-700">Name</label>
+          <input
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="e.g. Meta Ads, HubSpot, Zapier…"
+            className="w-full h-12 px-4 rounded-xl bg-white border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm text-slate-900 placeholder:text-slate-400"
+          />
+        </div>
 
-      {/* Assignee */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <label className="text-sm font-semibold text-slate-700">
+        <div className="space-y-1.5">
+          <label className="text-sm font-medium text-slate-700">
             Assign incoming leads to
           </label>
-          <span className="text-xs text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md font-medium">
-            Optional
-          </span>
+          <CustomSelect
+            value={assigneeId ?? TEAM_WIDE}
+            onChange={(value) =>
+              setAssigneeId(value === TEAM_WIDE ? null : value)
+            }
+            options={assigneeOptions}
+          />
+          <p className="text-xs text-slate-400 leading-relaxed">
+            Assigned leads show up in that member&apos;s personal view.
+            Team-wide leads are visible to everyone.
+          </p>
         </div>
-        <select
-          value={assigneeId ?? ""}
-          onChange={(e) => setAssigneeId(e.target.value || null)}
-          className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm text-slate-900"
-        >
-          <option value="">Team-wide (unassigned)</option>
-          {activeMembers.map((m) => (
-            <option key={m.id} value={m.userId as string}>
-              {getMemberDisplayName(m)}
-            </option>
-          ))}
-        </select>
-        <p className="text-sm text-slate-500 leading-relaxed max-w-2xl">
-          New leads from this webhook are assigned to this member so they appear
-          in their personal view. Leave team-wide to keep them visible to
-          everyone.
-        </p>
       </div>
 
       {/* Rules */}
-      <div className="space-y-3 pt-2">
-        <div className="flex items-center justify-between">
-          <label className="text-sm font-semibold text-slate-700">
-            Routing Rules
+      <div className="space-y-2">
+        <div>
+          <label className="text-sm font-medium text-slate-700">
+            Routing rules
+            <span className="ml-2 text-xs font-normal text-slate-400">
+              Optional
+            </span>
           </label>
-          <span className="text-xs text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md font-medium">
-            Optional
-          </span>
+          <p className="text-xs text-slate-400 leading-relaxed mt-1">
+            Auto-enroll leads into campaigns based on their tags or status.
+            Leads that don&apos;t match any rule are still saved.
+          </p>
         </div>
-        <p className="text-sm text-slate-500 leading-relaxed max-w-2xl">
-          Rules let you auto-enroll leads into specific campaigns based on their
-          tags or status. If no rules match, the lead is still saved but not
-          enrolled.
-        </p>
         <RulesBuilder
           rules={rules}
           onChange={setRules}
@@ -134,12 +130,12 @@ export function WebhookForm({
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-3 pt-2">
+      <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 pt-2">
         <Button
           type="button"
           variant="outline"
           onClick={onCancel}
-          className="flex-1 rounded-xl h-12 text-sm"
+          className="w-full sm:w-auto rounded-xl h-11 sm:h-10 px-5 text-sm"
           disabled={isSubmitting}
         >
           Cancel
@@ -147,15 +143,12 @@ export function WebhookForm({
         <Button
           type="submit"
           disabled={isSubmitting || !name.trim()}
-          className="flex-2 rounded-xl h-12 text-sm"
+          className="w-full sm:w-auto rounded-xl h-11 sm:h-10 px-5 text-sm"
         >
           {isSubmitting ? (
             <Loader2 className="w-4 h-4 animate-spin" />
           ) : (
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4" />
-              <span>{submitLabel}</span>
-            </div>
+            submitLabel
           )}
         </Button>
       </div>

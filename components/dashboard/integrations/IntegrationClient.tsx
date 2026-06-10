@@ -15,6 +15,7 @@ import { WebhookListSkeleton } from "./WebhookSkeleton";
 import { WebhookForm } from "./WebhookForm";
 import { SecretRevealModal } from "./SecretRevealModal";
 import { WebhookDocs } from "./WebhookDocs";
+import { IntegrationPlatforms } from "./IntegrationPlatforms";
 
 interface SecretRevealState {
   secret: string;
@@ -67,57 +68,56 @@ export function IntegrationClient() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-in fade-in duration-500">
       {/* ── Page Header ── */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">
             Integrations
           </h1>
-          <p className="text-slate-500 font-medium mt-1">
-            Connect your CRM and route incoming leads into campaigns with smart
-            webhook rules
+          <p className="text-slate-500 mt-1">
+            Receive leads from any platform and route them into campaigns
           </p>
         </div>
         {isOwnerOrAdmin && !isCreating && (
           <Button
             onClick={handleStartCreate}
-            className="rounded-xl h-10 px-5 shadow-md shadow-primary/10 text-sm w-full md:w-auto flex-none"
+            className="rounded-xl h-10 px-4 text-sm w-full md:w-auto flex-none"
           >
             <div className="flex items-center gap-2 justify-center">
               <Plus className="w-4 h-4" />
-              <span className="font-bold whitespace-nowrap">New Webhook</span>
+              <span className="font-semibold whitespace-nowrap">
+                New Webhook
+              </span>
             </div>
           </Button>
         )}
       </div>
 
-      <div className="space-y-6">
+      {/* ── Platforms ── */}
+      <IntegrationPlatforms />
+
+      <div className="space-y-4">
         {/* ── Inline Create Form ── */}
         {isOwnerOrAdmin && isCreating && (
-          <div className="bg-white border-2 border-primary/30 rounded-2xl shadow-lg overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-4 bg-primary/5 border-b-2 border-primary/15">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                  <Webhook className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-black text-slate-800">
-                    New Webhook
-                  </h3>
-                  <p className="text-xs text-slate-500 font-medium">
-                    Set up a new lead source with routing rules
-                  </p>
-                </div>
+          <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+            <div className="flex items-center justify-between gap-3 px-4 sm:px-6 py-4 border-b border-slate-100">
+              <div className="min-w-0">
+                <h3 className="text-sm font-semibold text-slate-900">
+                  New webhook
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  You&apos;ll get a unique URL and secret to send leads to
+                </p>
               </div>
               <button
                 onClick={() => setIsCreating(false)}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-200 transition-all"
+                className="shrink-0 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
-            <div className="p-5 sm:p-8">
+            <div className="p-4 sm:p-6">
               <WebhookForm
                 campaigns={campaigns}
                 isLoadingCampaigns={isLoadingCampaigns}
@@ -134,44 +134,46 @@ export function IntegrationClient() {
         {isLoadingSources ? (
           <WebhookListSkeleton />
         ) : sources.length === 0 && !isCreating ? (
-          <div className="flex flex-col items-center justify-center py-16 sm:py-24 px-6 text-center bg-white border border-slate-100 rounded-[40px] shadow-sm">
-            <div className="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center mb-6 text-slate-300">
-              <Webhook className="w-10 h-10" />
+          <div className="flex flex-col items-center justify-center py-16 px-6 text-center bg-white border border-slate-200 rounded-2xl">
+            <div className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center mb-4 text-slate-300">
+              <Webhook className="w-6 h-6" />
             </div>
-            <h2 className="text-2xl font-black text-slate-900 mb-2">
+            <h2 className="text-base font-semibold text-slate-900 mb-1">
               No webhooks yet
             </h2>
-            <p className="text-slate-500 max-w-sm mb-8 font-medium">
-              Create your first webhook to start routing CRM leads into
-              campaigns automatically.
+            <p className="text-sm text-slate-500 max-w-sm mb-6">
+              Create a webhook to start receiving leads from your CRM, forms, or
+              automation tools.
             </p>
             {isOwnerOrAdmin && (
               <Button
                 onClick={handleStartCreate}
-                className="rounded-xl px-8 h-12 shadow-lg shadow-primary/20"
+                className="rounded-xl px-5 h-10 text-sm"
               >
-                <Plus className="w-5 h-5 mr-2" />
-                Create First Webhook
+                <Plus className="w-4 h-4 mr-2" />
+                Create Webhook
               </Button>
             )}
           </div>
         ) : (
-          <div className="space-y-3">
-            {sources.map((source) => (
-              <WebhookRow
-                key={source.id}
-                source={source}
-                campaigns={campaigns}
-                isLoadingCampaigns={isLoadingCampaigns}
-                isExpanded={expandedId === source.id}
-                onToggleExpand={() => handleToggleExpand(source.id)}
-                onSecretRegenerated={(secret, name, slug) =>
-                  setSecretReveal({ secret, name, slug })
-                }
-                isOwnerOrAdmin={isOwnerOrAdmin}
-              />
-            ))}
-          </div>
+          sources.length > 0 && (
+            <div className="bg-white border border-slate-200 rounded-2xl divide-y divide-slate-100 overflow-hidden">
+              {sources.map((source) => (
+                <WebhookRow
+                  key={source.id}
+                  source={source}
+                  campaigns={campaigns}
+                  isLoadingCampaigns={isLoadingCampaigns}
+                  isExpanded={expandedId === source.id}
+                  onToggleExpand={() => handleToggleExpand(source.id)}
+                  onSecretRegenerated={(secret, name, slug) =>
+                    setSecretReveal({ secret, name, slug })
+                  }
+                  isOwnerOrAdmin={isOwnerOrAdmin}
+                />
+              ))}
+            </div>
+          )
         )}
       </div>
 
