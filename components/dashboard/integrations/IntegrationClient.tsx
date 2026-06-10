@@ -41,8 +41,16 @@ export function IntegrationClient() {
     setIsCreating(false);
   };
 
-  const handleCreate = async (name: string, rules: SourceRule[]) => {
-    const result = await createMutation.mutateAsync({ name, rules });
+  const handleCreate = async (
+    name: string,
+    rules: SourceRule[],
+    defaultAssigneeId: string | null,
+  ) => {
+    const result = await createMutation.mutateAsync({
+      name,
+      rules,
+      defaultAssigneeId,
+    });
     setSecretReveal({
       secret: result.secret,
       name: result.name,

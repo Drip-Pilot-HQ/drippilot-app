@@ -5,6 +5,8 @@ import { Loader2, Sparkles } from "lucide-react";
 import { SourceRule } from "@/types/lead-source";
 import { Campaign } from "@/types/campaign";
 import { Button } from "@/components/branding/Button";
+import { useMembersQuery } from "@/store/server/workspace.queries";
+import { getMemberDisplayName } from "@/lib/utils/member";
 import { RulesBuilder } from "./RulesBuilder";
 
 function makeEmptyRule(): SourceRule {
@@ -17,17 +19,23 @@ function makeEmptyRule(): SourceRule {
 interface WebhookFormProps {
   initialName?: string;
   initialRules?: SourceRule[];
+  initialAssigneeId?: string | null;
   campaigns: Campaign[];
   isLoadingCampaigns: boolean;
   isSubmitting: boolean;
   submitLabel: string;
   onCancel: () => void;
-  onSubmit: (name: string, rules: SourceRule[]) => Promise<void>;
+  onSubmit: (
+    name: string,
+    rules: SourceRule[],
+    defaultAssigneeId: string | null,
+  ) => Promise<void>;
 }
 
 export function WebhookForm({
   initialName = "",
   initialRules,
+  initialAssigneeId = null,
   campaigns,
   isLoadingCampaigns,
   isSubmitting,
@@ -39,6 +47,14 @@ export function WebhookForm({
   const [rules, setRules] = useState<SourceRule[]>(
     initialRules?.length ? initialRules : [makeEmptyRule()],
   );
+  const [assigneeId, setAssigneeId] = useState<string | null>(
+    initialAssigneeId,
+  );
+
+  const { data: members = [] } = useMembersQuery();
+  const activeMembers = members.filter(
+    (m) => m.userId !== null && m.status === "active",
+  );
 
   const validRules = rules.filter(
     (r) => (r.condition.tags?.length ?? 0) > 0 || !!r.condition.leadStatus,
@@ -46,7 +62,7 @@ export function WebhookForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit(name, validRules);
+    await onSubmit(name, validRules, assigneeId);
   };
 
   return (
@@ -63,6 +79,35 @@ export function WebhookForm({
           placeholder="e.g. Meta Ads Leads, Google Ads, HubSpot CRM…"
           className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm text-slate-900 placeholder:text-slate-400"
         />
+      </div>
+
+      {/* Assignee */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-semibold text-slate-700">
+            Assign incoming leads to
+          </label>
+          <span className="text-xs text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md font-medium">
+            Optional
+          </span>
+        </div>
+        <select
+          value={assigneeId ?? ""}
+          onChange={(e) => setAssigneeId(e.target.value || null)}
+          className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm text-slate-900"
+        >
+          <option value="">Team-wide (unassigned)</option>
+          {activeMembers.map((m) => (
+            <option key={m.id} value={m.userId as string}>
+              {getMemberDisplayName(m)}
+            </option>
+          ))}
+        </select>
+        <p className="text-sm text-slate-500 leading-relaxed max-w-2xl">
+          New leads from this webhook are assigned to this member so they appear
+          in their personal view. Leave team-wide to keep them visible to
+          everyone.
+        </p>
       </div>
 
       {/* Rules */}

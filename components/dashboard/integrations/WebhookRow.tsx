@@ -96,8 +96,15 @@ export function WebhookRow({
     }
   };
 
-  const handleSave = async (name: string, rules: SourceRule[]) => {
-    await updateMutation.mutateAsync({ id: source.id, dto: { name, rules } });
+  const handleSave = async (
+    name: string,
+    rules: SourceRule[],
+    defaultAssigneeId: string | null,
+  ) => {
+    await updateMutation.mutateAsync({
+      id: source.id,
+      dto: { name, rules, defaultAssigneeId },
+    });
     onToggleExpand();
   };
 
@@ -311,6 +318,7 @@ export function WebhookRow({
             <WebhookForm
               initialName={source.name}
               initialRules={source.rules}
+              initialAssigneeId={source.defaultAssigneeId}
               campaigns={campaigns}
               isLoadingCampaigns={isLoadingCampaigns}
               isSubmitting={updateMutation.isPending}

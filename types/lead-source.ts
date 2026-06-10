@@ -22,6 +22,7 @@ export interface LeadSource {
   slug: string;
   isActive: boolean;
   rules: SourceRule[];
+  defaultAssigneeId: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -29,12 +30,14 @@ export interface LeadSource {
 export interface CreateLeadSourceDto {
   name: string;
   rules?: SourceRule[];
+  defaultAssigneeId?: string | null;
 }
 
 export interface UpdateLeadSourceDto {
   name?: string;
   rules?: SourceRule[];
   isActive?: boolean;
+  defaultAssigneeId?: string | null;
 }
 
 export interface LeadSourceCreatedResponse extends LeadSource {

@@ -8,12 +8,11 @@ import {
   useLostThreadsQuery,
 } from "@/store/server/outreach.queries";
 import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
+import { useMessagesFilterStore } from "@/store/client/useMessagesFilterStore";
 import { ThreadList } from "./ThreadList";
 import { ThreadDetail, NoThreadSelected } from "./ThreadDetail";
 import { cn } from "@/lib/utils";
 import { lostThreadToOutreach } from "@/types/outreach";
-
-type Tab = "all" | "lost";
 
 interface MessagesClientProps {
   initialOutreachId?: string | null;
@@ -27,8 +26,10 @@ export function MessagesClient({
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(
     initialOutreachId ?? null,
   );
-  const [activeTab, setActiveTab] = useState<Tab>("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const activeTab = useMessagesFilterStore((s) => s.activeTab);
+  const setActiveTab = useMessagesFilterStore((s) => s.setActiveTab);
+  const searchQuery = useMessagesFilterStore((s) => s.searchQuery);
+  const setSearchQuery = useMessagesFilterStore((s) => s.setSearchQuery);
   const [showDetail, setShowDetail] = useState(!!initialOutreachId);
 
   const { data: threads = [], isLoading: isLoadingThreads } =

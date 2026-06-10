@@ -17,6 +17,7 @@ export const useOutreachThreadsQuery = () => {
       const { data } = await apiClient.get<OutreachThread[]>('/outreach/threads', { params: { viewMode } })
       return data
     },
+    refetchInterval: 30_000,
   })
 }
 
@@ -92,6 +93,7 @@ export const useSendReplyMutation = (outreachId: string) => {
       // before we replace the optimistic entry with real data
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey })
+        queryClient.invalidateQueries({ queryKey: ['outreach-threads'] })
       }, 3000)
     },
   })

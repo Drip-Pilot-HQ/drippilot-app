@@ -229,12 +229,7 @@ export function LeadRow({
               className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-slate-50 border border-slate-100 text-[10px] font-bold text-slate-600 whitespace-nowrap"
             >
               <Tag className="w-2 h-2 shrink-0" />
-              {tag
-                .split(" ")
-                .map(
-                  (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase(),
-                )
-                .join(" ")}
+              {tag}
             </span>
           ))}
           {(!lead.tags || lead.tags.length === 0) && (

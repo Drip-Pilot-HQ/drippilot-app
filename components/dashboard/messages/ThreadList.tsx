@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { Search, MessageSquare, AlertCircle } from "lucide-react";
 import {
   OutreachThread,
@@ -8,6 +8,7 @@ import {
   lostThreadToOutreach,
 } from "@/types/outreach";
 import { LeadStatus } from "@/types/lead";
+import { useMessagesFilterStore } from "@/store/client/useMessagesFilterStore";
 import { ThreadListItem } from "./ThreadListItem";
 import { ThreadListSkeleton } from "./MessagesSkeleton";
 import { cn } from "@/lib/utils";
@@ -52,6 +53,10 @@ function matchesSearch(
   );
 }
 
+function byMostRecentActivity(a: OutreachThread, b: OutreachThread) {
+  return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+}
+
 const STATUS_FILTERS = [
   {
     value: LeadStatus.HOT,
@@ -91,7 +96,8 @@ export function ThreadList({
   onSearchChange,
   showLostTab = false,
 }: ThreadListProps) {
-  const [statusFilter, setStatusFilter] = useState<LeadStatus | "all">("all");
+  const statusFilter = useMessagesFilterStore((s) => s.statusFilter);
+  const setStatusFilter = useMessagesFilterStore((s) => s.setStatusFilter);
 
   const filteredThreads = useMemo(
     () =>
@@ -99,7 +105,8 @@ export function ThreadList({
         .filter((t) => matchesSearch(searchQuery, t))
         .filter(
           (t) => statusFilter === "all" || t.lead?.leadStatus === statusFilter,
-        ),
+        )
+        .sort(byMostRecentActivity),
     [threads, searchQuery, statusFilter],
   );
 
@@ -107,7 +114,8 @@ export function ThreadList({
     () =>
       lostThreads
         .filter((t) => matchesSearch(searchQuery, t))
-        .map(lostThreadToOutreach),
+        .map(lostThreadToOutreach)
+        .sort(byMostRecentActivity),
     [lostThreads, searchQuery],
   );
 
