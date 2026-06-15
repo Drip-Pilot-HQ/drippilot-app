@@ -33,7 +33,7 @@ const SECTIONS: TutorialSection[] = [
     iconBg: "bg-primary/10",
     title: "Creating a Campaign",
     description:
-      "Learn how to build and launch your first automated outreach campaign — from setting up sequences to enrolling your first leads.",
+      "Learn how to build and launch your first automated outreach campaign from setting up sequences to enrolling your first leads.",
     videoId: "Fm3JTPxlkyM",
     duration: "5 min",
   },
