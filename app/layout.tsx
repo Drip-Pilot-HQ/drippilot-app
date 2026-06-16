@@ -7,6 +7,7 @@ import { ConfirmProvider } from "../components/branding/ConfirmProvider";
 import { Toaster } from "sonner";
 import { ServiceWorkerRegistrar } from "@/components/layout/ServiceWorkerRegistrar";
 import { CrispProvider } from "@/components/providers/CrispProvider";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const sourceSans = Source_Sans_3({
   variable: "--font-source-sans-pro",
@@ -115,23 +116,6 @@ export default function RootLayout({
       <head>
         <meta name="mobile-web-app-capable" content="yes" />
         <link rel="apple-touch-icon" href="/icons/ios/apple-touch-icon.png" />
-
-        {/* Google tag (gtag.js) */}
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-8GGT71HK31"
-        ></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-8GGT71HK31');
-            `,
-          }}
-        />
-
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
@@ -146,6 +130,7 @@ export default function RootLayout({
       >
         <ServiceWorkerRegistrar />
         <CrispProvider />
+        <GoogleAnalytics gaId="G-8GGT71HK31" />
         <TanstackQueryProvider>
           <AuthProvider>
             <ConfirmProvider>{children}</ConfirmProvider>
