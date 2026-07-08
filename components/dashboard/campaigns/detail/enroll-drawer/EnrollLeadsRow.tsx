@@ -5,6 +5,7 @@ import { Lead } from "@/types/lead";
 
 interface EnrollLeadsRowProps {
   lead: Lead;
+  campaignId: string;
   isSelected: boolean;
   isEnrolled: boolean;
   onToggle: () => void;
@@ -12,6 +13,7 @@ interface EnrollLeadsRowProps {
 
 export function EnrollLeadsRow({
   lead,
+  campaignId,
   isSelected,
   isEnrolled,
   onToggle,
@@ -20,6 +22,10 @@ export function EnrollLeadsRow({
     lead.firstName ||
     lead.email ||
     "?")[0].toUpperCase();
+
+  const previousRun = lead.campaignHistory?.find(
+    (h) => h.campaignId === campaignId,
+  );
 
   return (
     <div
@@ -56,6 +62,14 @@ export function EnrollLeadsRow({
       {isEnrolled && (
         <span className="shrink-0 text-[10px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-md">
           Enrolled
+        </span>
+      )}
+      {!isEnrolled && previousRun && (
+        <span
+          className="shrink-0 text-[10px] font-bold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-md cursor-help"
+          title={`Last: Step ${previousRun.lastStepNumber} — ${previousRun.status}${previousRun.logMessage ? ` (${previousRun.logMessage})` : ""}`}
+        >
+          Re-enroll
         </span>
       )}
     </div>

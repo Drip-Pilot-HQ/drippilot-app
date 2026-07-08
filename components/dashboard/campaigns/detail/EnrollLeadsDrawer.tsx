@@ -257,6 +257,7 @@ export function EnrollLeadsDrawer({
         <EnrollLeadsList
           isLoading={isLoading}
           leads={leads}
+          campaignId={campaign.id}
           enrolledLeadIds={enrolledLeadIds}
           selectedIds={selectedIds}
           allOnPageSelected={allOnPageSelected}

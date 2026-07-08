@@ -12,6 +12,16 @@ export interface EnrolledCampaignSummary {
   campaignStatus: "active" | "paused" | "draft";
 }
 
+export interface CampaignHistoryItem {
+  campaignId: string;
+  campaignName: string;
+  campaignStatus: 'active' | 'paused' | 'draft';
+  lastStepNumber: number;
+  status: 'success' | 'skipped' | 'failed';
+  logMessage: string | null;
+  executedAt: string | null;
+}
+
 export interface Lead {
   id: string;
   workspaceId: string;
@@ -25,6 +35,7 @@ export interface Lead {
   tags: string[];
   leadStatus: LeadStatus;
   enrolledCampaigns?: EnrolledCampaignSummary[];
+  campaignHistory?: CampaignHistoryItem[];
   createdAt: string;
   updatedAt: string;
 }

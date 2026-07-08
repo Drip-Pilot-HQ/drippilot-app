@@ -12,6 +12,7 @@ interface EnrollLeadsListProps {
   selectedIds: Set<string>;
   allOnPageSelected: boolean;
   someSelected: boolean;
+  campaignId: string;
   onToggleSelect: (id: string) => void;
   onToggleSelectAll: () => void;
 }
@@ -23,6 +24,7 @@ export function EnrollLeadsList({
   selectedIds,
   allOnPageSelected,
   someSelected,
+  campaignId,
   onToggleSelect,
   onToggleSelectAll,
 }: EnrollLeadsListProps) {
@@ -89,6 +91,7 @@ export function EnrollLeadsList({
             <EnrollLeadsRow
               key={lead.id}
               lead={lead}
+              campaignId={campaignId}
               isSelected={selectedIds.has(lead.id)}
               isEnrolled={enrolledLeadIds.has(lead.id)}
               onToggle={() => onToggleSelect(lead.id)}
