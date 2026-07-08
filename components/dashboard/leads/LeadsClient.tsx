@@ -87,6 +87,7 @@ export function LeadsClient() {
     sortBy: sortBy as "name" | "createdAt" | "updatedAt",
     sortOrder,
     assignedUserId: isOwnerOrAdmin ? assigneeFilter : undefined,
+    includeCampaigns: true,
   });
 
   const sortedLeads = useMemo(() => {

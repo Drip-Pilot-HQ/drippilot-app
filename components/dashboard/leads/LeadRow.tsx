@@ -240,6 +240,7 @@ export function LeadRow({
       <td className="px-3 py-3">
         <CampaignPills
           campaigns={lead.enrolledCampaigns ?? []}
+          history={lead.campaignHistory ?? []}
           leadId={lead.id}
         />
       </td>

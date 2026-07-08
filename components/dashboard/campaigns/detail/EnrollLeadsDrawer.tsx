@@ -62,6 +62,7 @@ export function EnrollLeadsDrawer({
     limit,
     sortBy,
     sortOrder,
+    includeCampaigns: true,
   });
 
   const enrollMutation = useEnrollLeadsMutation();
