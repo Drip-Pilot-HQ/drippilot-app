@@ -34,6 +34,7 @@ function matchesSearch(
     id: string;
     leadEmail?: string | null;
     leadPhone?: string | null;
+    campaignName?: string | null;
     lead?: { name?: string; firstName?: string; lastName?: string } | null;
   },
 ) {
@@ -44,6 +45,7 @@ function matchesSearch(
     thread.leadEmail?.toLowerCase().includes(q) ||
     thread.leadPhone?.toLowerCase().includes(q) ||
     thread.id.toLowerCase().includes(q) ||
+    thread.campaignName?.toLowerCase().includes(q) ||
     lead?.name?.toLowerCase().includes(q) ||
     lead?.firstName?.toLowerCase().includes(q) ||
     lead?.lastName?.toLowerCase().includes(q) ||

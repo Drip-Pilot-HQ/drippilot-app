@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { MessageSquare } from "lucide-react";
 import {
   useOutreachThreadsQuery,
@@ -10,27 +10,29 @@ import {
 import { useWorkspaceRole } from "@/lib/hooks/use-workspace-role";
 import { useMessagesFilterStore } from "@/store/client/useMessagesFilterStore";
 import { ThreadList } from "./ThreadList";
-import { ThreadDetail, NoThreadSelected } from "./ThreadDetail";
 import { cn } from "@/lib/utils";
-import { lostThreadToOutreach } from "@/types/outreach";
 
-interface MessagesClientProps {
-  initialOutreachId?: string | null;
-}
-
-export function MessagesClient({
-  initialOutreachId,
-}: MessagesClientProps = {}) {
+/*
+ * Persistent shell for the messages section, rendered from the segment layout.
+ *
+ * The previous implementation rendered the whole messages UI from each page,
+ * so navigating between /messages and /messages/[outreachId] remounted
+ * everything: the thread list lost its scroll position, the search input lost
+ * focus, and tab state had to be patched through a global store. Living in the
+ * layout, this component mounts once — selecting a thread swaps only the
+ * detail pane ({children}), and the list keeps its DOM, scroll, and focus.
+ */
+export function MessagesShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const params = useParams<{ outreachId?: string | string[] }>();
+  const selectedThreadId =
+    typeof params.outreachId === "string" ? params.outreachId : null;
+
   const { isOwnerOrAdmin } = useWorkspaceRole();
-  const [selectedThreadId, setSelectedThreadId] = useState<string | null>(
-    initialOutreachId ?? null,
-  );
   const activeTab = useMessagesFilterStore((s) => s.activeTab);
   const setActiveTab = useMessagesFilterStore((s) => s.setActiveTab);
   const searchQuery = useMessagesFilterStore((s) => s.searchQuery);
   const setSearchQuery = useMessagesFilterStore((s) => s.setSearchQuery);
-  const [showDetail, setShowDetail] = useState(!!initialOutreachId);
 
   const { data: threads = [], isLoading: isLoadingThreads } =
     useOutreachThreadsQuery();
@@ -38,59 +40,32 @@ export function MessagesClient({
     useLostThreadsQuery(isOwnerOrAdmin);
 
   const isLoading = isLoadingThreads || isLoadingLost;
+  const showDetail = !!selectedThreadId;
 
-  const [prevInitialOutreachId, setPrevInitialOutreachId] =
-    useState(initialOutreachId);
-  if (initialOutreachId !== prevInitialOutreachId) {
-    setPrevInitialOutreachId(initialOutreachId);
-    setSelectedThreadId(initialOutreachId ?? null);
-    setShowDetail(!!initialOutreachId);
-  }
-
+  /*
+   * Deep-linking into a lost thread reveals the Lost tab — but only once per
+   * thread id. The ref guard (not state) plus the persistent layout mean a
+   * user's manual switch back to "All" is never fought: this effect re-runs
+   * only when the selected thread itself changes.
+   */
+  const autoSwitchedForId = useRef<string | null>(null);
   const isCurrentlyLost = selectedThreadId
     ? lostThreads.some((t) => t.id === selectedThreadId)
     : false;
-  const [lastAutoSwitchedKey, setLastAutoSwitchedKey] = useState<string | null>(
-    null,
-  );
-  const currentKey = isCurrentlyLost ? selectedThreadId : null;
-
-  if (
-    isCurrentlyLost &&
-    activeTab !== "lost" &&
-    currentKey !== lastAutoSwitchedKey
-  ) {
+  useEffect(() => {
+    if (!selectedThreadId || !isCurrentlyLost) return;
+    if (autoSwitchedForId.current === selectedThreadId) return;
+    autoSwitchedForId.current = selectedThreadId;
     setActiveTab("lost");
-    setLastAutoSwitchedKey(currentKey);
-  }
-
-  const selectedThread = useMemo(() => {
-    if (!selectedThreadId) return null;
-    const thread = threads.find((t) => t.id === selectedThreadId);
-    if (thread) return thread;
-    const lost = lostThreads.find((t) => t.id === selectedThreadId);
-    return lost ? lostThreadToOutreach(lost) : null;
-  }, [selectedThreadId, threads, lostThreads]);
+  }, [selectedThreadId, isCurrentlyLost, setActiveTab]);
 
   const handleSelectThread = useCallback(
     (id: string) => {
-      setSelectedThreadId(id);
-      setShowDetail(true);
-      router.push(`/dashboard/messages/${id}`);
+      // scroll: false — keep the page (and thread list) exactly where it is.
+      router.push(`/dashboard/messages/${id}`, { scroll: false });
     },
     [router],
   );
-
-  const handleBack = useCallback(() => {
-    setShowDetail(false);
-    router.push("/dashboard/messages");
-  }, [router]);
-
-  const handleDeleted = useCallback(() => {
-    setSelectedThreadId(null);
-    setShowDetail(false);
-    router.push("/dashboard/messages");
-  }, [router]);
 
   return (
     <div className="animate-in fade-in duration-500 md:space-y-6">
@@ -163,16 +138,7 @@ export function MessagesClient({
             !showDetail ? "hidden lg:flex" : "flex",
           )}
         >
-          {selectedThread ? (
-            <ThreadDetail
-              key={selectedThread.id}
-              thread={selectedThread}
-              onBack={handleBack}
-              onDeleted={handleDeleted}
-            />
-          ) : (
-            <NoThreadSelected />
-          )}
+          {children}
         </div>
       </div>
     </div>

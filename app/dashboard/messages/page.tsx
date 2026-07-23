@@ -1,5 +1,5 @@
-import { MessagesClient } from "@/components/dashboard/messages/MessagesClient";
+import { NoThreadSelected } from "@/components/dashboard/messages/ThreadDetail";
 
-export default async function MessagesPage() {
-  return <MessagesClient />;
+export default function MessagesPage() {
+  return <NoThreadSelected />;
 }

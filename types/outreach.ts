@@ -12,6 +12,8 @@ export interface OutreachThread {
   senderEmail: string | null
   senderPhone: string | null
   campaignId: string | null
+  campaignName: string | null
+  hasReplied: boolean
   aiResponseEnabled: boolean
   isUnmatched: boolean
   createdAt: string
@@ -77,6 +79,9 @@ export function lostThreadToOutreach(lost: LostThread): OutreachThread {
     senderEmail: null,
     senderPhone: null,
     campaignId: null,
+    campaignName: null,
+    // Lost threads exist because someone wrote in — every message is inbound.
+    hasReplied: true,
     aiResponseEnabled: lost.aiResponseEnabled,
     isUnmatched: true,
     createdAt: lost.createdAt,

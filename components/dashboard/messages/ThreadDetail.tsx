@@ -10,6 +10,7 @@ import {
   MessageSquare,
   Loader2,
   PhoneCall,
+  Megaphone,
 } from "lucide-react";
 import {
   OutreachThread,
@@ -148,12 +149,24 @@ export function ThreadDetail({ thread, onBack, onDeleted }: ThreadDetailProps) {
               </span>
             )}
           </div>
-          {thread.leadPhone && (
-            <div className="flex items-center gap-1 mt-0.5">
-              <PhoneCall className="w-2.5 h-2.5 text-slate-300" />
-              <span className="text-[10px] text-slate-400 font-medium">
-                {formatNumber(thread.leadPhone)}
-              </span>
+          {(thread.campaignName || thread.leadPhone) && (
+            <div className="flex items-center gap-3 mt-0.5 min-w-0">
+              {thread.campaignName && (
+                <div className="flex items-center gap-1 min-w-0">
+                  <Megaphone className="w-2.5 h-2.5 text-slate-300 shrink-0" />
+                  <span className="text-[10px] text-slate-400 font-medium truncate">
+                    {thread.campaignName}
+                  </span>
+                </div>
+              )}
+              {thread.leadPhone && (
+                <div className="flex items-center gap-1 shrink-0">
+                  <PhoneCall className="w-2.5 h-2.5 text-slate-300" />
+                  <span className="text-[10px] text-slate-400 font-medium">
+                    {formatNumber(thread.leadPhone)}
+                  </span>
+                </div>
+              )}
             </div>
           )}
         </div>

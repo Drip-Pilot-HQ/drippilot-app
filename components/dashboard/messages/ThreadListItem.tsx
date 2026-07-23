@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, useCallback, useMemo } from "react";
-import { Mail, Phone, Bot, AlertCircle } from "lucide-react";
+import { Mail, Phone, Bot, AlertCircle, Megaphone, Reply } from "lucide-react";
 import { OutreachThread, getThreadChannels } from "@/types/outreach";
 import { LeadStatus } from "@/types/lead";
 import { cn } from "@/lib/utils";
@@ -148,6 +148,12 @@ export const ThreadListItem = memo(function ThreadListItem({
               AI
             </span>
           )}
+          {thread.hasReplied && (
+            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-semibold uppercase bg-teal-50 text-teal-600">
+              <Reply className="w-2.5 h-2.5" />
+              Replied
+            </span>
+          )}
           {thread.isUnmatched && (
             <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-semibold uppercase bg-rose-50 text-rose-500">
               <AlertCircle className="w-2.5 h-2.5" />
@@ -155,6 +161,15 @@ export const ThreadListItem = memo(function ThreadListItem({
             </span>
           )}
         </div>
+
+        {thread.campaignName && (
+          <div className="flex items-center gap-1 mt-1 min-w-0">
+            <Megaphone className="w-2.5 h-2.5 text-slate-300 shrink-0" />
+            <span className="text-[10px] text-slate-400 font-medium truncate">
+              {thread.campaignName}
+            </span>
+          </div>
+        )}
       </div>
     </button>
   );

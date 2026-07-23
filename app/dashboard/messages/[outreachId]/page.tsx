@@ -1,4 +1,4 @@
-import { MessagesClient } from "@/components/dashboard/messages/MessagesClient";
+import { ThreadDetailRoute } from "@/components/dashboard/messages/ThreadDetailRoute";
 
 interface Props {
   params: Promise<{ outreachId: string }>;
@@ -6,5 +6,5 @@ interface Props {
 
 export default async function MessagesThreadPage({ params }: Props) {
   const { outreachId } = await params;
-  return <MessagesClient initialOutreachId={outreachId} />;
+  return <ThreadDetailRoute outreachId={outreachId} />;
 }
