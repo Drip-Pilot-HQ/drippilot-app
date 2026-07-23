@@ -20,7 +20,6 @@ import {
 } from "@/types/campaign";
 import { TemplateChannel } from "@/types/template";
 import { cn } from "@/lib/utils";
-import { useTemplateQuery } from "@/store/server/template.queries";
 import {
   useUpdateCampaignStepMutation,
   useDeleteCampaignStepMutation,
@@ -70,7 +69,10 @@ export function StepCard({
   const actionConfig = isAction ? (step.stepConfig as ActionConfig) : undefined;
   const delayConfig = !isAction ? (step.stepConfig as DelayConfig) : undefined;
 
-  const { data: template } = useTemplateQuery(step.templateId ?? "");
+  // Template summary is embedded in the steps response — one joined query on
+  // the backend instead of one GET /templates/:id per card (N+1 that tripped
+  // rate limiting on large campaigns).
+  const template = step.template ?? null;
 
   const handleDelete = async () => {
     const confirmed = await confirm({

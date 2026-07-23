@@ -1,3 +1,5 @@
+import { TemplateChannel } from './template';
+
 export enum CampaignStatus {
   ACTIVE = 'active',
   PAUSED = 'paused',
@@ -18,6 +20,16 @@ export interface DelayConfig {
   days: number;
 }
 
+/**
+ * Template summary embedded by GET /campaigns/:id/steps so the workflow page
+ * can render template name/channel without fetching each template separately.
+ */
+export interface CampaignStepTemplateSummary {
+  id: string;
+  name: string;
+  templateChannel: TemplateChannel;
+}
+
 export interface CampaignStep {
   id: string;
   campaignId: string;
@@ -25,6 +37,7 @@ export interface CampaignStep {
   stepType: CampaignStepType;
   templateId?: string;
   stepConfig?: ActionConfig | DelayConfig;
+  template?: CampaignStepTemplateSummary | null;
   createdAt: string;
   updatedAt: string;
 }
